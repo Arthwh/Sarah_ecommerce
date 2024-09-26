@@ -1,8 +1,6 @@
 //Metodo para verificar se o usuario esta logado e tem permissao para visualizar a pagina
 export function checkAuth(req, res, next) {
-    const token = req.headers['authorization'] ?? "token";
-
-    if (token) {
+    if (req.session.user) {
         // Realizar verificação do token
         // Se for válido, continuar
         next();

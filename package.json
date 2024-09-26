@@ -11,9 +11,13 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "bcrypt": "^5.1.1",
     "dotenv": "^16.4.5",
     "ecommerceroupas": "file:",
-    "express": "^4.19.2",
+    "express": "^4.21.0",
+    "express-session": "^1.18.0",
+    "morgan": "^1.10.0",
+    "pg": "^8.13.0",
     "pug": "^3.0.3"
   }
 }

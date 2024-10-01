@@ -2,7 +2,11 @@ import path from 'path'
 import { fileURLToPath } from 'url';
 import express from 'express';
 import dotenv from 'dotenv';
-import productRoutes from "./routes/productRoutes.js"
+import session from 'express-session'
+
+import userRoutes from "./routes/userRoutes.js"
+import productRoutes from './routes/productRoutes.js'
+import mockProductRoutes from './routes/mockProductRoutes.js'
 dotenv.config();
 
 const app = express(); // inicia o servidor
@@ -13,9 +17,20 @@ const __dirname = path.dirname(__filename); // Obtém o diretório atual a parti
 app.set('views', path.join(__dirname, './views'));
 app.set('view engine', 'ejs');
 app.use('/public', express.static(path.join(__dirname, '../public')));
+app.use(express.json());
+
+//Sessão do usuário
+app.use(session({
+  secret: 'token',
+  resave: false,
+  saveUninitialized: true,
+  cookie: { secure: false }
+}));
 
 //Configura os arquivos de rotas
-app.use(productRoutes)
+app.use('/api', userRoutes)
+app.use('/api', productRoutes);
+app.use(mockProductRoutes);
 
 app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`);

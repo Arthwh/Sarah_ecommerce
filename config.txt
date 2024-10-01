@@ -4,3 +4,4 @@
     npm install dotenv
     npm install -D tailwindcss
     npx tailwindcss init
+    npm install express-session

@@ -1,0 +1,16 @@
+<!-- Breadcrums -->
+<div id="breadCrums_wrapper" class="hidden md:block">
+    <ul class="space-x-2 flex">
+        <% var count=0; if(data.page?.breadcrums){ data.page.breadcrums.forEach(breadcrum=> {
+            if (count> 0 && count < data.page.breadcrums.length ){ %>
+                <span class="h-4 w-4 flex pt-2 items-center"><img
+                        src="/public/images/icons/chevron_right_icon_black.svg" alt="..."></span>
+                <% }%>
+                    <li class="menuItem">
+                        <a href="<%= breadcrum.url %>">
+                            <%= breadcrum.name %>
+                        </a>
+                    </li>
+                    <% count++; }); }%>
+    </ul>
+</div>

@@ -1,0 +1,6 @@
+-- Instalar as dependências
+    npm install express
+    npm install ejs
+    npm install dotenv
+    npm install -D tailwindcss
+    npx tailwindcss init

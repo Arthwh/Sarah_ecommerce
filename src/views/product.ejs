@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>
+    <%= data.product.name %> - SARAH
+  </title>
+  <link href="/public/css/pagePattern.css" rel="stylesheet">
+  <link href="/public/css/tailwind/style.css" rel="stylesheet">
+</head>
+
+<body>
+  <!-- Header -->
+  <%- include('partials/_header') %>
+    <main class="container mx-auto py-10 w-full xl:w-4/5 h-full flex-grow">
+      <!-- Breadcrums -->
+      <%- include('partials/_breadcrums') %>
+
+        <div class="flex flex-col lg:grid lg:grid-cols-3 lg:grid-flow-col-dense xl:grid-cols-5 gap-8 mt-10">
+          <!-- Imagens do produto -->
+          <div class="w-full max-h-4/5 lg:flex lg:col-span-2 xl:col-span-3 lg:flex-row">
+
+            <!-- Carrossel para telas pequenas -->
+            <div class="lg:hidden overflow-hidden shadow-lg flex cols-3 h-full">
+              <!-- Botões de Controle do Carrossel (Telas Pequenas) -->
+              <button type="button" class="lg:hidden flex items-center justify-center min-h-full cursor-pointer"
+                onclick="prevImage()">
+                <span
+                  class="inline-flex items-center justify-center w-8 h-full bg-white/70 shadow-2xl hover:border border-gray-500">
+                  <svg class="w-4 h-4 text-gray-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+                    viewBox="0 0 6 10">
+                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"
+                      d="M5 1 1 5l4 4" />
+                  </svg>
+                  <span class="sr-only">Anterior</span>
+                </span>
+              </button>
+              <div
+                class="lg:flex lg:flex-col lg:flex-nowrap lg:space-y-2 lg:overflow-y-auto overflow-hidden block lg:hidden">
+                <div class="flex-shrink-0">
+                  <!-- Imagem do Carrossel para Telas Pequenas -->
+                  <div id="carouselCurrentImage" class="hidden lg:hidden h-full" data-carouselItemIndex>
+                    <img class="imagemProdutoTelaPequena w-full h-auto object-cover" alt="<%= data.product.name %>">
+                  </div>
+                </div>
+              </div>
+              <!-- Botão Próximo -->
+              <button type="button" class="lg:hidden flex items-center justify-center min-h-full cursor-pointer"
+                onclick="nextImage()">
+                <span
+                  class="inline-flex items-center justify-center w-8 h-full bg-white/70 shadow-2xl hover:border border-gray-500">
+                  <svg class="w-4 h-4 text-gray-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+                    viewBox="0 0 6 10">
+                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"
+                      d="m1 9 4-4-4-4" />
+                  </svg>
+                  <span class="sr-only">Próximo</span>
+                </span>
+              </button>
+            </div>
+
+            <!-- Container Principal para Imagem e Miniaturas -->
+            <div class="hidden lg:flex w-full max-h-[700px] 2xl:max-h-[800px]" id="mainImageContainer">
+              <!-- Lista de Miniaturas com Scroll -->
+              <div class="flex flex-shrink-0 flex-col mr-5 h-full">
+                <!-- Botão para Subir -->
+                <button id="scrollUpButton"
+                  class="w-full bg-white/80 border border-transparent hover:border-gray-500 p-1 shadow-lg"
+                  onclick="scrollCarousel(-150)">
+                  <svg class="w-4 h-4 text-gray-500 mx-auto" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                    fill="none" viewBox="0 0 10 6">
+                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"
+                      d="M1 5l4-4 4 4" />
+                  </svg>
+                </button>
+
+                <!-- Carrossel de Miniaturas -->
+                <ul id="miniImageCarousel"
+                  class="lg:flex lg:flex-col lg:space-y-2 overflow-y-auto h-full custom-scrollbar">
+                  <% data.product.images.forEach((image)=> { %>
+                    <li class="flex-shrink-0">
+                      <button onclick="changeMainImage('<%= image.url %>', this)">
+                        <img class="w-28 h-auto hover:border border-gray-500" src="<%= image.url %>"
+                          alt="<%= data.product.name %>">
+                      </button>
+                    </li>
+                    <% }); %>
+                </ul>
+
+                <!-- Botão para Descer -->
+                <button id="scrollDownButton"
+                  class="w-full bg-white/80 border border-transparent hover:border-gray-500 p-1"
+                  onclick="scrollCarousel(150)">
+                  <svg class="w-4 h-4 text-gray-500 mx-auto" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                    fill="none" viewBox="0 0 10 6">
+                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"
+                      d="M1 1l4 4 4-4" />
+                  </svg>
+                </button>
+              </div>
+
+              <!-- Imagem Principal -->
+              <div id="mainVisualizationProductImage" class="shadow-lg lg:block h-[700px] 2xl:h-[800px] w-fit mx-auto">
+                <img class="object-cover w-auto h-full" src="<%= data.product.images[0].url %>"
+                  alt="<%= data.product.name %>">
+              </div>
+            </div>
+          </div>
+
+          <!-- Informações do Produto -->
+          <div class="px-5 lg:px-0 xl:col-span-2">
+            <h1 id="productName" class="text-3xl font-bold text-black">
+              <%= data.product.name %>
+            </h1>
+            <p id="productPrice" class="text-xl text-amber-400 mt-2">R$ <%= data.product.price %>
+            </p>
+            <p id="ProductDescription" class="text-gray-700 mt-4">
+              <%= data.product.description %>
+            </p>
+
+            <!-- Opções de cores -->
+            <div class="mt-6">
+              <h2 id="colorTitle" class="text-sm">Cor: <b>
+                  <%= data.product.color%>
+                </b>
+              </h2>
+              <div id="productColorVariants" class="flex space-x-4 mt-2">
+                <% const displayedColors=new Set(); const colorsWithNoStock=new Map();
+                  data.product.variants.forEach(variant=>{
+                  if (!displayedColors.has(variant.colorCode)) {
+                  if (variant.stock > 0) {
+                  displayedColors.add(variant.colorCode);
+                  colorsWithNoStock.delete(variant.colorCode);%>
+                  <div id="productColor_<%= variant.sku %>" data-productSku="<%= variant.sku %>"
+                    data-productStock="<%= variant.stock %>" data-variantColor="<%= variant.color %>"
+                    data-variantType="color"
+                    class="rounded-full border border-black w-10 h-10 bg-white flex justify-center items-center">
+                    <button onclick="loadVariantData(this)" class="w-8 h-8 p-2 rounded-full" title="<%= variant.color%>"
+                      style="background-color: <%= variant.colorCode %>"></button>
+                  </div>
+                  <% } else { colorsWithNoStock.set(variant.colorCode, variant); } } });
+                    colorsWithNoStock.forEach((variant)=> {
+                    %>
+                    <div id="productColor_<%= variant.sku %>"
+                      class="rounded-full border border-gray-300 w-10 h-10 bg-white flex justify-center items-center">
+                      <button disabled class="w-8 h-8 rounded-full cursor-not-allowed" title="<%= variant.color %>"
+                        style="background-color: <%= variant.colorCode %>"></button>
+                    </div>
+                    <% }); %>
+              </div>
+            </div>
+
+            <!-- Opções de tamanhos -->
+            <div class="mt-6">
+              <h2 id="sizeTitle" class="text-sm">Tamanho: <b>
+                  <%= data.product.size%>
+                </b>
+              </h2>
+              <div id="productSizesComponent" class="flex flex-wrap mt-2">
+                <% data.product.variants.forEach(variant=> {
+                  if (variant.colorCode === data.product.colorCode) { %>
+                  <div id="productSize_<%= variant.sku %>" data-productSku="<%= variant.sku %>"
+                    data-productStock="<%= variant.stock %>" data-variantType="size">
+                    <% if (variant.stock <=0) { %>
+                      <button disabled
+                        class="px-2 py-2 mr-4 w-12 mt-2 border bg-gray-100 text-gray-300 cursor-not-allowed">
+                        <%= variant.size %>
+                      </button>
+                      <% } else { %>
+                        <button onclick="loadVariantData(this)"
+                          class="px-2 py-2 mr-4 w-12 mt-2 border hover:border-black">
+                          <%= variant.size %>
+                        </button>
+                        <% } %>
+                  </div>
+                  <% } }) %>
+              </div>
+            </div>
+
+            <!-- Botão de Comprar e Favorito -->
+            <div class="mt-8 w-full flex space-x-2">
+              <button id="wishlistButton" data-addedToWishlist>
+                <img src="/public/images/icons/favorite_icon_border_black.svg" alt="...">
+              </button>
+              <button id="addToCartButton"
+                class="bg-white w-full text-black border border-black px-6 py-3 font-semibold hover:bg-black hover:text-white">Adicionar
+                ao
+                Carrinho</button>
+            </div>
+          </div>
+        </div>
+        <!-- Informações adicionais -->
+        <div class="mt-10 p-5 lg:">
+          <h2 class="text-2xl font-bold">Detalhes do Produto</h2>
+          <p class="mt-4 text-gray-700">
+            <%= data.product.details %>
+          </p>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <%- include('partials/_footer') %>
+      <script>
+        // Obtem os dados enviados do backend e converte para JSON
+        const data = JSON.parse('<%- JSON.stringify(data) %>');
+        if (!data || !data.product || !data.user) {
+          console.error('Dados incompletos.');
+          window.location.href = "/error";
+        }
+        // Separa os dados em variáveis
+        const user = data.user;
+        const cart = data.user.cart || {};
+        const wishlist = data.user.wishlist || {};
+        const product = data.product;
+        const variants = data.product.variants;
+        const page = data.page
+      </script>
+      <script src="/public/js/categoryAsideMenu.js"></script>
+      <script src="/public/js/header.js"></script>
+      <script src="/public/js/loginAndRegister.js"></script>
+      <script src="/public/js/product.js"></script>
+</body>
+
+</html>

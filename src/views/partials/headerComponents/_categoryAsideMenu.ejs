@@ -1,0 +1,80 @@
+<!-- Menu Lateral (Categorias) -->
+<div id="categoriesOverlay" class="hidden fixed inset-0 bg-black bg-opacity-20 z-997" onclick="closeCategoriesMenu()">
+</div>
+<aside id="category-aside-menu"
+    class="hidden fixed top-0 left-0 w-full sm:w-72 h-full bg-black text-white transition-transform transform z-998">
+    <!-- Menu Principal -->
+    <div id="menuContainer" class="fixed top-0 left-0 p-6 w-full">
+        <button onclick="toggleCategoryAsideMenu()" class="text-right w-full">
+            <img src="/public/images/icons/close_icon_white.svg" alt="closeButton" class="w-8 h-8">
+        </button>
+        <ul class="mt-10 space-y-4 w-full">
+            <li class="flex pl-2">
+                <button class="menuItem category" onclick="toggleSubmenu('masculinoSubmenu')">Masculino</button>
+                <img class="h-6 w-6 ml-auto arrow" src="/public/images/icons/arrow_right_icon_white.svg"
+                    alt="Arrow right white">
+            </li>
+            <li class="flex pl-2">
+                <button class="menuItem category" onclick="toggleSubmenu('femininoSubmenu')">Feminino</button>
+                <img class="h-6 w-6 ml-auto arrow" src="/public/images/icons/arrow_right_icon_white.svg"
+                    alt="Arrow right white">
+            </li>
+            <li class="flex pl-2">
+                <button class="menuItem category" onclick="toggleSubmenu('acessoriosSubmenu')">Acessórios</button>
+                <img class="h-6 w-6 ml-auto arrow" src="/public/images/icons/arrow_right_icon_white.svg"
+                    alt="Arrow right white">
+            </li>
+            <li class="flex pl-2">
+                <button class="menuItem category" onclick="toggleSubmenu('esporteLazerSubmenu')">Esporte e
+                    Lazer</button>
+                <img class="h-6 w-6 ml-auto arrow" src="/public/images/icons/arrow_right_icon_white.svg"
+                    alt="Arrow right white">
+            </li>
+            <li class="sm:hidden pl-2">
+                <a href="/novidades" class="menuItem category">Novidades</a>
+            </li>
+            <li class="sm:hidden pl-2">
+                <a href="/mais-vendidos" class="menuItem category">Mais
+                    Vendidos</a>
+            </li>
+            <li class="sm:hidden pl-2">
+                <a href="/promocoes" class="menuItem category">Promoções</a>
+            </li>
+        </ul>
+    </div>
+
+    <!-- Submenu -->
+    <div id="submenuContainer" class="hidden bg-black p-6 fixed top-0 left-0 w-full h-full z-999">
+        <button onclick="toggleSubmenu()" class="text-left w-full pl-2">
+            <img src="/public/images/icons/arrow_back_icon_white.svg" alt="backButton" class="w-8 h-8">
+        </button>
+        <!-- Subcategorias Masculino -->
+        <ul id="masculinoSubmenu" class="hidden mt-10 space-y-4">
+            <li class="pl-2"><a href="/categoria/masculino/camisas" class="menuItem">Camisas</a></li>
+            <li class="pl-2"><a href="/categoria/masculino/calcados" class="menuItem">Calçados</a></li>
+            <li class="pl-2"><a href="/categoria/masculino/jaquetas" class="menuItem">Jaquetas</a></li>
+        </ul>
+        <!-- Subcategorias Feminino -->
+        <ul id="femininoSubmenu" class="hidden mt-10 space-y-4">
+            <li class="pl-2"><a href="/categoria/feminino/vestidos" class="menuItem">Vestidos</a></li>
+            <li class="pl-2"><a href="/categoria/feminino/sapatos" class="menuItem">Sapatos</a></li>
+            <li class="pl-2"><a href="/categoria/feminino/bolsas" class="menuItem">Bolsas</a></li>
+        </ul>
+        <!-- Subcategorias Acessórios -->
+        <ul id="acessoriosSubmenu" class="hidden mt-10 space-y-4">
+            <li class="pl-2"><a href="/categoria/acessorios/relogios" class="menuItem">Relógios</a></li>
+            <li class="pl-2"><a href="/categoria/acessorios/oculos" class="menuItem">Óculos</a></li>
+            <li class="pl-2"><a href="/categoria/acessorios/cintos" class="menuItem">Cintos</a></li>
+            <li class="pl-2"><a href="/categoria/acessorios/bolsas" class="menuItem">Bolsas</a></li>
+            <li class="pl-2"><a href="/categoria/acessorios/lencos" class="menuItem">Lenços</a></li>
+        </ul>
+        <!-- Subcategorias Infantil -->
+        <ul id="esporteLazerSubmenu" class="hidden mt-10 space-y-4">
+            <li class="pl-2"><a href="/categoria/esporteLazer/camisetasEsportivas" class="menuItem">Camisetas
+                    esportivas</a></li>
+            <li class="pl-2"><a href="/categoria/esporteLazer/agasalhoEsportivo" class="menuItem">Agasalho esportivo</a>
+            </li>
+            <li class="pl-2"><a href="/categoria/esporteLazer/tenisCorrida" class="menuItem">Tênis de corrida</a></li>
+        </ul>
+    </div>
+</aside>

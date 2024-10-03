@@ -22,13 +22,13 @@
                         <!-- Titulo -->
                         <div class="text-xl flex text-center">
                             <span>
-                                <%= data.page.title %>
+                                <%= data.page?.title %>
                             </span>
                         </div>
                         <!-- Quantidade de resultados (produtos) -->
                         <div class="text-sm">
                             <p>
-                                <%= data.page.quantResults %> produtos
+                                <%= data.page?.quantResults %> produtos
                             </p>
                         </div>
                     </div>
@@ -42,7 +42,7 @@
 
                 <!-- Lista de Produtos -->
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6">
-                    <% data.products.forEach(product=> { %>
+                    <% data.products?.forEach(product=> { %>
                         <div class="bg-white shadow-lg hover:shadow-xl transition-shadow h-full">
                             <div class="hover:relative group w-full h-auto">
                                 <!-- Link e imagens do produto -->
@@ -112,7 +112,7 @@
                         <p class="text-sm">VOCÊ ESTÁ NA PÁGINA</p>
                     </div>
                     <div class="flex justify-center items-center space-x-2">
-                        <button <% if( data.pagination.currentPage===1) { %>
+                        <button <% if( data.pagination?.currentPage) { %>
                             class="bg-white text-black border border-black px-4 py-2" disabled
                             <% } else{ %>
                                 class="bg-white text-black border border-black px-4 py-2 hover:bg-black hover:text-white
@@ -149,7 +149,7 @@
                 // Obtem os dados enviados do backend e converte para JSON
                 const data = JSON.parse('<%- JSON.stringify(data) %>');
                 console.log(data)
-                if (!data || !data.user) {
+                if (!data) {
                     console.error('Dados incompletos.');
                     window.location.href = "/error";
                 }

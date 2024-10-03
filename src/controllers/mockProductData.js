@@ -2,39 +2,7 @@
 export async function getProductInfo(req, res) {
     const data = {
         user: {
-            id: 1,
-            name: 'João',
-            logged: 'true',
-            cart: {
-                items: [
-                    {
-                        sku: '0001',
-                        baseProduct: '1',
-                        quantity: 1,
-                        price: 99.90,
-                    },
-                    {
-                        sku: '0004',
-                        baseProduct: '1',
-                        quantity: 2,
-                        price: 79.90,
-                    },
-                    {
-                        sku: '0008',
-                        baseProduct: '1',
-                        quantity: 1,
-                        price: 89.90,
-                    }
-                ],
-                id: 1,
-                totalQuantity: 4,
-                totalPrice: 349.60,
-                currency: 'BRL',
-            },
-            wishlist: {
-                items: ['1'],
-                quantity: 2,
-            }
+            logged: 'false'
         },
         product: {
             baseProduct: '1',
@@ -82,12 +50,12 @@ export async function getProductInfo(req, res) {
         }
     }
 
-    res.render('product', { data })
+    // res.render('product', { data })
+    return data;
 }
 
 //Mock de dados para obtencao de dado sobre variante especifica (clique em cor ou tamanho diferente na pagina de produto especifico)
-export async function updateProductVariantData(req, res) {
-    const sku = req.params.id
+export async function updateProductVariantDataMock(sku) {
     const type = req.query.type
     const baseProduct = '1'
 
@@ -271,32 +239,14 @@ export async function updateProductVariantData(req, res) {
     const variantData = productVariants.find(variant => variant.sku === sku);
 
     if (!variantData) {
-        return res.status(404).json({ message: 'Invalid SKU or variant not found.' });
+        return false
     }
-    return res.status(200).json(variantData);
+    return variantData;
 }
 
 //Mock de dados para listagem de produtos
 export async function getProducts(req, res) {
     const data = {
-        user: {
-            // id: 1,
-            // name: 'João',
-            logged: 'false',
-            // cart: {
-            //     items: [
-            //         {
-            //             sku: '0001',
-            //             baseProduct: '1',
-            //             quantity: 1,
-            //             price: 99.90,
-            //         }],
-            //     id: 1,
-            //     totalQuantity: 1,
-            //     totalPrice: 99.90,
-            //     currency: 'BRL',
-            // }
-        },
         products: [
             {
                 id: '1',
@@ -371,17 +321,9 @@ export async function getProducts(req, res) {
             // Adicione mais produtos conforme necessário
         ],
         pagination: {
-            currentPage: 1, // Página atual
-            totalPages: 5, // Total de páginas
-            itemsPerPage: 10 // Itens por página
-        },
-        filters: {
-            priceRange: {
-                min: 0,
-                max: 200
-            },
-            categories: ['masculino', 'feminino', 'acessórios'], // Filtro por categorias
-            onSaleOnly: false // Filtro para apenas itens em promoção
+            currentPage: 1,
+            totalPages: 1,
+            itemsPerPage: 10
         },
         page: {
             breadcrums: [
@@ -391,7 +333,8 @@ export async function getProducts(req, res) {
             title: 'Resultado da busca por: Camisetas Masculinas',
             quantResults: 50,
         }
-    };
+    }
+    return data;
 
-    res.render('productsList', { data });
+    // res.render('productsList', { data });
 }

@@ -31,21 +31,21 @@
           </div>
 
           <!-- Botões de Login/Carrinho -->
-          <div class="flex flex-shrink-0 justify-center items-center mx-auto ml-5">
-            <% if(data.user.logged=='true' ){ %>
+          <div id="userControlsContainer" class="flex flex-shrink-0 justify-center items-center mx-auto ml-5">
+            <% if(data.user?.logged=='true' ){ %>
               <div class="md:hidden relative">
                 <button id="menuUserOptionsSmallScreen">
                   <img src="/public/images/icons/menu_icon_white.svg" alt="menuIcon" class="w-8 h-8 mx-auto">
                 </button>
                 <div id="userOptionsDropdown"
                   class="hidden md:hidden absolute right-0 mt-2 p-4 w-36 bg-black shadow-lg min-h-fit">
-                  <a href="/carrinho" class="block pb-2 text-white menuItem w-fit">Carrinho</a>
+                  <a href="/cart" class="block pb-2 text-white menuItem w-fit">Carrinho</a>
                   <a href="/user/favorites" class="block py-2 text-white menuItem w-fit">Favoritos</a>
                   <a href="/user/profile" class="block pt-2 text-white menuItem w-fit">Perfil</a>
                 </div>
               </div>
               <div class="hidden md:flex relative space-x-6 ">
-                <a href="/carrinho" class="relative inline-block">
+                <a href="/cart" class="relative inline-block">
                   <img id="cartIcon" src="/public/images/icons/shopping_cart_icon.svg" alt="Carrinho" class="w-8 h-8">
                   <span id="cartNumber"
                     class="hidden absolute top-0 right-0 transform -translate-x-1/2 -translate-y-1/2 bg-white text-black font-bold rounded-full w-4 h-4 flex items-center justify-center text-xs"></span>

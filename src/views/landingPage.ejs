@@ -24,10 +24,10 @@
             <script>
                 // Obtem os dados enviados do backend e converte para JSON
                 const data = JSON.parse('<%- JSON.stringify(data) %>');
-                if (!data || !data.product || !data.user) {
-                    console.error('Dados incompletos.');
-                    window.location.href = "/error";
-                }
+                // if (!data) {
+                //     console.error('Dados incompletos.');
+                //     window.location.href = "/error";
+                // }
                 // Separa os dados em variáveis
                 const user = data.user;
                 const cart = data.user.cart || {};

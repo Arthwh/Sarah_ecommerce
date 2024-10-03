@@ -31,22 +31,45 @@ function toggleRegisterModal() {
     }
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-    formLogin.onsubmit = (event) => {
-        event.preventDefault(); // Impede o envio do formulário
-        if (!validateLoginData()) {
-            return;
+async function login() {
+    if (!validateLoginData()) {
+        console.log("Erro: dados de login inválidos");
+        return;
+    }
+    // Capturar os dados do formulário
+    const formData = new FormData(formLogin);
+    console.log(formData);
+    const loginData = Object.fromEntries(formData.entries());
+    console.log(loginData.loginEmail)
+    try {
+        const response = await fetch(`/api/login`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body:
+                JSON.stringify({
+                    email: loginData.loginEmail,
+                    password: loginData.loginPassword
+                })
+        });
+        if (!response.ok) {
+            throw new Error(`Erro HTTP: ${response.status}`);
         }
-        formLogin.submit();
-    };
-    formRegister.onsubmit = (event) => {
-        event.preventDefault(); // Impede o envio do formulário
-        if (!validateRegisterData()) {
-            return;
-        };
-        formRegister.submit();
-    };
-});
+        const data = await response.json();
+        console.log("Login bem-sucedido:", data);
+        editHeaderWithUserInfo(data.user);
+        toggleRegisterModal();
+        toggleLoginModal();
+    } catch (error) {
+        console.error('Erro no login:', error);
+        alert('Erro no login. Verifique suas credenciais.');
+    }
+}
+
+function register() {
+
+}
 
 function validateLoginData() {
     const email = document.getElementById('loginEmail').value;

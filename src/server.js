@@ -28,7 +28,7 @@ app.use(session({
 
 //Configura os arquivos de rotas
 app.use('/api', userRoutes)
-app.use(productRoutes);
+app.use('/api', productRoutes);
 
 app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`);

@@ -7,11 +7,11 @@ class ProductService {
     }
 
     static async listProducts() {
-        return await getProducts(); // Ou ProductModel.getAllProducts();
+        return await ProductModel.getAllProducts();
     }
 
     static async getProduct() {
-        return await getProductInfo(); // Ou ProductModel.getProductById(id);
+        return await ProductModel.getProductById(id);
     }
 
     static async updateProductVariantData(sku) {

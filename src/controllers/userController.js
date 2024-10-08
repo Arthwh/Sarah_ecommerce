@@ -67,31 +67,21 @@ class UserController {
     static async login(req, res) {
         try {
             const { email, password } = req.body;
-            console.log(email);
-            console.log(password)
-            const user = { id: 1, email: email };
-            req.session.user = { id: user.id, email: user.email };
-            return res.status(200).json({
-                message: "Sucesso!", user: {
-                    id: user.id, email: user.email
-                }
-            })
-            // const user = await UserModel.getUserByEmail(email);
-            // if (!user) {
-            //     return res.status(401).send('Usuário não encontrado');
-            // }
-            // const match = await bcrypt.compare(password, user.password);
-            // if (match) {
-            //     // Se a senha estiver correta, armazena o usuário na sessão
-            //     req.session.user = { id: user.id, email: user.email };
-            //     return res.redirect(req.get('referer') || '/');
-            // } else {
-            //     return res.status(401).send('Usuário ou senha inválidos');
-            // }
+            const user = await UserModel.getUserByEmail(email);
+            if (!user) {
+                return res.status(401).json({ error: 'Usuário não encontrado' });
+            }
+            const match = await bcrypt.compare(password, user.password);
+            if (match) {
+                req.session.user = { id: user.id, email: user.email };
+                return res.json({ user: { id: user.id, email: user.email } });
+            } else {
+                return res.status(401).json({ error: 'Usuário ou senha inválidos' });
+            }
         } catch (error) {
+            console.log(error);
             res.status(500).json({ error: 'Erro ao logar' });
         }
-
     }
 
     static async logout(req, res) {

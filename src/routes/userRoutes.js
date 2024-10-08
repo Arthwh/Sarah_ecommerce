@@ -9,7 +9,7 @@ router.post('/logout', checkAuth, UserController.logout);
 router.get('/users', checkAuth, UserController.listUsers);
 router.get('/users/:id', checkAuth, UserController.getUser);
 router.get('/users/email/:email', checkAuth, UserController.getUserByEmail);
-router.post('/users', UserController.createUser);
+router.post('/register', UserController.createUser);
 router.put('/users/:id', checkAuth, UserController.updateUser);
 router.delete('/users/:id', checkAuth, UserController.deleteUser);
 

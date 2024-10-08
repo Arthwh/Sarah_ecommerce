@@ -1,10 +1,9 @@
-import UserModel from '../models/userModel.js';
-import bcrypt from 'bcrypt'
+import UserService from './userService.js';
 
 class UserController {
     static async listUsers(req, res) {
         try {
-            const users = await UserModel.getAllUsers();
+            const users = await UserService.listUsers();
             res.json(users);
         } catch (error) {
             res.status(500).json({ error: 'Erro ao listar usuários' });
@@ -13,7 +12,7 @@ class UserController {
 
     static async getUser(req, res) {
         try {
-            const user = await UserModel.getUserById(req.params.id);
+            const user = await UserService.getUser(req.params.id);
             if (!user) return res.status(404).json({ error: 'Usuário não encontrado' });
             res.json(user);
         } catch (error) {
@@ -22,10 +21,8 @@ class UserController {
     }
 
     static async getUserByEmail(req, res) {
-        console.log('Teste1')
         try {
-            const user = await UserModel.getUserByEmail(req.params.email);
-            console.log(user.password)
+            const user = await UserService.getUserByEmail(req.params.email);
             if (!user) return res.status(404).json({ error: 'Usuário não encontrado' });
             res.json(user);
         } catch (error) {
@@ -35,8 +32,7 @@ class UserController {
 
     static async createUser(req, res) {
         try {
-            const { name, email, password, role = 1, phone_number_1, phone_number_2, birthdate, gender, cpf, created_at, updated_at, is_active } = req.body;
-            const newUser = await UserModel.createUser({ name, email, password, role, phone_number_1, phone_number_2, birthdate, gender, cpf, created_at, updated_at, is_active });
+            const newUser = await UserService.createUser(req.body);
             res.status(201).json(newUser);
         } catch (error) {
             res.status(500).json({ error: 'Erro ao criar usuário' });
@@ -45,8 +41,7 @@ class UserController {
 
     static async updateUser(req, res) {
         try {
-            const { name, email, password, role, phone_number_1, phone_number_2, birthdate, gender, cpf, created_at, updated_at, is_active } = req.body;
-            const updatedUser = await UserModel.updateUser(req.params.id, { name, email, password, role, phone_number_1, phone_number_2, birthdate, gender, cpf, created_at, updated_at, is_active });
+            const updatedUser = await UserService.updateUser(req.params.id, req.body);
             if (!updatedUser) return res.status(404).json({ error: 'Usuário não encontrado' });
             res.json(updatedUser);
         } catch (error) {
@@ -56,7 +51,7 @@ class UserController {
 
     static async deleteUser(req, res) {
         try {
-            const deletedUser = await UserModel.deleteUser(req.params.id);
+            const deletedUser = await UserService.deleteUser(req.params.id);
             if (!deletedUser) return res.status(404).json({ error: 'Usuário não encontrado' });
             res.json({ message: 'Usuário deletado com sucesso' });
         } catch (error) {
@@ -67,19 +62,13 @@ class UserController {
     static async login(req, res) {
         try {
             const { email, password } = req.body;
-            const user = await UserModel.getUserByEmail(email);
+            const user = await UserService.login(email, password);
             if (!user) {
-                return res.status(401).json({ error: 'Usuário não encontrado' });
-            }
-            const match = await bcrypt.compare(password, user.password);
-            if (match) {
-                req.session.user = { id: user.id, email: user.email };
-                return res.json({ user: { id: user.id, email: user.email } });
-            } else {
                 return res.status(401).json({ error: 'Usuário ou senha inválidos' });
             }
+            req.session.user = { id: user.id, email: user.email };
+            res.json({ user: { id: user.id, email: user.email } });
         } catch (error) {
-            console.log(error);
             res.status(500).json({ error: 'Erro ao logar' });
         }
     }

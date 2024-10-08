@@ -1,63 +1,59 @@
-import ProductModel from '../models/productModel.js';
-import { getProducts, updateProductVariantDataMock, getProductInfo } from '../controllers/mockProductData.js'
+import ProductService from './productService.js';
 
 class ProductController {
-    static async getLangingPage(req, res) {
-
-        const data = {}
-        res.render('landingPage', { data });
+    static async getLandingPage(req, res) {
+        try {
+            const data = await ProductService.getLandingPageData();
+            res.render('landingPage', { data });
+        } catch (error) {
+            res.status(500).json({ error: 'Erro ao carregar a página inicial' });
+        }
     }
 
     static async listProducts(req, res) {
         try {
-            // const products = await ProductModel.getAllProducts();
-            const data = await getProducts()
-            console.log(data)
+            const data = await ProductService.listProducts();
             res.render('productsList', { data });
         } catch (error) {
-            res.status(500).json({ error: 'Erro ao listar itens' });
+            res.status(500).json({ error: 'Erro ao listar produtos' });
         }
     }
 
     static async getProduct(req, res) {
         try {
-            // const products = await ProductModel.getProductById(req.params.id);
-            // if (!products) return res.status(404).json({ error: 'Produto não encontrado' });
-            const data = await getProductInfo();
+            const data = await ProductService.getProduct();
             res.render('product', { data });
-            // res.json(products);
         } catch (error) {
-            res.status(500).json({ error: 'Erro ao buscar products' });
+            res.status(500).json({ error: 'Erro ao buscar produto' });
         }
     }
 
     static async updateProductVariantData(req, res) {
         try {
-            const sku = req.params.id
-            const data = await updateProductVariantDataMock(sku);
+            const sku = req.params.id;
+            const data = await ProductService.updateProductVariantData(sku);
             if (data) {
                 res.status(200).json(data);
+            } else {
+                res.status(404).json({ error: 'Produto não encontrado' });
             }
-            res.status(404).json({ error: 'Produto não encontrado' });
         } catch (error) {
-            res.status(500).json({ error: 'Erro ao listar itens' });
+            res.status(500).json({ error: 'Erro ao atualizar dados da variante do produto' });
         }
     }
 
     static async createProduct(req, res) {
         try {
-            const { brand_id, name, description, unit_price, total_stock_quantity, created_at, updated_at, is_active } = req.body;
-            const newProduct = await ProductModel.createProduct({ brand_id, name, description, unit_price, total_stock_quantity, created_at, updated_at, is_active });
+            const newProduct = await ProductService.createProduct(req.body);
             res.status(201).json(newProduct);
         } catch (error) {
-            res.status(500).json({ error: 'Erro ao criar products', error });
+            res.status(500).json({ error: 'Erro ao criar produto' });
         }
     }
 
     static async updateProduct(req, res) {
         try {
-            const { brand_id, name, description, unit_price, total_stock_quantity, created_at, updated_at, is_active } = req.body;
-            const updatedProduct = await ProductModel.updateProduct(req.params.id, { brand_id, name, description, unit_price, total_stock_quantity, created_at, updated_at, is_active });
+            const updatedProduct = await ProductService.updateProduct(req.params.id, req.body);
             if (!updatedProduct) return res.status(404).json({ error: 'Produto não encontrado' });
             res.json(updatedProduct);
         } catch (error) {
@@ -67,7 +63,7 @@ class ProductController {
 
     static async deleteProduct(req, res) {
         try {
-            const deletedProduct = await ProductModel.deleteProduct(req.params.id);
+            const deletedProduct = await ProductService.deleteProduct(req.params.id);
             if (!deletedProduct) return res.status(404).json({ error: 'Produto não encontrado' });
             res.json({ message: 'Produto deletado com sucesso' });
         } catch (error) {

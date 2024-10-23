@@ -1,5 +1,5 @@
 <!-- Header -->
-<div id="headerContent">
+<div id="headerContent" class="z-10">
   <%- include('../partials/headerComponents/_promotionHeader') %>
     <header class="bg-black text-white shadow-lg flex block items-center">
       <div class="container mx-auto py-4 px-6 flex flex-col cols-1 lg:flex-row lg:cols-2 items-center">
@@ -18,8 +18,7 @@
           <!-- Barra de Pesquisa -->
           <div id="searchBar" class="relative w-full md:flex-grow md:mx-auto">
             <form action="/search">
-              <input type="text" placeholder="Buscar produtos..."
-                class="w-full h-10 px-4 py-1 rounded-lg text-black pr-10">
+              <input type="text" placeholder="Buscar produtos..." class="w-full h-10 px-4 py-1 text-black pr-10">
               <button type="submit" class="absolute inset-y-0 right-0 flex items-center px-4 text-black">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
                   stroke="currentColor">
@@ -46,16 +45,27 @@
               </div>
               <div class="hidden md:flex relative space-x-6 ">
                 <a href="/cart" class="relative inline-block">
-                  <img id="cartIcon" src="/public/images/icons/shopping_cart_icon.svg" alt="Carrinho" class="w-8 h-8">
+                  <img id="cartIcon" src="/public/images/icons/shopping_cart_icon.svg" title="Carrinho" alt="Carrinho"
+                    class="w-8 h-8">
                   <span id="cartNumber"
                     class="hidden absolute top-0 right-0 transform -translate-x-1/2 -translate-y-1/2 bg-white text-black font-bold rounded-full w-4 h-4 flex items-center justify-center text-xs"></span>
                 </a>
                 <a href="/user/favorites" class="relative inline-block">
-                  <img id="favoriteIcon" src="/public/images/icons/favorite_icon.svg" alt="Favoritos" class="w-8 h-8">
+                  <img id="favoriteIcon" src="/public/images/icons/favorite_icon.svg" title="Favoritos" alt="Favoritos"
+                    class="w-8 h-8">
                 </a>
                 <a href="/user/profile" class="relative inline-block">
-                  <img id="userIcon" src="/public/images/icons/user_icon.svg" alt="Perfil" class="w-8 h-8">
+                  <img id="userIcon" src="/public/images/icons/user_icon.svg" title="Configurações do usuário"
+                    alt="Perfil" class="w-8 h-8">
                 </a>
+                <% if(data.user?.role=='admin' ){ %>
+                  <a href="/admin" class="relative inline-block group">
+                    <img id="userIcon" src="/public/images/icons/admin_panel_settings_icon_border_white.svg"
+                      title="Painel administrativo" alt="Perfil" class="w-8 h-8 group-hover:hidden">
+                    <img id="userIcon" src="/public/images/icons/admin_panel_settings_icon_fill_white.svg"
+                      title="Painel administrativo" alt="Perfil" class="w-8 h-8 hidden group-hover:block">
+                  </a>
+                  <% } %>
               </div>
               <% } else { %>
                 <button onclick="toggleLoginModal()" class="menuItem">Entre ou cadastre-se</button>

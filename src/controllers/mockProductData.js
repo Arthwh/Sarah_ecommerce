@@ -2,7 +2,8 @@
 export async function getProductInfo(req, res) {
     const data = {
         user: {
-            logged: 'false'
+            logged: 'true',
+            role: 'admin'
         },
         product: {
             baseProduct: '1',
@@ -41,7 +42,7 @@ export async function getProductInfo(req, res) {
             ]
         },
         page: {
-            breadcrums: [
+            breadcrumbs: [
                 { name: 'Início', url: '/' },
                 { name: 'Masculino', url: '/masculino' },
                 { name: 'Camisetas', url: '/masculino/camisetas' },
@@ -56,12 +57,12 @@ export async function getProductInfo(req, res) {
 
 //Mock de dados para obtencao de dado sobre variante especifica (clique em cor ou tamanho diferente na pagina de produto especifico)
 export async function updateProductVariantDataMock(sku) {
-    const type = req.query.type
-    const baseProduct = '1'
+    // const type = req.query.type
+    // const baseProduct = '1'
 
-    if (!type || !sku || !baseProduct) {
-        return res.status(400).json({ message: 'Missing required parameters.' });
-    }
+    // if (!type || !sku || !baseProduct) {
+    //     return res.status(400).json({ message: 'Missing required parameters.' });
+    // }
     const productVariants = [
         // Preto - Tamanho P
         {
@@ -326,7 +327,7 @@ export async function getProducts(req, res) {
             itemsPerPage: 10
         },
         page: {
-            breadcrums: [
+            breadcrumbs: [
                 { name: 'Início', url: '/' },
                 { name: 'Resultado da pesquisa para: Camiseta Masculina', url: '/products/search?searchParams=camiseta-masculina' },
             ],

@@ -1,0 +1,160 @@
+/* Estilos gerais do card do produto */
+.product-card {
+    background-color: #fff;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: box-shadow 0.5s ease-in-out;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.product-card:hover {
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Estilos para as imagens */
+.product-image-wrapper {
+    position: relative;
+    width: 100%;
+}
+
+.product-images {
+    width: 100%;
+}
+
+.product-image-default,
+.product-image-hover {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    transition: opacity 0.5s ease-in-out;
+}
+
+.product-image-hover {
+    display: none;
+}
+
+.product-image-wrapper:hover .product-image-default {
+    display: none;
+}
+
+.product-image-wrapper:hover .product-image-hover {
+    display: block;
+}
+
+/* Botão de adicionar ao carrinho */
+.cart-button-wrapper {
+    display: none;
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    z-index: 10;
+}
+
+.add-to-cart-button {
+    width: 100%;
+    background-color: #fff;
+    color: #000;
+    border: 1px solid #000;
+    font-weight: bold;
+    padding: 0.5rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out;
+}
+
+.add-to-cart-button:hover {
+    background-color: #000;
+    color: #fff;
+}
+
+/* Botão de favoritos */
+.wishlist-button-wrapper {
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 10;
+    padding: 0.5rem;
+}
+
+.favorite-icon {
+    width: 32px;
+    height: 32px;
+}
+
+.favorite-icon-hover {
+    width: 32px;
+    height: 32px;
+    display: none;
+}
+
+.favorite-btn:hover .favorite-icon {
+    display: none;
+}
+
+.favorite-btn:hover .favorite-icon-hover {
+    display: block;
+}
+
+/* Exibir os botões ao passar o mouse sobre o card */
+.product-image-wrapper:hover .cart-button-wrapper,
+.product-image-wrapper:hover .wishlist-button-wrapper {
+    display: block;
+}
+
+/* Estilos para as informações do produto */
+.product-info-link {
+    display: block;
+    width: 100%;
+    text-align: center;
+    padding: 1rem;
+    flex-grow: 3;
+}
+
+.product-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100%;
+}
+
+.product-name {
+    font-size: 1rem;
+    color: #333;
+    min-height: 48px;
+    margin-bottom: 0.5rem;
+}
+
+.product-price {
+    font-size: 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: auto;
+    padding-bottom: 5px;
+}
+
+/* Preço em promoção */
+.price-old {
+    text-decoration: line-through;
+    color: #333;
+}
+
+.price-new {
+    color: #e60000;
+    font-weight: bold;
+    font-size: 1.25rem;
+}
+
+/* Preço sem promoção */
+.price-current {
+    color: #333;
+    font-weight: bold;
+    font-size: 1.25rem;
+}
+
+.price-installments {
+    color: #333;
+    font-size: 0.875rem;
+}

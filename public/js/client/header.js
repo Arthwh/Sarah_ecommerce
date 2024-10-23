@@ -1,4 +1,4 @@
-const cartCount = cart.totalQuantity || 0;
+const cartCount = cart?.totalQuantity || 0;
 
 
 document.addEventListener("DOMContentLoaded", () => {

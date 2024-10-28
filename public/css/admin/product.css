@@ -1,0 +1,41 @@
+.placeholderSelect{
+    color: grey;
+    opacity: 0.5;
+}
+
+.inputImages-box{
+    position: relative;
+}
+
+body.modal-open {
+    overflow: hidden;
+}
+
+#variantModalContent{
+    max-height: 90%;
+    overflow-y: auto;
+    width: 400px;
+}
+
+#previewImagesContainer {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr); /* 5 colunas fixas */
+    gap: 10px; /* Espaçamento entre os itens */
+    justify-items: center;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th, td {
+    text-align: center;
+    vertical-align: middle;
+    padding: 10px;
+}
+
+th{
+    background-color: black;
+    color: white;
+}

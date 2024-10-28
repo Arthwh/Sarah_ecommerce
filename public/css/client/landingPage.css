@@ -1,0 +1,130 @@
+/* Banner Section */
+.banner-section {
+    position: relative;
+    width: 100%;
+    max-height: 550px;
+    background-color: #e9ecef;
+    overflow: hidden;
+    margin-bottom: 40px;
+    display: flex;
+    overflow-x: hidden;
+    flex-wrap: nowrap;
+}
+
+.banner-section img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    flex-shrink: 0;
+}
+
+/* Ocultar todos os banners inicialmente */
+.bannerDiv {
+    display: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+}
+
+/* Mostrar apenas o banner ativo */
+.bannerDiv[data-active="true"] {
+    display: block;
+    position: relative;
+}
+
+.banner_image_large {
+    width: 100%;
+    display: none;
+}
+
+.banner_image_small {
+    width: 100%;
+    display: block;
+}
+
+.banner_button{
+    display: none;
+    position: absolute;
+    font-family: roboto, sans-serif;
+    min-width: fit-content;
+    width: 15%;
+    text-align: center;
+    font-weight: bold;
+    top: 85%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 10px;
+    font-size: small;
+    color: black;
+    background-color: #FFF;
+    box-sizing: border-box;
+}
+
+.banner_button:hover{
+    color: white;
+    background-color: black;
+}
+
+/* Exibir a imagem grande para telas maiores */
+@media (min-width: 768px) {
+    .banner_image_large {
+        display: block;
+    }
+    .banner_image_small {
+        display: none;
+    }
+    .banner_button{
+        display: block;
+    }
+}
+
+/* Highlight Section */
+.highlight-section {
+    max-width: 90%;
+    margin-inline: auto;
+    max-height: 600px;
+    object-fit: cover;
+    background-color: #fff;
+    padding: 20px, 0px;
+    margin-bottom: 40px;
+    text-align: center;
+    position: relative;
+}
+
+.highlightCarousel{
+    align-items: stretch;
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 15px;
+    overflow: hidden;
+    scroll-behavior: smooth;
+}
+
+.highlightCarousel .product-card{
+    min-width: 225px;
+    justify-content: space-between;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 3;
+    height: 430px;
+}
+
+
+/* Grid Section */
+.grid-section {
+    background-color: #f1f3f5;
+    max-width: 90%;
+    margin-inline: auto;
+    max-height: fit-content;
+    object-fit: cover;
+    padding: 20px;
+    margin-bottom: 40px;
+    text-align: center;
+}
+
+.highlight-section h2, .grid-section h2 {
+    font-family: Lato, sans-serif;
+    font-size: 1.2rem;
+    margin-bottom: 15px;
+}

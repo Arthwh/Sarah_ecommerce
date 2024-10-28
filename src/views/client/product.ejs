@@ -9,33 +9,30 @@
   </title>
   <link href="/public/css/pagePattern.css" rel="stylesheet">
   <link href="/public/css/tailwind/style.css" rel="stylesheet">
+  <link href="/public/css/client/carouselControllStyles.css" rel="stylesheet">
 </head>
 
 <body>
   <!-- Header -->
   <%- include('partials/_header') %>
     <main class="container mx-auto py-10 w-full xl:w-4/5 h-full flex-grow">
-      <!-- Breadcrums -->
-      <%- include('partials/_breadcrums') %>
+      <!-- Breadcrumbs -->
+      <%- include('partials/_breadcrumbs') %>
 
         <div class="flex flex-col lg:grid lg:grid-cols-3 lg:grid-flow-col-dense xl:grid-cols-5 gap-8 mt-10">
           <!-- Imagens do produto -->
-          <div class="w-full max-h-4/5 lg:flex lg:col-span-2 xl:col-span-3 lg:flex-row">
+          <div class="relative w-full max-h-4/5 lg:flex lg:col-span-2 xl:col-span-3 lg:flex-row">
 
             <!-- Carrossel para telas pequenas -->
             <div class="lg:hidden overflow-hidden shadow-lg flex cols-3 h-full">
               <!-- Botões de Controle do Carrossel (Telas Pequenas) -->
-              <button type="button" class="lg:hidden flex items-center justify-center min-h-full cursor-pointer"
-                onclick="prevImage()">
-                <span
-                  class="inline-flex items-center justify-center w-8 h-full bg-white/70 shadow-2xl hover:border border-gray-500">
-                  <svg class="w-4 h-4 text-gray-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
-                    viewBox="0 0 6 10">
-                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"
-                      d="M5 1 1 5l4 4" />
-                  </svg>
-                  <span class="sr-only">Anterior</span>
-                </span>
+              <button type="button" onclick="prevImage()" class="carousel-control prev">
+                <img class="prevBlack" src="/public/images/icons/arrow_prev_icon_black.svg" alt="previous">
+                <img class="prevWhite" src="/public/images/icons/arrow_prev_icon_white.svg" alt="previous">
+              </button>
+              <button type="button" onclick="nextImage()" class="carousel-control next">
+                <img class="forwBlack" src="/public/images/icons/arrow_forward_icon_black.svg" alt="next">
+                <img class="forwWhite" src="/public/images/icons/arrow_forward_icon_white.svg" alt="next">
               </button>
               <div
                 class="lg:flex lg:flex-col lg:flex-nowrap lg:space-y-2 lg:overflow-y-auto overflow-hidden block lg:hidden">
@@ -46,19 +43,6 @@
                   </div>
                 </div>
               </div>
-              <!-- Botão Próximo -->
-              <button type="button" class="lg:hidden flex items-center justify-center min-h-full cursor-pointer"
-                onclick="nextImage()">
-                <span
-                  class="inline-flex items-center justify-center w-8 h-full bg-white/70 shadow-2xl hover:border border-gray-500">
-                  <svg class="w-4 h-4 text-gray-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
-                    viewBox="0 0 6 10">
-                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"
-                      d="m1 9 4-4-4-4" />
-                  </svg>
-                  <span class="sr-only">Próximo</span>
-                </span>
-              </button>
             </div>
 
             <!-- Container Principal para Imagem e Miniaturas -->
@@ -217,10 +201,10 @@
         const variants = data.product.variants;
         const page = data.page
       </script>
-      <script src="/public/js/categoryAsideMenu.js"></script>
-      <script src="/public/js/header.js"></script>
-      <script src="/public/js/loginAndRegister.js"></script>
-      <script src="/public/js/product.js"></script>
+      <script src="/public/js/client/categoryAsideMenu.js"></script>
+      <script src="/public/js/client/header.js"></script>
+      <script src="/public/js/client/loginAndRegister.js"></script>
+      <script src="/public/js/client/product.js"></script>
 </body>
 
 </html>

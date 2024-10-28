@@ -1,4 +1,4 @@
-const cartCount = cart.totalQuantity || 0;
+const cartCount = cart?.totalQuantity || 0;
 
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -43,7 +43,7 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 function addListenersToUserButtons(cartCount) {
-    const cartIcon = document.getElementById('cartIcon')
+    const cartIcon = document.getElementById('cartIcon');
     const favoriteIcon = document.getElementById('favoriteIcon');
     const userIcon = document.getElementById('userIcon');
     setCartCount(cartCount);
@@ -111,5 +111,5 @@ function editHeaderWithUserInfo(userData) {
                 </a>
               </div>`;
 
-    addListenersToUserButtons(user.cart.count || 0)
+    addListenersToUserButtons(cartCount || 0)
 }

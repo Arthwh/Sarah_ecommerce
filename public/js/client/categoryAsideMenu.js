@@ -1,5 +1,21 @@
 var activeSubmenu = ''
 
+//Função para alterar a cor (imagem) da seta dos menus no hover
+document.addEventListener("DOMContentLoaded", () => {
+    const categories = document.querySelectorAll('.category');
+    categories.forEach(category => {
+        const arrow = category.nextElementSibling
+        if (arrow) {
+            category.addEventListener('mouseover', () => {
+                arrow.src = '/public/images/icons/arrow_right_icon_E9C495.svg';
+            });
+            category.addEventListener('mouseout', () => {
+                arrow.src = '/public/images/icons/arrow_right_icon_white.svg';
+            });
+        }
+    });
+});
+
 // Função para alternar a exibição dos submenus de categorias
 function toggleSubmenu(id) {
     const submenuContainter = document.getElementById('submenuContainer')
@@ -36,18 +52,4 @@ function closeCategoriesMenu() {
     document.getElementById('categoriesOverlay').classList.add('hidden');
 }
 
-//Função para alterar a cor (imagem) da seta dos menus no hover
-document.addEventListener("DOMContentLoaded", () => {
-    const categories = document.querySelectorAll('.category');
-    categories.forEach(category => {
-        const arrow = category.nextElementSibling
-        if (arrow) {
-            category.addEventListener('mouseover', () => {
-                arrow.src = '/public/images/icons/arrow_right_icon_E9C495.svg';
-            });
-            category.addEventListener('mouseout', () => {
-                arrow.src = '/public/images/icons/arrow_right_icon_white.svg';
-            });
-        }
-    });
-});
+

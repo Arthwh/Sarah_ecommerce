@@ -1,0 +1,60 @@
+<div id="gridSection_<%= component.id %>" class="grid-section">
+    <h2>
+        <%= component.title %>
+    </h2>
+    <div class="overflow-auto grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+        <% data.grid_items.forEach(item=> { %>
+            <% if (item.landing_page_component_id===component.id && item.is_active) { %>
+                <div class="product-card">
+                    <div class="product-image-wrapper">
+                        <!-- Link e imagens do produto -->
+                        <a href="<%= item.product.url %>" class="product-link">
+                            <div class="product-images">
+                                <!-- Primeira imagem (imagem padrão) -->
+                                <img src="<%= item.product.images[0] %>" alt="<%= item.product.name %>"
+                                    class="product-image-default">
+                                <!-- Segunda imagem (imagem ao hover) -->
+                                <img src="<%= item.product.images[1] %>" alt="<%= item.product.name %>"
+                                    class="product-image-hover">
+                            </div>
+                        </a>
+                        <!-- Botão de favoritos -->
+                        <div class="wishlist-button-wrapper">
+                            <button onclick="addItemToWishlist('<%= item.product.sku %>')" class="favorite-btn">
+                                <img src="/public/images/icons/favorite_icon_border_black.svg" alt="Favoritar"
+                                    class="favorite-icon">
+                                <img src="/public/images/icons/favorite_icon_fill_black.svg" alt="Favoritado"
+                                    class="favorite-icon-hover">
+                            </button>
+                        </div>
+                    </div>
+                    <!-- Nome e Preço do Produto -->
+                    <a href="<%= item.product.url %>" class="product-info-link">
+                        <div class="product-info">
+                            <h3 class="product-name">
+                                <%= item.product.name %>
+                            </h3>
+                            <div class="product-price">
+                                <% if (item.product.isOnSale) { %>
+                                    <span class="price-old">R$ <%= item.product.price %>
+                                    </span>
+                                    <span class="price-new">R$ <%= item.product.promoPrice %>
+                                    </span>
+                                    <% } else { %>
+                                        <span class="price-current">R$
+                                            <%= item.product.price %>
+                                        </span>
+                                        <% } %>
+                                            <span class="price-installments">
+                                                <%= item.product.installments %>
+                                                    x de
+                                                    R$ <%= item.product.installment_value %>*
+                                            </span>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <% } %>
+                    <% }); %>
+    </div>
+</div>

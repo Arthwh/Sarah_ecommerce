@@ -1,0 +1,162 @@
+<div class="w-full min-h-full">
+    <h2 class="text-2xl font-semibold text-center textColorYellow w-full bg-black p-4">Cadastro de Produto</h2>
+
+    <form id="productRegisterForm" onsubmit="createProduct(event)" class="p-4">
+        <div class="mb-4">
+            <h3 class="text-lg font-semibold mb-2">Nome do Produto</h3>
+            <input type="text" name="productName" id="productName" placeholder="Digite o nome do produto"
+                class="ring-black/20 w-full px-4 py-2 border border-gray-300 focus:outline-none focus:ring focus:border-black">
+            <span id="productNameError" class="text-sm hidden" style="color: red;"></span>
+        </div>
+
+        <div class="mb-4">
+            <h3 class="text-lg font-semibold mb-2">Descrição</h3>
+            <textarea name="productDescription" id="productDescription" placeholder="Descreva o produto"
+                class="ring-black/20 w-full px-4 py-2 border border-gray-300 focus:outline-none focus:ring focus:border-black"></textarea>
+            <span id="productDescriptionError" class="text-sm hidden" style="color: red;"></span>
+        </div>
+
+        <!-- Categorias -->
+        <div class="mb-4 flex flex-col">
+            <div class="flex space-x-2 mb-2">
+                <h3 id="categoryTitle" class="text-lg font-semibold w-1/2">Categoria / Subcategoria</h3>
+                <button id="addCategoryButton" type="button" onclick="addNewCategory()" class="mb-6 w-fit">
+                    <img src="/public/images/icons/add_icon_black.svg" alt="...">
+                </button>
+            </div>
+            <div id="categoriesAndSubcategoriesContent">
+                <div class="flex mb-2 space-x-2">
+                    <select name="category[]"
+                        class="flex-grow ring-black/20 w-1/2 px-4 py-2 border border-gray-300 focus:outline-none focus:ring focus:border-black">
+                        <!-- Opções de categorias carregadas do banco -->
+                        <option value="" disable selected class="placeholderSelect">Selecione uma categoria...</option>
+                    </select>
+                    <select name="subcategory[]"
+                        class="hidden flex-grow ring-black/20 w-1/2 px-4 py-2 border border-gray-300 focus:outline-none focus:ring focus:border-black">
+                    </select>
+                    <div class="group flex items-center flex-shrink-0">
+                        <button onclick="deleteCategory(this)">
+                            <img class="group-hover:hidden" src="/public/images/icons/delete_icon_border_black.svg"
+                                alt="trash">
+                            <img class="hidden group-hover:block" src="/public/images/icons/delete_icon_fill_black.svg"
+                                alt="trash">
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <span id="categoriesAndSubcategoriesError" class="text-sm hidden" style="color: red;"></span>
+        </div>
+
+
+        <!-- Marca -->
+        <div class="mb-4">
+            <h3 class="text-lg font-semibold mb-2">Marca</h3>
+            <select name="brand" id="brand"
+                class="ring-black/20 w-full px-4 py-2 border border-gray-300 focus:outline-none focus:ring focus:border-black">
+                <!-- Opções de marcas carregadas do banco -->
+                <option value="" disabled selected>Selecione uma marca...</option>
+                <option value="1">Marca 1</option>
+                <option value="2">Marca 2</option>
+                <option value="3">Marca 3</option>
+            </select>
+            <span id="productBrandError" class="text-sm hidden" style="color: red;"></span>
+        </div>
+
+        <!-- Variantes -->
+        <div class="w-full mb-2">
+            <div class="flex space-x-2">
+                <h3 class="text-lg font-semibold">Variantes</h3>
+                <button type="button" onclick="toggleVariantModal()" class="w-fit"><img
+                        src="/public/images/icons/add_icon_black.svg" alt="..."></button>
+            </div>
+            <table id="variantsDataTableContainer" class="hidden table-auto w-full border border-gray-300">
+                <thead>
+                    <tr>
+                        <th>Cor</th>
+                        <th>Tamanho</th>
+                        <th>Preço</th>
+                        <th>Imagens</th>
+                        <th>Editar</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+        <button type="submit"
+            class="w-full bg-black text-white py-2 mt-3 hover:bg-gray-800 transition-colors items-end">Cadastrar
+            Produto</button>
+    </form>
+    <div id="variantModal" class="hidden fixed flex inset-0 z-50 justify-center items-center max-h-4/5 overflow-auto">
+        <!-- Overlay -->
+        <div id="transparentVariantModalOverlay" class="absolute inset-0 bg-black bg-opacity-20"
+            onclick="toggleVariantModal()"></div>
+        <!-- Conteúdo do Modal -->
+        <div id="variantModalContent" class="bg-white shadow-lg z-10 overflow-y-scroll">
+            <h2 class="flex text-2xl font-semibold text-center textColorYellow w-full bg-black p-4">
+                <p class="flex-grow ml-6">Adicionar Variante</p>
+                <button onclick="toggleVariantModal()" class="text-right justify-end">
+                    <img src="/public/images/icons/close_icon_white.svg" alt="closeButton" class="w-6 h-6">
+                </button>
+            </h2>
+            <div class="flex flex-col space-y-4 p-6 mb-6 overflow-auto">
+                <!-- Preço -->
+                <div>
+                    <label for="variantPrice" class="block font-semibold">Preço</label>
+                    <input type="text" placeholder="R$ 0,00" oninput="formatPriceForInputField(this)" id="variantPrice"
+                        name="variantPrice" class="w-full p-2 border border-gray-300 rounded-md">
+                    <span id="variantPriceError" class="text-sm hidden" style="color: red;"></span>
+                </div>
+                <!-- Cor -->
+                <div>
+                    <label for="variantColor" class="block font-semibold">Cor</label>
+                    <input type="text" id="variantColor" name="variantColor"
+                        class="w-full p-2 border border-gray-300 rounded-md">
+                    <span id="variantColorError" class="text-sm hidden" style="color: red;"></span>
+                </div>
+                <!-- Tamanho -->
+                <div>
+                    <label for="variantSize" class="block font-semibold">Tamanho</label>
+                    <select id="variantSize" name="variantSize" class="w-full p-2 border border-gray-300 rounded-md">
+                        <option value="" selected disabled>Selecione o tamanho</option>
+                        <option value="PP">PP</option>
+                        <option value="P">P</option>
+                        <option value="M">M</option>
+                        <option value="G">G</option>
+                        <option value="GG">GG</option>
+                        <option value="XG">XG</option>
+                    </select>
+                    <span id="variantSizeError" class="text-sm hidden" style="color: red;"></span>
+                </div>
+                <!-- Checkbox para herdar imagem -->
+                <div class="items-center">
+                    <div class="flex">
+                        <input type="checkbox" id="inheritImage" name="inheritImage" class="mr-2"
+                            onchange="toggleImagesContainerOrInherit(this.checked)">
+                        <label for="inheritImage">Usar imagem de outra variante</label>
+                    </div>
+                    <div id="inheritVariantSelectContainer" class="hidden w-full bg-black p-2">
+                        <label for="inheritImageSelect" class="text-white">Herdar imagens de:</label>
+                        <select id="inheritImageSelect" name="inheritImageSelect" class="p-2 w-full">
+                            <option value="" disabled>Nenhuma</option>
+                        </select>
+                        <span id="inheritImageSelectError" class="text-sm hidden" style="color: red;"></span>
+                    </div>
+                    <div id="inputImagesContainer" class="space-y-2">
+                        <label for="variantImages" class="block font-semibold">Imagens</label>
+                        <input id="variantImages" type="file" name="variantImages" multiple class="inputImages w-full"
+                            onchange="addImagesPreview(this)">
+                        <span id="variantImagesError" class="text-sm hidden" style="color: red;"></span>
+                        <div id="previewImagesContainer" class="flex-grow-0 border border-black hidden"></div>
+                    </div>
+                </div>
+                <!-- Botões -->
+                <div class="flex justify-between p-6">
+                    <button type="button" onclick="saveVariant()" class="bg-black text-white px-4 py-2">Salvar</button>
+                    <button type="button" onclick="toggleVariantModal()"
+                        class="bg-white text-black border border-black px-4 py-2">Cancelar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

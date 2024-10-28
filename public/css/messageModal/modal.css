@@ -1,0 +1,84 @@
+/* Toast modal styles */
+.toast {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    /* background-color: #333; */
+    background-color: black;
+    color: #fff;
+    padding: 15px;
+    border-radius: 5px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.toast .toast-message {
+    margin-right: 10px;
+}
+
+.toast .toast-close {
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.toast.success {
+    border: 4px, solid, #28a745;
+}
+
+.toast.error {
+    border: 4px, solid, #dc3545;
+}
+
+/* Central modal styles */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background-color: #fff;
+    padding: 20px;
+    /* border-radius: 8px; */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    max-width: 400px;
+    width: 100%;
+}
+
+.modal-title {
+    margin-bottom: 10px;
+    font-size: 1.5em;
+}
+
+.modal-message {
+    margin-bottom: 20px;
+}
+
+.modal-close {
+    padding: 10px 20px;
+    background-color: black;
+    color: #fff;
+    border: 2px, solid, black;
+    /* border-radius: 5px; */
+    cursor: pointer;
+}
+
+.modal-close:hover {
+    background-color: #fff;
+    color: black;
+    box-sizing: border-box;
+}

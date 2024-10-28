@@ -7,14 +7,17 @@
     <title>Listagem de Produtos - SARAH</title>
     <link href="/public/css/pagePattern.css" rel="stylesheet">
     <link href="/public/css/tailwind/style.css" rel="stylesheet">
+    <link href="/public/css/messageModal/modal.css" rel="stylesheet">
+    <link href="/public/css/client/productCard.css" rel="stylesheet">
+
 </head>
 
 <body>
     <%- include('partials/_header') %>
 
         <main class="container mx-auto py-10 w-full px-5 xl:px-0 xl:w-full min-h-full items-center flex-grow">
-            <!-- Breadcrums -->
-            <%- include('partials/_breadcrums') %>
+            <!-- Breadcrumbs -->
+            <%- include('partials/_breadcrumbs') %>
                 <!-- titulo e botao de filtro -->
                 <div class="flex flex-col md:flex-row w-full mb-10 mx-auto justify-between items-center">
                     <!-- Titulo e quantidade de resultados -->
@@ -41,64 +44,56 @@
                 <!-- Filtros -->
 
                 <!-- Lista de Produtos -->
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6">
+                <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
                     <% data.products?.forEach(product=> { %>
-                        <div class="bg-white shadow-lg hover:shadow-xl transition-shadow h-full">
-                            <div class="hover:relative group w-full h-auto">
+                        <div class="product-card">
+                            <div class="product-image-wrapper">
                                 <!-- Link e imagens do produto -->
-                                <a href="<%= product.url %>" class="block h-full w-full">
-                                    <div class="w-full h-auto">
+                                <a href="<%= product.url %>" class="product-link">
+                                    <div class="product-images">
                                         <!-- Primeira imagem (imagem padrão) -->
                                         <img src="<%= product.images[0] %>" alt="<%= product.name %>"
-                                            class="w-full h-auto object-cover transition duration-500 ease-in-out group-hover:hidden">
+                                            class="product-image-default">
                                         <!-- Segunda imagem (imagem ao hover) -->
                                         <img src="<%= product.images[1] %>" alt="<%= product.name %>"
-                                            class="w-full h-auto object-cover hidden transition duration-500 ease-in-out group-hover:block">
+                                            class="product-image-hover">
                                     </div>
                                 </a>
 
                                 <!-- Botão adicionar ao carrinho -->
-                                <div class="hidden w-full group-hover:block absolute bottom-0 z-10">
-                                    <button onclick="addItemToCart('<%= product.sku %>')"
-                                        class="w-full bg-white text-black border border-black hover:bg-black hover:text-white font-bold p-2">
+                                <div class="cart-button-wrapper">
+                                    <button onclick="addItemToCart('<%= product.sku %>')" class="add-to-cart-button">
                                         Adicionar ao carrinho
                                     </button>
                                 </div>
 
                                 <!-- Botão de favoritos -->
-                                <div
-                                    class="hidden group-hover:block absolute top-0 left-0 z-10 p-2 flex flex-row items-center">
-                                    <button onclick="addItemToWishlist('<%= product.sku %>')"
-                                        class="favorite-btn relative">
+                                <div class="wishlist-button-wrapper">
+                                    <button onclick="addItemToWishlist('<%= product.sku %>')" class="favorite-btn">
                                         <img src="/public/images/icons/favorite_icon_border_black.svg" alt="Favoritar"
-                                            class="w-8 h-8 favorite-icon">
+                                            class="favorite-icon">
                                         <img src="/public/images/icons/favorite_icon_fill_black.svg" alt="Favoritado"
-                                            class="w-8 h-8 hidden favorite-icon-hover">
+                                            class="favorite-icon-hover">
                                     </button>
                                 </div>
                             </div>
 
                             <!-- Nome e Preço do Produto -->
-                            <a href="<%= product.url %>" class="block w-full">
-                                <div class="p-4 mb-2 text-center flex flex-col h-auto my-auto">
-                                    <h3 class="block text-md text-[#333333] mx-auto min-h-[48px]">
+                            <a href="<%= product.url %>" class="product-info-link">
+                                <div class="product-info">
+                                    <h3 class="product-name">
                                         <%= product.name %>
                                     </h3>
-                                    <div class="text-md items-end h-10 flex-grow flex-col">
-                                        <div>
-                                            <% if (product.isOnSale) { %>
-                                                <span class="line-through text-[#333333]">R$ <%= product.price %></span>
-                                                <span class="text-red-600 font-bold text-lg">R$ <%= product.promoPrice
-                                                        %>
-                                                </span>
-                                                <% } else { %>
-                                                    <span class="text-[#333333] text-lg font-bold">R$ <%= product.price
-                                                            %>
-                                                    </span>
-                                                    <% } %>
-                                        </div>
-                                        <span class="text-[#333333]">3x de <%= ((parseInt(product.promoPrice ||
-                                                product.price))/3).toFixed(2) %>*</span>
+                                    <div class="product-price">
+                                        <% if (product.isOnSale) { %>
+                                            <span class="price-old">R$ <%= product.price %></span>
+                                            <span class="price-new">R$ <%= product.promoPrice %></span>
+                                            <% } else { %>
+                                                <span class="price-current">R$ <%= product.price %></span>
+                                                <% } %>
+                                                    <span class="price-installments">3x de R$ <%=
+                                                            ((parseInt(product.promoPrice ||
+                                                            product.price))/3).toFixed(2) %>*</span>
                                     </div>
                                 </div>
                             </a>
@@ -145,13 +140,18 @@
         <!-- Footer -->
         <%- include('partials/_footer') %>
 
+            <script src="/public/js/messageModal/toastMessageModal.js"></script>
+            <script src="/public/js/messageModal/centralMessageModal.js"></script>
             <script>
                 // Obtem os dados enviados do backend e converte para JSON
                 const data = JSON.parse('<%- JSON.stringify(data) %>');
                 console.log(data)
                 if (!data) {
+                    const redirect = () => {
+                        window.location.href = '/';
+                    }
+                    showCentralModal("Listagem de produtos", "Dados incompletos.", redirect)
                     console.error('Dados incompletos.');
-                    window.location.href = "/error";
                 }
                 // Separa os dados em variáveis
                 const user = data.user;
@@ -160,9 +160,10 @@
                 const products = data.products;
                 const page = data.page
             </script>
-            <script src="/public/js/categoryAsideMenu.js"></script>
-            <script src="/public/js/header.js"></script>
-            <script src="/public/js/loginAndRegister.js"></script>
+            <script src="/public/js/client/categoryAsideMenu.js"></script>
+            <script src="/public/js/client/header.js"></script>
+            <script src="/public/js/client/loginAndRegister.js"></script>
+
 </body>
 
 </html>

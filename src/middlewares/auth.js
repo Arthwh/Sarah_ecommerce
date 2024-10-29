@@ -6,6 +6,14 @@ export function checkAuth(req, res, next) {
         next();
     } else {
         // Se não for válido, enviar erro
-        res.status(401).send('Unauthorized');
+        res.status(403).json({ message: 'Acesso negado.' });
+    }
+}
+
+export function isAdmin(req, res, next) {
+    if (req.user && req.user.role === '3') {
+        next();
+    } else {
+        res.status(403).json({ message: 'Acesso negado.' });
     }
 }

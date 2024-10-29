@@ -1,10 +1,10 @@
-import ProductService from '../services/productService.js';
+import ProductService from './productService.js';
 
 class ProductController {
     static async getLandingPage(req, res) {
         try {
-            const components = await ProductService.getLandingPageData();
-            res.render('client/landingPage', { data: { components } });
+            const data = await ProductService.getLandingPageData();
+            res.render('landingPage', { data });
         } catch (error) {
             res.status(500).json({ error: 'Erro ao carregar a página inicial' });
         }
@@ -14,6 +14,9 @@ class ProductController {
         try {
             const data = await ProductService.listProducts();
             res.render('productsList', { data });
+            // const products = await ProductModel.getAllProducts();
+            const data = await getProducts()
+            res.render('client/productsList', { data });
         } catch (error) {
             res.status(500).json({ error: 'Erro ao listar produtos' });
         }
@@ -23,6 +26,11 @@ class ProductController {
         try {
             const data = await ProductService.getProduct();
             res.render('product', { data });
+            // const products = await ProductModel.getProductById(req.params.id);
+            // if (!products) return res.status(404).json({ error: 'Produto não encontrado' });
+            const data = await getProductInfo();
+            res.render('client/product', { data });
+            // res.json(products);
         } catch (error) {
             res.status(500).json({ error: 'Erro ao buscar produto' });
         }
@@ -34,6 +42,8 @@ class ProductController {
             const data = await ProductService.updateProductVariantData(sku);
             if (data) {
                 res.status(200).json(data);
+            } else {
+                res.status(404).json({ error: 'Produto não encontrado' });
             } else {
                 res.status(404).json({ error: 'Produto não encontrado' });
             }

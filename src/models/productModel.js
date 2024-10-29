@@ -31,16 +31,6 @@ class ProductModel {
         const { rows } = await pool.query('DELETE FROM products WHERE id = $1 RETURNING *', [id]);
         return rows[0];
     }
-
-    static async updateProductVariant(sku) {
-
-        return rows[0];
-    }
-
-    static async getLandingPageData() {
-        const { rows } = await pool.query('SELECT id, section_name, section_model, section_content, content_type, section_position, start_date, end_date, is_active FROM landing_page_components WHERE is_active = true ORDER BY section_position ASC;');
-        return rows
-    }
 }
 
 export default ProductModel;

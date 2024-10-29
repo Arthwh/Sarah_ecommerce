@@ -1,8 +1,9 @@
 import ProductModel from '../models/productModel.js';
+import { getProducts, updateProductVariantDataMock, getProductInfo } from '../controllers/mockProductData.js';
 
 class ProductService {
     static async getLandingPageData() {
-        return await ProductModel.getLandingPageData();
+        return {};
     }
 
     static async listProducts() {
@@ -14,7 +15,7 @@ class ProductService {
     }
 
     static async updateProductVariantData(sku) {
-        return await ProductModel.updateProductVariant(sku);
+        return await updateProductVariantDataMock(sku);
     }
 
     static async createProduct(productData) {

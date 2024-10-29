@@ -17,11 +17,11 @@ class UserModel {
         return rows[0];
     }
 
-    static async createUser({ registerEmail, cpf, name, birthdate, phoneNumber, registerPassword, gender }) {
-        const hashedPassword = await bcrypt.hash(registerPassword, 10);
+    static async createUser({ name, email, password, role, phone_number_1, phone_number_2, birthdate, gender, cpf, created_at, updated_at, is_active }) {
+        const hashedPassword = await bcrypt.hash(password, 10);
         const { rows } = await pool.query(
-            "INSERT INTO users (email, cpf, name, birthdate, phone_number_1, password, gender, role) VALUES ($1, $2, $3, $4, $5, $6, $7, 1) RETURNING *",
-            [registerEmail, cpf, name, birthdate, phoneNumber, hashedPassword, gender]
+            'INSERT INTO users (name, email, password, role, phone_number_1, phone_number_2, birthdate, gender, cpf, created_at, updated_at, is_active) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12) RETURNING *',
+            [name, email, hashedPassword, role, phone_number_1, phone_number_2, birthdate, gender, cpf, created_at, updated_at, is_active]
         );
         return rows[0];
     }
@@ -38,16 +38,6 @@ class UserModel {
         const { rows } = await pool.query('DELETE FROM users WHERE id = $1 RETURNING *', [id]);
         return rows[0];
     }
-
-    static async getUserCartCount(userId) {
-        const { rows } = await pool.query(`
-            SELECT COUNT(*) 
-            FROM shopping_cart_items sci
-            JOIN shopping_carts sc ON sc.id = sci.shopping_cart_id
-            WHERE sc.user_id = $1`, [userId]);
-        return parseInt(rows[0].count, 10);
-    }
-
 }
 
 export default UserModel;

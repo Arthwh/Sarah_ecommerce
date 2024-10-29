@@ -1,4 +1,4 @@
-import UserService from '../services/userService.js';
+import UserService from './userService.js';
 
 class UserController {
     static async listUsers(req, res) {
@@ -66,8 +66,8 @@ class UserController {
             if (!user) {
                 return res.status(401).json({ error: 'Usuário ou senha inválidos' });
             }
-            req.session.user = { id: user.id, email: user.email, cart: { count: user.cart.count }, role: user.role };
-            res.json({ user: { id: user.id, email: user.email, cart: user.cart, role: user.role } });
+            req.session.user = { id: user.id, email: user.email };
+            res.json({ user: { id: user.id, email: user.email } });
         } catch (error) {
             res.status(500).json({ error: 'Erro ao logar' });
         }
@@ -81,8 +81,6 @@ class UserController {
             res.send('Logout bem-sucedido!');
         });
     }
-
-
 }
 
 export default UserController;

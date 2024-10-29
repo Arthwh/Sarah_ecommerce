@@ -33,9 +33,7 @@ class UserService {
         const match = await bcrypt.compare(password, user.password);
         if (!match) return null;
 
-        const cartCount = await UserModel.getUserCartCount(user.id);
-
-        return { ...user, cart: { count: cartCount } };
+        return user;
     }
 }
 

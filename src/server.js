@@ -6,7 +6,6 @@ import session from 'express-session';
 
 import userRoutes from "./routes/userRoutes.js"
 import productRoutes from './routes/productRoutes.js'
-import adminRoutes from './routes/adminRoutes.js'
 dotenv.config();
 
 const app = express(); // inicia o servidor
@@ -31,9 +30,8 @@ app.use(session({
 }));
 
 //Configura os arquivos de rotas
-app.use(userRoutes)
-app.use(productRoutes);
-app.use(adminRoutes);
+app.use('/api', userRoutes)
+app.use('/api', productRoutes);
 
 app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`);

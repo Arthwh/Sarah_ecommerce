@@ -3,7 +3,7 @@
         <%= component.title %>
     </h2>
     <div class="overflow-auto grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
-        <% data.grid_items.forEach(item=> { %>
+        <% component.section_content.forEach(item=> { %>
             <% if (item.landing_page_component_id===component.id && item.is_active) { %>
                 <div class="product-card">
                     <div class="product-image-wrapper">

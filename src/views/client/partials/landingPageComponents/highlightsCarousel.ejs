@@ -3,7 +3,7 @@
         <%= component.title %>
     </h2>
     <div id="highlightCarousel_<%= component.id %>" class="highlightCarousel">
-        <% data.featured_items.forEach(item=> { %>
+        <% component.section_content.forEach(item=> { %>
             <% if (item.landing_page_component_id===component.id && item.is_active) { %>
                 <div class="product-card">
                     <div class="product-image-wrapper">

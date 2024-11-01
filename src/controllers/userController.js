@@ -1,61 +1,62 @@
 import UserService from '../services/userService.js';
 
 class UserController {
-    static async listUsers(req, res) {
+    static async getAllUsers(req, res) {
         try {
-            const users = await UserService.listUsers();
-            res.json(users);
+            await UserService.getAllUsersService();
+            res.status(200).send({ message: 'User updated successfully' });
         } catch (error) {
-            res.status(500).json({ error: 'Erro ao listar usuários' });
+            res.status(400).send({ message: error.message });
         }
     }
 
-    static async getUser(req, res) {
+    static async getUserById(req, res) {
         try {
-            const user = await UserService.getUser(req.params.id);
-            if (!user) return res.status(404).json({ error: 'Usuário não encontrado' });
-            res.json(user);
+            const userData = req.body;
+            await UserService.getUserbyIdService(userData);
+            res.status(200).send({ message: 'User found successfully' });
         } catch (error) {
-            res.status(500).json({ error: 'Erro ao buscar usuário' });
+            res.status(400).send({ message: error.message });
         }
     }
 
     static async getUserByEmail(req, res) {
         try {
-            const user = await UserService.getUserByEmail(req.params.email);
-            if (!user) return res.status(404).json({ error: 'Usuário não encontrado' });
-            res.json(user);
+            const userData = req.body;
+            await UserService.getUserbyEmailService(userData);
+            res.status(200).send({ message: 'User found successfully' });
         } catch (error) {
-            res.status(500).json({ error: 'Erro ao buscar usuário' });
+            res.status(400).send({ message: error.message });
         }
     }
 
     static async createUser(req, res) {
         try {
-            const newUser = await UserService.createUser(req.body);
-            res.status(201).json(newUser);
+            const userData = req.body;
+            await UserService.createUserService(userData);
+            res.status(200).send({ message: 'User created successfully' });
         } catch (error) {
-            res.status(500).json({ error: 'Erro ao criar usuário' });
+            res.status(400).send({ message: error.message });
         }
     }
 
     static async updateUser(req, res) {
         try {
-            const updatedUser = await UserService.updateUser(req.params.id, req.body);
-            if (!updatedUser) return res.status(404).json({ error: 'Usuário não encontrado' });
-            res.json(updatedUser);
+            const userData = req.body;
+            await UserService.updateUserService(userData);
+            res.status(200).send({ message: 'User updated successfully' });
         } catch (error) {
-            res.status(500).json({ error: 'Erro ao atualizar usuário' });
+            res.status(400).send({ message: error.message });
         }
     }
 
     static async deleteUser(req, res) {
         try {
-            const deletedUser = await UserService.deleteUser(req.params.id);
-            if (!deletedUser) return res.status(404).json({ error: 'Usuário não encontrado' });
-            res.json({ message: 'Usuário deletado com sucesso' });
+            const userData = req.body;
+            await UserService.deleteUserService(userData);
+            res.status(200).send({ message: 'User deleted successfully' });
         } catch (error) {
-            res.status(500).json({ error: 'Erro ao deletar usuário' });
+            res.status(400).send({ message: error.message });
         }
     }
 
@@ -69,7 +70,7 @@ class UserController {
             req.session.user = { id: user.id, email: user.email, cart: { count: user.cart.count }, role: user.role };
             res.json({ user: { id: user.id, email: user.email, cart: user.cart, role: user.role } });
         } catch (error) {
-            res.status(500).json({ error: 'Erro ao logar' });
+            res.status(500).json({ error: 'Erro ao logar: ' + error });
         }
     }
 
@@ -82,7 +83,65 @@ class UserController {
         });
     }
 
+    // static async listUsers(req, res) {
+    //     try {
+    //         const users = await UserService.listUsers();
+    //         res.json(users);
+    //     } catch (error) {
+    //         res.status(500).json({ error: 'Erro ao listar usuários' });
+    //     }
+    // }
 
+    // static async getUser(req, res) {
+    //     try {
+    //         const user = await UserService.getUser(req.params.id);
+    //         if (!user) return res.status(404).json({ error: 'Usuário não encontrado' });
+    //         res.json(user);
+    //     } catch (error) {
+    //         res.status(500).json({ error: 'Erro ao buscar usuário' });
+    //     }
+    // }
+
+    // static async getUserByEmail(req, res) {
+    //     try {
+    //         const user = await UserService.getUserByEmail(req.params.email);
+    //         if (!user) return res.status(404).json({ error: 'Usuário não encontrado' });
+    //         res.json(user);
+    //     } catch (error) {
+    //         res.status(500).json({ error: 'Erro ao buscar usuário' });
+    //     }
+    // }
+
+
+
+    // static async createUser(req, res) {
+    //     try {
+    //         const newUser = await UserService.createUser(req.body);
+    //         res.status(201).json(newUser);
+    //     } catch (error) {
+    //         res.status(500).json({ error: 'Erro ao criar usuário' });
+    //     }
+    // }
+
+    // static async updateUser(req, res) {
+    //     try {
+    //         const updatedUser = await UserService.updateUser(req.params.id, req.body);
+    //         if (!updatedUser) return res.status(404).json({ error: 'Usuário não encontrado' });
+    //         res.json(updatedUser);
+    //     } catch (error) {
+    //         res.status(500).json({ error: 'Erro ao atualizar usuário' });
+    //     }
+    // }
+
+    // static async deleteUser(req, res) {
+    //     try {
+    //         const deletedUser = await UserService.deleteUser(req.params.id);
+    //         if (!deletedUser) return res.status(404).json({ error: 'Usuário não encontrado' });
+    //         res.json({ message: 'Usuário deletado com sucesso' });
+    //     } catch (error) {
+    //         res.status(500).json({ error: 'Erro ao deletar usuário' });
+    //     }
+    // }
 }
 
 export default UserController;

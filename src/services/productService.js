@@ -1,8 +1,10 @@
 import ProductModel from '../models/productModel.js';
+import MockProductData from '../controllers/mockProductData.js'
 
 class ProductService {
     static async getLandingPageData() {
-        return await ProductModel.getLandingPageData();
+        // return await ProductModel.getLandingPageData();
+        return MockProductData.getLangingPageData();
     }
 
     static async listProducts() {

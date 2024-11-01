@@ -6,8 +6,8 @@ const router = express.Router();
 
 router.post('/api/login', UserController.login);
 router.post('/logout', checkAuth, UserController.logout);
-router.get('/users', checkAuth, UserController.listUsers);
-router.get('/users/:id', checkAuth, UserController.getUser);
+router.get('/users', checkAuth, UserController.getAllUsers);
+router.get('/users/:id', checkAuth, UserController.getUserById);
 router.get('/users/email/:email', checkAuth, UserController.getUserByEmail);
 router.post('/register', UserController.createUser);
 router.put('/users/:id', checkAuth, UserController.updateUser);

@@ -1,66 +1,70 @@
 import argon2 from 'argon2';
-import { createUserRepository, updateUserRepository, getAllUsersRepository, getUserByIdRepository, getUserByEmailRepository, } from '../repositories/userRepository.js';
+import UserRepository from '../repositories/userRepository.js';
 
-export async function getAllUsersService() {
-    try {
-        await getAllUsersRepository();
-        return { message: "All Users listed successfully" };
-    } catch (error) {
-        console.error('Error listing users: ' + error.message);
-        throw error;
+class UserService{
+    static async getAllUsersService() {
+        try {
+            await UserRepository.getAllUsersRepository();
+            return { message: "All Users listed successfully" };
+        } catch (error) {
+            console.error('Error listing users: ' + error.message);
+            throw error;
+        }
+    }
+    
+    static async getUserbyIdService(userData) {
+        try {
+            await UserRepository.getUserByIdRepository(userData.id);
+            return { message: "User found successfully" };
+        } catch (error) {
+            console.error('Error getting user: ' + error.message);
+            throw error;
+        }
+    }
+    
+    static async getUserbyEmailService(userData) {
+        try {
+            await UserRepository.getUserByEmailRepository(userData.email);
+            return { message: "User found successfully" };
+        } catch (error) {
+            console.error('Error getting user: ' + error.message);
+            throw error;
+        }
+    }
+    
+    static async createUserService(userData) {
+        try {
+            userData.password = await argon2.hash(userData.password);
+            await UserRepository.createUserRepository(userData);
+            return { message: "User created successfully" };
+        } catch (error) {
+            console.error('Error creating user: ' + error.message);
+            throw error;
+        }
+    }
+    
+    static async updateUserService(userData) {
+        try {
+            await UserRepository.updateUserRepository(userData);
+            return { message: "User updated successfully" };
+        } catch (error) {
+            console.error('Error updating user: ' + error.message);
+            throw error;
+        }
+    }
+    
+    static async deleteUserService(userData) {
+        try {
+            await UserRepository.deleteUserRepository(userData.id);
+            return { message: "User deleted successfully" };
+        } catch (error) {
+            console.error('Error deleting user: ' + error.message);
+            throw error;
+        }
     }
 }
 
-export async function getUserbyIdService(userData) {
-    try {
-        await getUserByIdRepository(userData.id);
-        return { message: "User found successfully" };
-    } catch (error) {
-        console.error('Error getting user: ' + error.message);
-        throw error;
-    }
-}
-
-export async function getUserbyEmailService(userData) {
-    try {
-        await getUserByEmailRepository(userData.email);
-        return { message: "User found successfully" };
-    } catch (error) {
-        console.error('Error getting user: ' + error.message);
-        throw error;
-    }
-}
-
-export async function createUserService(userData) {
-    try {
-        userData.password = await argon2.hash(userData.password);
-        await createUserRepository(userData);
-        return { message: "User created successfully" };
-    } catch (error) {
-        console.error('Error creating user: ' + error.message);
-        throw error;
-    }
-}
-
-export async function updateUserService(userData) {
-    try {
-        await updateUserRepository(userData);
-        return { message: "User updated successfully" };
-    } catch (error) {
-        console.error('Error updating user: ' + error.message);
-        throw error;
-    }
-}
-
-export async function deleteUserService(userData) {
-    try {
-        await deleteUserRepository(userData.id);
-        return { message: "User deleted successfully" };
-    } catch (error) {
-        console.error('Error deleted user: ' + error.message);
-        throw error;
-    }
-}
+export default UserService;
 
 // import UserModel from '../models/userModel.js';
 // import bcrypt from 'bcrypt';

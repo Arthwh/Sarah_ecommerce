@@ -1,66 +1,65 @@
 import UserService from '../services/userService.js';
 
 class UserController {
-    
-    static async getAllUsers(request, reply) {
+    static async getAllUsers(req, res) {
         try {
-            await getAllUsersService();
-            reply.status(200).send({ message: 'User updated successfully' });
+            await UserService.getAllUsersService();
+            res.status(200).send({ message: 'User updated successfully' });
         } catch (error) {
-            reply.status(400).send({ message: error.message });
-        }
-    }
-    
-    static async getUserById(request, reply) {
-        try {
-            const userData = request.body;
-            await getUserByIdService(userData);
-            reply.status(200).send({ message: 'User found successfully' });
-        } catch (error) {
-            reply.status(400).send({ message: error.message });
-        }
-    }
-    
-    static async getUserByEmail(request, reply) {
-        try {
-            const userData = request.body;
-            await getUserByEmailService(userData);
-            reply.status(200).send({ message: 'User found successfully' });
-        } catch (error) {
-            reply.status(400).send({ message: error.message });
-        }
-    }
-    
-    static async createUser(request, reply) {
-        try {
-            const userData = request.body;
-            await createUserService(userData);
-            reply.status(200).send({ message: 'User created successfully' });
-        } catch (error) {
-            reply.status(400).send({ message: error.message });
+            res.status(400).send({ message: error.message });
         }
     }
 
-    static async updateUser(request, reply) {
+    static async getUserById(req, res) {
         try {
-            const userData = request.body;
-            await updateUserService(userData);
-            reply.status(200).send({ message: 'User updated successfully' });
+            const userData = req.body;
+            await UserService.getUserbyIdService(userData);
+            res.status(200).send({ message: 'User found successfully' });
         } catch (error) {
-            reply.status(400).send({ message: error.message });
+            res.status(400).send({ message: error.message });
         }
     }
 
-    static async deleteUser(request, reply) {
+    static async getUserByEmail(req, res) {
         try {
-            const userData = request.body;
-            await deleteUserService(userData);
-            reply.status(200).send({ message: 'User deleted successfully' });
+            const userData = req.body;
+            await UserService.getUserbyEmailService(userData);
+            res.status(200).send({ message: 'User found successfully' });
         } catch (error) {
-            reply.status(400).send({ message: error.message });
+            res.status(400).send({ message: error.message });
         }
     }
-    
+
+    static async createUser(req, res) {
+        try {
+            const userData = req.body;
+            await UserService.createUserService(userData);
+            res.status(200).send({ message: 'User created successfully' });
+        } catch (error) {
+            res.status(400).send({ message: error.message });
+        }
+    }
+
+    static async updateUser(req, res) {
+        try {
+            const userData = req.body;
+            await UserService.updateUserService(userData);
+            res.status(200).send({ message: 'User updated successfully' });
+        } catch (error) {
+            res.status(400).send({ message: error.message });
+        }
+    }
+
+    static async deleteUser(req, res) {
+        try {
+            const userData = req.body;
+            await UserService.deleteUserService(userData);
+            res.status(200).send({ message: 'User deleted successfully' });
+        } catch (error) {
+            res.status(400).send({ message: error.message });
+        }
+    }
+
     static async login(req, res) {
         try {
             const { email, password } = req.body;
@@ -71,7 +70,7 @@ class UserController {
             req.session.user = { id: user.id, email: user.email, cart: { count: user.cart.count }, role: user.role };
             res.json({ user: { id: user.id, email: user.email, cart: user.cart, role: user.role } });
         } catch (error) {
-            res.status(500).json({ error: 'Erro ao logar' });
+            res.status(500).json({ error: 'Erro ao logar: ' + error });
         }
     }
 
@@ -83,7 +82,7 @@ class UserController {
             res.send('Logout bem-sucedido!');
         });
     }
-    
+
     // static async listUsers(req, res) {
     //     try {
     //         const users = await UserService.listUsers();
@@ -113,7 +112,7 @@ class UserController {
     //     }
     // }
 
-    
+
 
     // static async createUser(req, res) {
     //     try {

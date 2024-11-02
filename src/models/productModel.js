@@ -1,21 +1,21 @@
 export class Product {
-    constructor({ id, publicId, name, description, total_stock_quantity }) {
+    constructor({ id, public_id, name, description, total_stock_quantity }) {
         this.id = id;
-        this.publicId = publicId;
+        this.public_id = public_id;
         this.name = name;
         this.description = description;
         this.total_stock_quantity = total_stock_quantity;
     }
 
-    static async getLandingPageComponents(){
-        
+    static async getLandingPageComponents() {
+
     }
 }
 
 // Método para validar dados do produto
 export function validate(userData) {
-    const { publicId, name, description, total_stock_quantity } = userData;
-    if (!publicId || !name || !description || !total_stock_quantity ) {
+    const { public_id, name, description, total_stock_quantity } = userData;
+    if (!public_id || !name || !description || !total_stock_quantity) {
         return false
     }
     return true

@@ -1,7 +1,7 @@
 export class User {
-    constructor({ id, publicId, name, email, password, role, phone_number_1, phone_number_2, birthdate, gender, cpf }) {
+    constructor({ id, public_id, name, email, password, role, phone_number_1, phone_number_2, birthdate, gender, cpf }) {
         this.id = id;
-        this.publicId = publicId;
+        this.public_id = public_id;
         this.name = name;
         this.email = email;
         this.password = password;
@@ -16,8 +16,8 @@ export class User {
 
 // Método para validar dados do usuário
 export function validate(userData) {
-    const { publicId, name, email, password, role, phone_number_1, phone_number_2, birthdate, gender, cpf } = userData;
-    if (!publicId || !name || !email || !password || !role || !phone_number_1 || !phone_number_2 || !birthdate || !gender || !cpf ) {
+    const { public_id, name, email, password, role, phone_number_1, phone_number_2, birthdate, gender, cpf } = userData;
+    if (!public_id || !name || !email || !password || !role || !phone_number_1 || !phone_number_2 || !birthdate || !gender || !cpf) {
         return false
     }
     return true
@@ -66,7 +66,7 @@ export function validate(userData) {
 
 //     static async getUserCartCount(userId) {
 //         const { rows } = await pool.query(`
-//             SELECT COUNT(*) 
+//             SELECT COUNT(*)
 //             FROM shopping_cart_items sci
 //             JOIN shopping_carts sc ON sc.id = sci.shopping_cart_id
 //             WHERE sc.user_id = $1`, [userId]);

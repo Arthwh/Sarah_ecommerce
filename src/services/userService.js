@@ -63,6 +63,22 @@ class UserService {
             throw error;
         }
     }
+
+    static async login(userData) {
+        try {
+            const { email, password } = userData;
+            const user = await UserRepository.getUserByEmailRepository(email);
+            const isPasswordValid = await argon2.verify(user.password, password);
+            if (!isPasswordValid)
+                return { message: "Bad password" };
+            const cartCount = await UserRepository.getUserCartCountRepository(user.id);
+            return { ...user, cart: { count: cartCount } };
+        } catch (error) {
+            console.error('Error loggin in user: ' + error.message);
+            throw error;
+        }
+    }
+
 }
 
 export default UserService;

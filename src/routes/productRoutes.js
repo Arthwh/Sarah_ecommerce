@@ -5,10 +5,10 @@ const router = express.Router();
 
 router.get('/', ProductController.getLandingPage);
 router.get('/products', ProductController.listProducts);
-router.get('/products/:id', ProductController.getProduct);
+router.get('/products/:id', ProductController.getSpecificProduct);
 router.post('/products', ProductController.createProduct);
 router.put('/products/:id', ProductController.updateProduct);
 router.delete('/products/:id', ProductController.deleteProduct);
-router.get('/products/updateProductVariant/:id', ProductController.updateProductVariantData);
+router.get('/api/products/updateProductVariant/:id', ProductController.getProductVariantData);
 
 export default router;

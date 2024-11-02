@@ -3,40 +3,52 @@ import ProductService from '../services/productService.js';
 class ProductController {
     static async getLandingPage(req, res) {
         try {
-            const components = await ProductService.getLandingPageData();
-            res.render('client/landingPage', { data: { components } });
+            const data = await ProductService.getLandingPageData();
+            res.render('client/landingPage', { data });
         } catch (error) {
             res.status(500).json({ error: 'Erro ao carregar a página inicial' });
+        }
+    }
+
+    static async getCategories(req, res) {
+        try {
+            const data = await ProductService.getAllProductCategories();
+            res.status(200).json(data);
+        } catch (error) {
+            res.status(500).json({ error: 'Erro ao buscar categorias' });
         }
     }
 
     static async listProducts(req, res) {
         try {
             const data = await ProductService.listProducts();
-            res.render('productsList', { data });
+            res.render('client/productsList', { data });
         } catch (error) {
             res.status(500).json({ error: 'Erro ao listar produtos' });
         }
     }
 
-    static async getProduct(req, res) {
+    static async getSpecificProduct(req, res) {
         try {
-            const data = await ProductService.getProduct();
-            res.render('product', { data });
+            const id = req.params.id;
+            if (!id) {
+                res.status(404).json({ error: 'Código do produto não informado ou incorreto' })
+            }
+            const data = await ProductService.getSpecificProduct(id);
+            res.render('client/product', { data });
         } catch (error) {
             res.status(500).json({ error: 'Erro ao buscar produto' });
         }
     }
 
-    static async updateProductVariantData(req, res) {
+    static async getProductVariantData(req, res) {
         try {
             const sku = req.params.id;
-            const data = await ProductService.updateProductVariantData(sku);
-            if (data) {
-                res.status(200).json(data);
-            } else {
+            const data = await ProductService.getProductVariantData(sku);
+            if (!data) {
                 res.status(404).json({ error: 'Produto não encontrado' });
             }
+            res.status(200).json(data);
         } catch (error) {
             res.status(500).json({ error: 'Erro ao atualizar dados da variante do produto' });
         }
@@ -44,7 +56,17 @@ class ProductController {
 
     static async createProduct(req, res) {
         try {
-            const newProduct = await ProductService.createProduct(req.body);
+            const productData = req.body;
+            const files = req.files; // Todos os arquivos carregados
+            console.log('Dados do produto:', productData);
+            console.log("files: ", files)
+            // Processar os arquivos
+            if (files && files.length > 0) {
+                files.forEach(file => {
+                    console.log(`Arquivo recebido: ${file.originalname}`);
+                });
+            }
+            const newProduct = await ProductService.createProduct(productData);
             res.status(201).json(newProduct);
         } catch (error) {
             res.status(500).json({ error: 'Erro ao criar produto' });

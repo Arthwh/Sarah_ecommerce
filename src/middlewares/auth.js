@@ -11,7 +11,7 @@ export function checkAuth(req, res, next) {
 }
 
 export function isAdmin(req, res, next) {
-    if (req.user && req.user.role === '3') {
+    if (req.session.user && req.session.user.role === '3') {
         next();
     } else {
         res.status(403).json({ message: 'Acesso negado.' });

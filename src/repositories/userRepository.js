@@ -32,11 +32,11 @@ class UserRepository {
         }
     }
 
-    static async createUserRepository({ publicId, name, email, password, role, phone_number_1, phone_number_2, birthdate, gender, cpf }) {
+    static async createUserRepository({ public_id, name, email, password, role, phone_number_1, phone_number_2, birthdate, gender, cpf }) {
         try {
             const { rows } = await pool.query(
-                "INSERT INTO users (publicId, name, email, password, role, phone_number_1, phone_number_2, birthdate, gender, cpf) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING *",
-                [publicId, name, email, password, role, phone_number_1, phone_number_2, birthdate, gender, cpf]
+                "INSERT INTO users (public_id, name, email, password, role, phone_number_1, phone_number_2, birthdate, gender, cpf) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING *",
+                [public_id, name, email, password, role, phone_number_1, phone_number_2, birthdate, gender, cpf]
             );
             return rows[0];
         } catch (error) {
@@ -45,11 +45,11 @@ class UserRepository {
         }
     }
 
-    static async updateUserRepository(id, { publicId, name, email, password, role, phone_number_1, phone_number_2, birthdate, gender, cpf }) {
+    static async updateUserRepository(id, { public_id, name, email, password, role, phone_number_1, phone_number_2, birthdate, gender, cpf }) {
         try {
             const { rows } = await pool.query(
-                'UPDATE users SET publicId = $1, name = $2, email = $3, password = $4, role = $5, phone_number_1 = $6, phone_number_2 = $7, birthdate = $8, gender = $9, cpf = $10 WHERE id = $13 RETURNING *',
-                [publicId, name, email, password, role, phone_number_1, phone_number_2, birthdate, gender, cpf, id]
+                'UPDATE users SET public_id = $1, name = $2, email = $3, password = $4, role = $5, phone_number_1 = $6, phone_number_2 = $7, birthdate = $8, gender = $9, cpf = $10 WHERE id = $13 RETURNING *',
+                [public_id, name, email, password, role, phone_number_1, phone_number_2, birthdate, gender, cpf, id]
             );
             return rows[0];
         } catch (error) {

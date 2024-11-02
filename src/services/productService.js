@@ -1,4 +1,4 @@
-// import ProductModel from '../models/productModel.js';
+import ProductRepository from '../repositories/productRepository.js'
 import { getCategories_Mock, getLandingPageComponentsAndData_Mock, getProductsForList_Mock, getProductInfo_Mock, updateProductVariantData_Mock } from '../controllers/mockProductData.js' // Mocks dos dados enquanto nao esta pronto essa parte no backend
 
 class ProductService {
@@ -26,7 +26,14 @@ class ProductService {
         return data;
     }
 
-    static async createProduct(productData) {
+    static async createProductService(productData) {
+        try {
+            await ProductRepository.createProductRepository(productData);
+            return { message: "Product created successfully" };
+        } catch (error) {
+            console.error('Error creating product: ' + error.message);
+            throw error;
+        }
     }
 
     static async updateProduct(id, productData) {

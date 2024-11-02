@@ -62,15 +62,12 @@ class UserController {
 
     static async login(req, res) {
         try {
-            const { email, password } = req.body;
-            const user = await UserService.login(email, password);
-            if (!user) {
-                return res.status(401).json({ error: 'Usuário ou senha inválidos' });
-            }
+            const userData = req.body;
+            const user = await UserService.login(userData);
             req.session.user = { id: user.id, email: user.email, cart: { count: user.cart.count }, role: user.role };
             res.json({ user: { id: user.id, email: user.email, cart: user.cart, role: user.role } });
         } catch (error) {
-            res.status(500).json({ error: 'Erro ao logar: ' + error });
+            res.status(400).send({ message: error.message });
         }
     }
 

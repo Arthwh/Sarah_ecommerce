@@ -1,7 +1,7 @@
 import argon2 from 'argon2';
 import UserRepository from '../repositories/userRepository.js';
 
-class UserService{
+class UserService {
     static async getAllUsersService() {
         try {
             await UserRepository.getAllUsersRepository();
@@ -11,7 +11,7 @@ class UserService{
             throw error;
         }
     }
-    
+
     static async getUserbyIdService(userData) {
         try {
             await UserRepository.getUserByIdRepository(userData.id);
@@ -21,7 +21,7 @@ class UserService{
             throw error;
         }
     }
-    
+
     static async getUserbyEmailService(userData) {
         try {
             await UserRepository.getUserByEmailRepository(userData.email);
@@ -31,7 +31,7 @@ class UserService{
             throw error;
         }
     }
-    
+
     static async createUserService(userData) {
         try {
             userData.password = await argon2.hash(userData.password);
@@ -42,7 +42,7 @@ class UserService{
             throw error;
         }
     }
-    
+
     static async updateUserService(userData) {
         try {
             await UserRepository.updateUserRepository(userData);
@@ -52,7 +52,7 @@ class UserService{
             throw error;
         }
     }
-    
+
     static async deleteUserService(userData) {
         try {
             await UserRepository.deleteUserRepository(userData.id);
@@ -62,6 +62,22 @@ class UserService{
             throw error;
         }
     }
+
+    static async login(userData) {
+        try {
+            const { email, password } = userData;
+            const user = await UserRepository.getUserByEmailRepository(email);
+            const isPasswordValid = await argon2.verify(user.password, password);
+            if (!isPasswordValid)
+                return { message: "Bad password" };
+            const cartCount = await UserRepository.getUserCartCountRepository(user.id);
+            return { ...user, cart: { count: cartCount } };
+        } catch (error) {
+            console.error('Error loggin in user: ' + error.message);
+            throw error;
+        }
+    }
+
 }
 
 export default UserService;

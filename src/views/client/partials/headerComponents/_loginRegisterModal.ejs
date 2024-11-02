@@ -25,7 +25,7 @@
                 <input type="password" name="loginPassword" id="loginPassword" placeholder="Digite sua senha"
                     class="ring-black/20 w-full px-4 py-2 mb-4 border border-gray-300 rounded focus:outline-none focus:ring focus:border-black">
                 <span id="loginError" class="error-message"></span>
-                <button type="button" type="button" onclick="login()"
+                <button type="button" onclick="login()"
                     class="w-full bg-black text-white py-2 mt-3 rounded hover:bg-gray-800 transition-colors">Entrar</button>
             </form>
 
@@ -61,7 +61,11 @@
 
         <!-- Formulário de Cadastro -->
         <div class="p-10 overflow-y-auto max-h-[70vh]">
-            <form id="formRegister" action="/register" method="post">
+            <form id="formRegister" method="post">
+                <label for="name" class="block text-gray-700 mb-3">Nome</label>
+                <input type="text" name="name" id="name" placeholder="Digite seu nome"
+                    class="ring-black/20 w-full px-4 py-2 mb-4 border border-gray-300 rounded focus:outline-none focus:ring focus:border-black">
+                <span id="nameError" class="error-message"></span>
                 <label for="registerEmail" class="block text-gray-700 mb-2">Email</label>
                 <input type="text" name="registerEmail" id="registerEmail" placeholder="Digite seu email"
                     class="ring-black/20 w-full px-4 py-2 mb-4 border border-gray-300 rounded focus:outline-none focus:ring focus:border-black">
@@ -70,10 +74,15 @@
                 <input type="text" name="cpf" id="cpf" placeholder="Digite seu CPF"
                     class="ring-black/20 w-full px-4 py-2 mb-4 border border-gray-300 rounded focus:outline-none focus:ring focus:border-black">
                 <span id="cpfError" class="error-message"></span>
-                <label for="name" class="block text-gray-700 my-3">Nome</label>
-                <input type="text" name="name" id="name" placeholder="Digite seu nome"
+                <label for="gender" class="block text-gray-700 my-3">Gênero</label>
+                <select type="option" name="gender" id="gender"
                     class="ring-black/20 w-full px-4 py-2 mb-4 border border-gray-300 rounded focus:outline-none focus:ring focus:border-black">
-                <span id="nameError" class="error-message"></span>
+                    <option value="" disable selected>Selecione um gênero...</option>
+                    <option value="Masculino">Masculino</option>
+                    <option value="Feminino">Feminino</option>
+                    <option value="Outro">Outro</option>
+                </select>
+                <span id="genderError" class="error-message"></span>
                 <label for="birthdate" class="block text-gray-700 my-3">Data de nascimento</label>
                 <input type="date" name="birthdate" id="birthdate" placeholder="Digite sua data de nascimento"
                     class="ring-black/20 w-full px-4 py-2 mb-4 border border-gray-300 rounded focus:outline-none focus:ring focus:border-black">
@@ -86,7 +95,7 @@
                 <input type="password" name="registerPassword" id="registerPassword" placeholder="Digite sua senha"
                     class="ring-black/20 w-full px-4 py-2 mb-4 border border-gray-300 rounded focus:outline-none focus:ring focus:border-black">
                 <span id="registerPasswordError" class="error-message"></span>
-                <button type="submit"
+                <button type="button" onclick="register()"
                     class="w-full bg-black text-white py-2 mt-3 rounded hover:bg-gray-800 transition-colors">Cadastrar</button>
             </form>
         </div>

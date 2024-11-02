@@ -1,7 +1,7 @@
 import argon2 from 'argon2';
 import UserRepository from '../repositories/userRepository.js';
 
-class UserService{
+class UserService {
     static async getAllUsersService() {
         try {
             await UserRepository.getAllUsersRepository();
@@ -11,7 +11,7 @@ class UserService{
             throw error;
         }
     }
-    
+
     static async getUserbyIdService(userData) {
         try {
             await UserRepository.getUserByIdRepository(userData.id);
@@ -21,7 +21,7 @@ class UserService{
             throw error;
         }
     }
-    
+
     static async getUserbyEmailService(userData) {
         try {
             await UserRepository.getUserByEmailRepository(userData.email);
@@ -31,10 +31,11 @@ class UserService{
             throw error;
         }
     }
-    
+
     static async createUserService(userData) {
         try {
             userData.password = await argon2.hash(userData.password);
+            // console.log(userData)
             await UserRepository.createUserRepository(userData);
             return { message: "User created successfully" };
         } catch (error) {
@@ -42,7 +43,7 @@ class UserService{
             throw error;
         }
     }
-    
+
     static async updateUserService(userData) {
         try {
             await UserRepository.updateUserRepository(userData);
@@ -52,7 +53,7 @@ class UserService{
             throw error;
         }
     }
-    
+
     static async deleteUserService(userData) {
         try {
             await UserRepository.deleteUserRepository(userData.id);

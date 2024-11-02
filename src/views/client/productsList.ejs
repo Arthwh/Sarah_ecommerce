@@ -15,7 +15,7 @@
 <body>
     <%- include('partials/_header') %>
 
-        <main class="container mx-auto py-10 w-full px-5 xl:px-0 xl:w-full min-h-full items-center flex-grow">
+        <main class="container mx-auto py-10 w-full px-5 xl:px-0 xl:w-full min-h-full items-center flex-grow z-0">
             <!-- Breadcrumbs -->
             <%- include('partials/_breadcrumbs') %>
                 <!-- titulo e botao de filtro -->
@@ -59,13 +59,6 @@
                                             class="product-image-hover">
                                     </div>
                                 </a>
-
-                                <!-- Botão adicionar ao carrinho -->
-                                <div class="cart-button-wrapper">
-                                    <button onclick="addItemToCart('<%= product.sku %>')" class="add-to-cart-button">
-                                        Adicionar ao carrinho
-                                    </button>
-                                </div>
 
                                 <!-- Botão de favoritos -->
                                 <div class="wishlist-button-wrapper">

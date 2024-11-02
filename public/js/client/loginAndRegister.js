@@ -32,8 +32,10 @@ function toggleRegisterModal() {
 }
 
 async function login() {
+    clearErrors();
     if (!validateLoginData()) {
-        console.log("Erro: dados de login inválidos");
+        console.error("Erro: dados de login inválidos");
+        showToast("Erro: dados de login inválidos", "error")
         return;
     }
     // Capturar os dados do formulário
@@ -58,17 +60,55 @@ async function login() {
         }
         const data = await response.json();
         console.log("Login bem-sucedido:", data);
+        showToast('Login bem-sucedido', 'success')
         editHeaderWithUserInfo(data.user);
         toggleRegisterModal();
         toggleLoginModal();
     } catch (error) {
         console.error('Erro no login:', error);
-        alert('Erro no login. Verifique suas credenciais.');
+        showToast('Erro no login. Verifique suas credenciais.', 'error');
     }
 }
 
-function register() {
-
+async function register() {
+    clearErrors()
+    if (!validateRegisterData()) {
+        console.error("Erro: dados de registro inválidos");
+        showToast('Erro: dados de registro inválidos', 'error');
+        return;
+    }
+    const formData = new FormData(formRegister);
+    console.log(formData);
+    const registerData = Object.fromEntries(formData.entries());
+    try {
+        const response = await fetch(`/api/register`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body:
+                JSON.stringify({
+                    name: registerData.name,
+                    email: registerData.registerEmail,
+                    password: registerData.registerPassword,
+                    cpf: registerData.cpf,
+                    gender: registerData.gender,
+                    birthdate: registerData.birthdate,
+                    phoneNumber: registerData.phoneNumber
+                })
+        });
+        if (!response.ok) {
+            throw new Error(`Erro HTTP: ${response.status}`);
+        }
+        const data = await response.json();
+        console.log("Registro bem-sucedido:", data);
+        showToast("Usuário criado com sucesso!", "success")
+        toggleRegisterModal();
+        // toggleLoginModal();
+    } catch (error) {
+        console.error("Erro ao registrar-se: ", error);
+        showToast("Ocorreu um erro ao registrar.<br> Tente novamente mais tarde", "error")
+    }
 }
 
 function validateLoginData() {
@@ -89,6 +129,7 @@ function validateRegisterData() {
     const birthdate = document.getElementById('birthdate').value;
     const phone = document.getElementById('phoneNumber').value;
     const password = document.getElementById('registerPassword').value;
+    const gender = document.getElementById('gender').value
     let valid = true;
     // Validação de email
     if (!validateEmail(email)) {
@@ -109,6 +150,9 @@ function validateRegisterData() {
     if (!validateBirthdate(birthdate)) {
         showError('birthdateError', 'Data de nascimento inválida.');
         valid = false;
+    }
+    if (!gender) {
+        showError('genderError', 'Selecione um gênero.');
     }
     // Validação de telefone
     if (!validatePhone(phone)) {

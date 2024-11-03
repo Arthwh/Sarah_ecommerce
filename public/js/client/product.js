@@ -1,6 +1,6 @@
 var { actualVariants, images, ...actualProductData } = product
-var cartItems = cart.items;
-var wishlistItems = wishlist.items;
+var cartItems = cart?.items;
+var wishlistItems = wishlist?.items;
 
 const smallScreenImagemCarousel = document.getElementById('carouselCurrentImage')
 const miniImageCarousel = document.getElementById('miniImageCarousel');

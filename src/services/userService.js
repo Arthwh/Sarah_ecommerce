@@ -35,7 +35,10 @@ class UserService {
     static async createUserService(userData) {
         try {
             userData.password = await argon2.hash(userData.password);
-            // console.log(userData)
+            if (!userData.role) {
+                userData.role = 1;
+            }
+
             await UserRepository.createUserRepository(userData);
             return { message: "User created successfully" };
         } catch (error) {
@@ -43,6 +46,8 @@ class UserService {
             throw error;
         }
     }
+
+
 
     static async updateUserService(userData) {
         try {

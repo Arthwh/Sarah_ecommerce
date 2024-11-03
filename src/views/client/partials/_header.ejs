@@ -31,7 +31,7 @@
 
           <!-- Botões de Login/Carrinho -->
           <div id="userControlsContainer" class="flex flex-shrink-0 justify-center items-center mx-auto ml-5">
-            <% if(data.user?.logged=='true' ){ %>
+            <% if(data.user){ %>
               <div class="md:hidden relative">
                 <button id="menuUserOptionsSmallScreen">
                   <img src="/public/images/icons/menu_icon_white.svg" alt="menuIcon" class="w-8 h-8 mx-auto">
@@ -40,25 +40,29 @@
                   class="hidden md:hidden absolute right-0 mt-2 p-4 w-36 bg-black shadow-lg min-h-fit">
                   <a href="/cart" class="block pb-2 text-white menuItem w-fit">Carrinho</a>
                   <a href="/user/favorites" class="block py-2 text-white menuItem w-fit">Favoritos</a>
+                  <% if(data.user?.role=='3' ){ %>
+                    <a href="/admin" class="block py-2 text-white menuItem w-fit">Administrador</a>
+                    <% } %>
                   <a href="/user/profile" class="block pt-2 text-white menuItem w-fit">Perfil</a>
+                  <button onclick="logout()" class="block pt-2 text-white menuItem w-fit">Sair</button>
                 </div>
               </div>
               <div class="hidden md:flex relative space-x-6 ">
-                <a href="/cart" class="relative inline-block">
+                <a href="/cart" class="relative inline-block group">
                   <img id="cartIcon" src="/public/images/icons/shopping_cart_icon.svg" title="Carrinho" alt="Carrinho"
-                    class="w-8 h-8">
+                    class="w-8 h-8 group-hover:hidden">
+                  <img id="cartIcon" src="/public/images/icons/shopping_cart_icon_hover.svg" title="Carrinho"
+                    alt="Carrinho" class="w-8 h-8 hidden group-hover:block">
                   <span id="cartNumber"
-                    class="hidden absolute top-0 right-0 transform -translate-x-1/2 -translate-y-1/2 bg-white text-black font-bold rounded-full w-4 h-4 flex items-center justify-center text-xs"></span>
+                    class="hidden absolute top-0 right-0 transform -translate-x-1/2 -translate-y-1/2 bg-white text-black group-hover:bg-black group-hover:text-white font-bold rounded-full w-4 h-4 flex items-center justify-center text-xs"></span>
                 </a>
-                <a href="/user/favorites" class="relative inline-block">
+                <a href="/user/favorites" class="relative inline-block group">
                   <img id="favoriteIcon" src="/public/images/icons/favorite_icon.svg" title="Favoritos" alt="Favoritos"
-                    class="w-8 h-8">
+                    class="w-8 h-8 group-hover:hidden">
+                  <img id="favoriteIcon" src="/public/images/icons/favorite_icon_hover.svg" title="Favoritos"
+                    alt="Favoritos" class="w-8 h-8 hidden group-hover:block">
                 </a>
-                <a href="/user/profile" class="relative inline-block">
-                  <img id="userIcon" src="/public/images/icons/user_icon.svg" title="Configurações do usuário"
-                    alt="Perfil" class="w-8 h-8">
-                </a>
-                <% if(data.user?.role=='admin' ){ %>
+                <% if(data.user?.role=='3' ){ %>
                   <a href="/admin" class="relative inline-block group">
                     <img id="userIcon" src="/public/images/icons/admin_panel_settings_icon_border_white.svg"
                       title="Painel administrativo" alt="Perfil" class="w-8 h-8 group-hover:hidden">
@@ -66,6 +70,15 @@
                       title="Painel administrativo" alt="Perfil" class="w-8 h-8 hidden group-hover:block">
                   </a>
                   <% } %>
+                <a href="/user/profile" class="relative inline-block group">
+                  <img id="userIcon" src="/public/images/icons/user_icon.svg" title="Configurações do usuário"
+                    alt="Perfil" class="w-8 h-8 group-hover:hidden">
+                  <img id="userIcon" src="/public/images/icons/user_icon_hover.svg" title="Configurações do usuário"
+                    alt="Perfil" class="w-8 h-8 hidden group-hover:block">
+                </a>
+                <button onclick="logout()" class="relative inline-block">
+                  <img id="userLogout" src="/public/images/icons/logout_icon.svg" alt="logout" title="Sair da conta" class="w-8 h-8">
+                </button>
               </div>
               <% } else { %>
                 <button onclick="toggleLoginModal()" class="menuItem">Entre ou cadastre-se</button>

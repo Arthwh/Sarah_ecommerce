@@ -3,8 +3,10 @@ import ProductService from '../services/productService.js';
 class ProductController {
     static async getLandingPage(req, res) {
         try {
-            const data = await ProductService.getLandingPageData();
-            res.render('client/landingPage', { data });
+            const user = req.session.user
+            console.log("User: " + JSON.stringify(user))
+            const components = await ProductService.getLandingPageData();
+            res.render('client/landingPage', { data: { user: user, components: components } });
         } catch (error) {
             res.status(500).json({ error: 'Erro ao carregar a página inicial' });
         }
@@ -21,8 +23,10 @@ class ProductController {
 
     static async listProducts(req, res) {
         try {
+            const user = req.session.user
+            console.log("User: " + JSON.stringify(user))
             const data = await ProductService.listProducts();
-            res.render('client/productsList', { data });
+            res.render('client/productsList', { data: { user: user, page: data.page, pagination: data.pagination, products: data.products } });
         } catch (error) {
             res.status(500).json({ error: 'Erro ao listar produtos' });
         }
@@ -30,12 +34,14 @@ class ProductController {
 
     static async getSpecificProduct(req, res) {
         try {
+            const user = req.session.user
+            console.log("User: " + JSON.stringify(user))
             const id = req.params.id;
             if (!id) {
                 res.status(404).json({ error: 'Código do produto não informado ou incorreto' })
             }
             const data = await ProductService.getSpecificProduct(id);
-            res.render('client/product', { data });
+            res.render('client/product', { data: { user: user, page: data.page, product: data.product } });
         } catch (error) {
             res.status(500).json({ error: 'Erro ao buscar produto' });
         }

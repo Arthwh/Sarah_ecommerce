@@ -148,8 +148,8 @@
                 }
                 // Separa os dados em variáveis
                 const user = data.user;
-                const cart = data.user.cart || {};
-                const wishlist = data.user.wishlist || {};
+                const cart = user?.cart || {};
+                const wishlist = user?.wishlist || {};
                 const products = data.products;
                 const page = data.page
             </script>

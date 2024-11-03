@@ -12,5 +12,8 @@ router.get('/users/email/:email', checkAuth, UserController.getUserByEmail);
 router.post('/api/register', UserController.createUser);
 router.put('/users/:id', checkAuth, UserController.updateUser);
 router.delete('/users/:id', checkAuth, UserController.deleteUser);
+router.get('/session-debug', (req, res) => {
+    res.status(200).json({ data: req.session.user });
+});
 
 export default router;

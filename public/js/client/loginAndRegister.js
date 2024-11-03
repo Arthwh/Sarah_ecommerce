@@ -60,13 +60,29 @@ async function login() {
         }
         const data = await response.json();
         console.log("Login bem-sucedido:", data);
-        showToast('Login bem-sucedido', 'success')
-        editHeaderWithUserInfo(data.user);
-        toggleRegisterModal();
-        toggleLoginModal();
+        await showToast('Login bem-sucedido', 'success')
+        location.reload()
     } catch (error) {
         console.error('Erro no login:', error);
         showToast('Erro no login. Verifique suas credenciais.', 'error');
+    }
+}
+
+async function logout() {
+    console.log("teste")
+    try {
+        const response = await fetch('/api/logout', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+        if (!response.ok) {
+            throw new Error(`Erro HTTP: ${response.status}`);
+        };
+        location.reload();
+    } catch (error) {
+
     }
 }
 
@@ -94,7 +110,7 @@ async function register() {
                     cpf: registerData.cpf,
                     gender: registerData.gender,
                     birthdate: registerData.birthdate,
-                    phoneNumber: registerData.phoneNumber
+                    phone_number: registerData.phone_number
                 })
         });
         if (!response.ok) {
@@ -104,7 +120,6 @@ async function register() {
         console.log("Registro bem-sucedido:", data);
         showToast("Usuário criado com sucesso!", "success")
         toggleRegisterModal();
-        // toggleLoginModal();
     } catch (error) {
         console.error("Erro ao registrar-se: ", error);
         showToast("Ocorreu um erro ao registrar.<br> Tente novamente mais tarde", "error")
@@ -127,7 +142,7 @@ function validateRegisterData() {
     const cpf = document.getElementById('cpf').value;
     const name = document.getElementById('name').value;
     const birthdate = document.getElementById('birthdate').value;
-    const phone = document.getElementById('phoneNumber').value;
+    const phone = document.getElementById('phone_number').value;
     const password = document.getElementById('registerPassword').value;
     const gender = document.getElementById('gender').value
     let valid = true;

@@ -1,10 +1,6 @@
 //Mock de dados sobre produto especifico (inclui infos sobre todas as variantes). Deve receber o baseId e o sku e fazer a consulta, retornando os dados. Se o sku nao for informado, deve pegar o primeiro que aparecer na consulta. 
 export async function getProductInfo_Mock(req, res) {
     const data = {
-        user: {
-            logged: 'true',
-            role: 'admin'
-        },
         product: {
             baseProduct: '1',
             sku: '0001',
@@ -396,8 +392,8 @@ export async function getCategories_Mock() {
 }
 
 export async function getLandingPageComponentsAndData_Mock() {
-    const data = {
-        components: [
+    const components =
+        [
             {
                 id: 1,
                 section_name: "Top Banner",
@@ -877,8 +873,7 @@ export async function getLandingPageComponentsAndData_Mock() {
                     [
                     ],
             }
-        ],
-    }
+        ];
 
-    return data;
+    return components;
 }

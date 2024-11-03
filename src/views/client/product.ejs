@@ -10,6 +10,8 @@
   <link href="/public/css/pagePattern.css" rel="stylesheet">
   <link href="/public/css/tailwind/style.css" rel="stylesheet">
   <link href="/public/css/client/carouselControllStyles.css" rel="stylesheet">
+  <link href="/public/css/messageModal/modal.css" rel="stylesheet">
+
 </head>
 
 <body>
@@ -186,19 +188,22 @@
 
     <!-- Footer -->
     <%- include('partials/_footer') %>
+
+      <script src="/public/js/messageModal/toastMessageModal.js"></script>
+      <script src="/public/js/messageModal/centralMessageModal.js"></script>
       <script>
         // Obtem os dados enviados do backend e converte para JSON
         const data = JSON.parse('<%- JSON.stringify(data) %>');
-        if (!data || !data.product || !data.user) {
+        if (!data) {
           console.error('Dados incompletos.');
           window.location.href = "/error";
         }
         // Separa os dados em variáveis
         const user = data.user;
-        const cart = data.user.cart || {};
-        const wishlist = data.user.wishlist || {};
+        const cart = user?.cart;
+        const wishlist = user?.wishlist;
         const product = data.product;
-        const variants = data.product.variants;
+        const variants = product?.variants;
         const page = data.page
       </script>
       <script src="/public/js/client/categoryAsideMenu.js"></script>

@@ -35,7 +35,11 @@ class UserService {
             if (!userData.role) {
                 userData.role = 1;
             }
-
+            if (UserRepository.checkIfEmailExists(userData.email)) {
+                const error = new Error('Error creating user: E-mail already exists');
+                console.error(error.message);
+                throw error;
+            }
             await UserRepository.createUserRepository(userData);
             return { message: "User created successfully" };
         } catch (error) {
@@ -50,7 +54,7 @@ class UserService {
             if (!userData.role) {
                 userData.role = 1;
             }
-            
+
             await UserRepository.updateUserRepository(id, userData);
             return { message: "User updated successfully" };
         } catch (error) {

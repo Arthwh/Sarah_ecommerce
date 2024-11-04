@@ -22,13 +22,20 @@ class ProductVariantRepository {
         }
     }
 
-    static async createProductVariantRepository({ product_id, color, unit_price, installments, is_on_sale, size, stock_quantity }) {
+    static async createProductVariantRepository(product_id, { variants }) {
         try {
-            const { rows } = await pool.query(
-                "INSERT INTO product_variant (product_id, color, unit_price, installments, is_on_sale, size, stock_quantity) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *",
-                [product_id, color, unit_price, installments, is_on_sale, size, stock_quantity]
-            );
-            return rows[0];
+            variants = JSON.parse(variants);
+            const rows = [];
+            for (const variant of variants) {
+                variant.variantPrice = parseFloat(variant.variantPrice.replace('R$', '').replace(/\./g, '').replace(',', '.'));
+                const result = await pool.query(
+                    // Installments, is_on_sale e stock_quantity possuem um valor temporário
+                    "INSERT INTO product_variant (products_id, color, unit_price, size, installments, is_on_sale, stock_quantity) VALUES ($1, $2, $3, $4, 10, false, 1337) RETURNING *",
+                    [product_id, variant.variantColor, variant.variantPrice, variant.variantSize]
+                );
+                rows.push(result.rows[0]);
+            }
+            return rows;
         } catch (error) {
             console.error('Error creating product variant:', error);
             throw error;
@@ -58,3 +65,5 @@ class ProductVariantRepository {
         }
     }
 }
+
+export default ProductVariantRepository

@@ -4,28 +4,25 @@ import UserRepository from '../repositories/userRepository.js';
 class UserService {
     static async getAllUsersService() {
         try {
-            await UserRepository.getAllUsersRepository();
-            return { message: "All Users listed successfully" };
+            return await UserRepository.getAllUsersRepository();
         } catch (error) {
             console.error('Error listing users: ' + error.message);
             throw error;
         }
     }
 
-    static async getUserbyIdService(userData) {
+    static async getUserbyIdService(id) {
         try {
-            await UserRepository.getUserByIdRepository(userData.id);
-            return { message: "User found successfully" };
+            return await UserRepository.getUserByIdRepository(id);
         } catch (error) {
             console.error('Error getting user: ' + error.message);
             throw error;
         }
     }
 
-    static async getUserbyEmailService(userData) {
+    static async getUserbyEmailService(email) {
         try {
-            await UserRepository.getUserByEmailRepository(userData.email);
-            return { message: "User found successfully" };
+            return await UserRepository.getUserByEmailRepository(email);
         } catch (error) {
             console.error('Error getting user: ' + error.message);
             throw error;
@@ -47,11 +44,14 @@ class UserService {
         }
     }
 
-
-
-    static async updateUserService(userData) {
+    static async updateUserService(id, userData) {
         try {
-            await UserRepository.updateUserRepository(userData);
+            userData.password = await argon2.hash(userData.password);
+            if (!userData.role) {
+                userData.role = 1;
+            }
+            
+            await UserRepository.updateUserRepository(id, userData);
             return { message: "User updated successfully" };
         } catch (error) {
             console.error('Error updating user: ' + error.message);
@@ -59,9 +59,9 @@ class UserService {
         }
     }
 
-    static async deleteUserService(userData) {
+    static async deleteUserService(id) {
         try {
-            await UserRepository.deleteUserRepository(userData.id);
+            await UserRepository.deleteUserRepository(id);
             return { message: "User deleted successfully" };
         } catch (error) {
             console.error('Error deleting user: ' + error.message);

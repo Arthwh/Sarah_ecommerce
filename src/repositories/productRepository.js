@@ -53,15 +53,13 @@ class ProductRepository {
         }
     }
 
-    static async createProductImagesRepository(product_id, files) {
+    static async createProductImagesRepository(variant_id, files) {
         try {
-            console.log(files);
             const rows = [];
             for (const file of files) {
                 const result = await pool.query(`
                 INSERT INTO product_images(product_id, image_url)
-                VALUES($1, $2)
-                    `, [product_id, file.path]);
+                VALUES($1, $2) RETURNING *`, [variant_id, file.path]);
                 rows.push(result.rows[0]);
             }
             return rows;

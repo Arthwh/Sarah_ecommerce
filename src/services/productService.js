@@ -1,11 +1,16 @@
 import ProductRepository from '../repositories/productRepository.js'
+import ProductVariantRepository from '../repositories/productVariantRepository.js'
 import { getCategories_Mock, getLandingPageComponentsAndData_Mock, getProductsForList_Mock, getProductInfo_Mock, updateProductVariantData_Mock } from '../controllers/mockProductData.js' // Mocks dos dados enquanto nao esta pronto essa parte no backend
 
 class ProductService {
-    //Dados de mock
+
     static async getLandingPageData() {
-        const data = await getLandingPageComponentsAndData_Mock();
-        return data;
+        try {
+            return await ProductRepository.getLandingPageDataRepository();
+        } catch (error) {
+            console.error('Error getting LandingPage: ' + error.message);
+            throw error;
+        }
     }
 
     //Dados de mock
@@ -26,9 +31,14 @@ class ProductService {
         return data;
     }
 
-    static async createProductService(productData) {
+    static async createProductService(productData, files) {
         try {
-            await ProductRepository.createProductRepository(productData);
+            const productResponse = await ProductRepository.createProductRepository(productData);
+            const product_id = productResponse.id;
+            await ProductRepository.assignCategoryRepository(product_id, productData);
+            await ProductRepository.createProductImagesRepository(product_id, files);
+            if (productData.variants)
+                await ProductVariantRepository.createProductVariantRepository(product_id, productData);
             return { message: "Product created successfully" };
         } catch (error) {
             console.error('Error creating product: ' + error.message);

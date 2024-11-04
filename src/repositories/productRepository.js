@@ -22,12 +22,17 @@ class ProductRepository {
         }
     }
 
-    static async createProductRepository({ brand_id, name, description, total_stock_quantity }) {
+    static async createProductRepository({
+        productName,
+        productDescription,
+        brand
+    }) {
         try {
-            const { rows } = await pool.query(
-                "INSERT INTO products (brand_id, name, description, total_stock_quantity) VALUES ($1, $2, $3, $4) RETURNING *",
-                [brand_id, name, description, total_stock_quantity]
-            );
+            // Quantidade em estoque temporária
+            const { rows } = await pool.query(`
+                INSERT INTO products (brand_id, name, description, total_stock_quantity)
+                VALUES ($1, $2, $3, 1337) RETURNING id
+            `, [brand, productName, productDescription]);
             return rows[0];
         } catch (error) {
             console.error('Error creating product:', error);
@@ -35,11 +40,42 @@ class ProductRepository {
         }
     }
 
+    static async assignCategoryRepository(product_id, { category }) {
+        try {
+            const { rows } = await pool.query(`
+                INSERT INTO product_category_assignments(product_id, category_id)
+                VALUES($1, $2)
+                    `, [product_id, category[0]]);
+            return rows[0];
+        } catch (error) {
+            console.error('Error assigning category:', error);
+            throw error;
+        }
+    }
+
+    static async createProductImagesRepository(product_id, files) {
+        try {
+            console.log(files);
+            const rows = [];
+            for (const file of files) {
+                const result = await pool.query(`
+                INSERT INTO product_images(product_id, image_url)
+                VALUES($1, $2)
+                    `, [product_id, file.path]);
+                rows.push(result.rows[0]);
+            }
+            return rows;
+        } catch (error) {
+            console.error('Error uploading images:', error);
+            throw error;
+        }
+    }
+
     static async updateProductRepository(id, { brand_id, name, description, total_stock_quantity }) {
         try {
             const { rows } = await pool.query(
-                'UPDATE products SET brand_id = $1, name = $2, description = $3, total_stock_quantity = $4 RETURNING *',
-                [brand_id, name, description, total_stock_quantity]
+                'UPDATE products SET brand_id = $1, name = $2, description = $3, total_stock_quantity = $4 WHERE ID = $5 RETURNING *',
+                [brand_id, name, description, total_stock_quantity, id]
             );
             return rows[0];
         } catch (error) {
@@ -64,8 +100,13 @@ class ProductRepository {
     }
 
     static async getLandingPageDataRepository() {
-        const { rows } = await pool.query('SELECT id, section_name, section_model, section_content, content_type, section_position, start_date, end_date, is_active FROM landing_page_components WHERE is_active = true ORDER BY section_position ASC;');
-        return rows
+        try {
+            const { rows } = await pool.query('');
+            return rows;
+        } catch (error) {
+            console.error('Error finding all products:', error);
+            throw error;
+        }
     }
 }
 

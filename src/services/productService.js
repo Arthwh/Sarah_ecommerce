@@ -38,9 +38,7 @@ class ProductService {
             await ProductRepository.assignCategoryRepository(product_id, productData);
             if (productData.variants) {
                 const variants = await ProductVariantRepository.createProductVariantRepository(product_id, productData);
-                console.log('variants', variants)
                 for (const variant of variants) {
-                    console.log('variant', variant)
                     const variant_id = variant.id;
                     await ProductRepository.createProductImagesRepository(variant_id, files);
                 }

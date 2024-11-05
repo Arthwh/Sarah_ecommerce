@@ -83,7 +83,7 @@ class ProductController {
                     console.log(`Arquivo recebido: ${file.originalname}`);
                 });
             }
-            const newProduct = await ProductService.createProduct(productData);
+            const newProduct = await ProductService.createProductService(productData, files);
             res.status(201).json(newProduct);
         } catch (error) {
             res.status(500).json({ error: 'Erro ao criar produto' });

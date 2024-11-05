@@ -3,8 +3,7 @@ import UserService from '../services/userService.js';
 class UserController {
     static async getAllUsers(req, res) {
         try {
-            await UserService.getAllUsersService();
-            res.status(200).send({ message: 'User updated successfully' });
+            res.status(200).send(await UserService.getAllUsersService());
         } catch (error) {
             res.status(400).send({ message: error.message });
         }
@@ -12,9 +11,7 @@ class UserController {
 
     static async getUserById(req, res) {
         try {
-            const userData = req.body;
-            await UserService.getUserbyIdService(userData);
-            res.status(200).send({ message: 'User found successfully' });
+            res.status(200).send(await UserService.getUserbyIdService(req.params.id));
         } catch (error) {
             res.status(400).send({ message: error.message });
         }
@@ -22,9 +19,7 @@ class UserController {
 
     static async getUserByEmail(req, res) {
         try {
-            const userData = req.body;
-            await UserService.getUserbyEmailService(userData);
-            res.status(200).send({ message: 'User found successfully' });
+            res.status(200).send(await UserService.getUserbyEmailService(req.params.email));
         } catch (error) {
             res.status(400).send({ message: error.message });
         }
@@ -46,8 +41,9 @@ class UserController {
 
     static async updateUser(req, res) {
         try {
+            const id = req.params.id;
             const userData = req.body;
-            await UserService.updateUserService(userData);
+            await UserService.updateUserService(id, userData);
             res.status(200).send({ message: 'User updated successfully' });
         } catch (error) {
             res.status(400).send({ message: error.message });
@@ -56,8 +52,7 @@ class UserController {
 
     static async deleteUser(req, res) {
         try {
-            const userData = req.body;
-            await UserService.deleteUserService(userData);
+            await UserService.deleteUserService(req.params.id);
             res.status(200).send({ message: 'User deleted successfully' });
         } catch (error) {
             res.status(400).send({ message: error.message });

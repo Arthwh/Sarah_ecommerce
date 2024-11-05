@@ -238,18 +238,18 @@ export async function getProductsForList_Mock(req, res) {
     const data = {
         products: [
             {
-                id: '1',
-                name: 'Camiseta Regular Red Hot Chili Peppers',
-                price: '99,90',
-                promoPrice: '79,90', // Preço promocional
-                isOnSale: true, // Controle de promoção
+                id: '1', // atributo proprio
+                name: 'Camiseta Regular Red Hot Chili Peppers', // atributo proprio
+                price: '99,90', // product_variant
+                promoPrice: '79,90', // product_offers
+                isOnSale: true, // product_variant
                 images: [
                     '/public/mockImages/redhotCamiseta.webp',
                     '/public/mockImages/redhotCamiseta2.webp'
-                ],
-                url: '/masculino/camisetas/camiseta-regular-red-hot-chili-peppers',
-                category: 'masculino',
-                subcategory: 'camisetas'
+                ], // product_images
+                url: '/masculino/camisetas/camiseta-regular-red-hot-chili-peppers', // sem db, criar no back
+                category: 'masculino', // categories
+                subcategory: 'camisetas' // sub_categories
             },
             {
                 id: '2',

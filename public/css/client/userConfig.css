@@ -1,0 +1,35 @@
+.settings-container {
+    display: flex;
+    min-height: 100vh;
+    width: 90%;
+    margin-inline: auto;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.menu-lateral {
+    width: 250px;
+    background-color: #f7f7f7;
+    padding: 20px;
+}
+
+.menu-lateral ul {
+    list-style: none;
+    padding: 0;
+}
+
+.menu-lateral li {
+    margin-bottom: 15px;
+}
+
+.menu-lateral a {
+    text-decoration: none;
+    color: #333;
+}
+
+.config-content {
+    flex-grow: 1;
+    padding: 20px;
+    justify-items: center;
+}
+

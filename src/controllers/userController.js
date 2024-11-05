@@ -79,6 +79,18 @@ class UserController {
         });
     }
 
+    static async getUserAccountPage(req, res) {
+        const user = req.session.user;
+        if (!user) {
+            return res.status(401).send({ message: 'Você precisa estar logado para acessar essa página' });
+        }
+        res.render('client/userConfig', {
+            data: {
+                user: user,
+            }
+        });
+    }
+
     // static async listUsers(req, res) {
     //     try {
     //         const users = await UserService.listUsers();

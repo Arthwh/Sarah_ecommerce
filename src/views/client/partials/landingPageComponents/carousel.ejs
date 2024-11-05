@@ -1,12 +1,14 @@
-<div id="gridSection_<%= component.id %>" class="grid-section <%= data.page.mode === 'edit' ? 'editable' : '' %>"
-    data-component-id="<%= component.id %>" data-component-content-type="<%= component.content_type %>"
+<div id="carouselSection_<%= component.id %>"
+    class="carousel-section <%= data.page.mode === 'edit' ? 'editable' : '' %>" data-component-id="<%= component.id %>"
+    data-component-content-type="<%= component.content_type %>"
     data-component-section-model="<%= component.section_model %>"
     data-component-section-position="<%= component.section_position %>" data-element="section"
     data-title="<%= component.title %>" data-product-type="<%= component.product_type %>"
     data-product-limit="<%= component.product_limit %>" data-end-date="<%= component.end_date %>">
     <% if (data.page.mode==='edit' ) { %>
-        <div class="edit-buttons" data-component-id="gridSection_<%= component.id %>">
-            <button class="edit-btn" onclick="showEditComponentModal('gridSection_<%= component.id %>', 'grid')">
+        <div class="edit-buttons" data-component-id="bannerSection_<%= component.id %>">
+            <button class="edit-btn"
+                onclick="showEditComponentModal('carouselSection_<%= component.id %>', 'carousel')">
                 <img src="/public/images/icons/edit_pen_icon_white.svg" alt="editar">
             </button>
             <button class="move-btn" onclick="moveElement(this, 'section')">
@@ -17,18 +19,17 @@
             </button>
         </div>
         <% } %>
+
             <div class="titleSection">
-                <h2 id="gridSection_<%= component.id %>_title">
+                <h2 id="carouselSection_<%= component.id %>_title">
                     <%= component.title %>
                 </h2>
             </div>
-            <div id="gridSectionContent_<%= component.id %>"
-                class="overflow-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+            <div id="carousel-content_<%= component.id %>" class="carousel-content container">
                 <% component.section_content.forEach(item=> { %>
                     <% if (item.landing_page_component_id===component.id && item.is_active) { %>
-                        <div class="product-card <%= data.page.mode === 'edit' ? 'editable' : '' %>"
-                            data-element="item">
-
+                        <div class="product-card <%= data.page.mode === 'edit' ? 'editable draggable' : '' %>"
+                            draggable="true" data-element="item">
                             <div class="product-image-wrapper">
                                 <!-- Link e imagens do produto -->
                                 <a href="<%= item.product.url %>" class="product-link">
@@ -64,17 +65,14 @@
                                         <% if (item.product.isOnSale) { %>
                                             <span class="price-old">R$ <%= item.product.price %>
                                             </span>
-                                            <span class="price-new">R$ <%= item.product.promoPrice %>
-                                            </span>
+                                            <span class="price-new">R$ <%= item.product.promoPrice %></span>
                                             <% } else { %>
-                                                <span class="price-current">R$
-                                                    <%= item.product.price %>
-                                                </span>
+                                                <span class="price-current">R$ <%= item.product.price %></span>
                                                 <% } %>
                                                     <span class="price-installments">
-                                                        <%= item.product.installments %>
-                                                            x de
-                                                            R$ <%= item.product.installment_value %>*
+                                                        <%= item.product.installments %>x de
+                                                            R$ <%= item.product.installment_value %>
+                                                                *
                                                     </span>
                                     </div>
                                 </div>
@@ -93,4 +91,13 @@
                         <% } %>
                             <% }); %>
             </div>
+            <!-- Botões de controle do carrossel -->
+            <button class="carousel-control prev" onclick="movecarousel(-1, <%= component.id %>)">
+                <img class="prevBlack" src="/public/images/icons/arrow_prev_icon_black.svg" alt="previous">
+                <img class="prevWhite" src="/public/images/icons/arrow_prev_icon_white.svg" alt="previous">
+            </button>
+            <button class="carousel-control next" onclick="movecarousel(1, <%= component.id %>)">
+                <img class="forwBlack" src="/public/images/icons/arrow_forward_icon_black.svg" alt="next">
+                <img class="forwWhite" src="/public/images/icons/arrow_forward_icon_white.svg" alt="next">
+            </button>
 </div>

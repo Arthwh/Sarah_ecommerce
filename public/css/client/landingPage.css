@@ -2,20 +2,31 @@
 .banner-section {
     position: relative;
     width: 100%;
-    max-height: 550px;
+    min-height: 400px;
     background-color: #e9ecef;
-    overflow: hidden;
     margin-bottom: 40px;
     display: flex;
-    overflow-x: hidden;
+    overflow: hidden;
     flex-wrap: nowrap;
+    margin-inline: auto;
 }
 
-.banner-section img {
+.banner-carousel{
+    width: 100%;
+    height: 100%;
+}
+
+.banner-carousel img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    flex-shrink: 0;
+}
+
+.banner-carousel:hover .editable:hover, .banner-section:hover{
+    .banner-carousel{
+        margin-top: 50px;
+        box-sizing: border-box;
+    }
 }
 
 /* Ocultar todos os banners inicialmente */
@@ -35,12 +46,18 @@
 
 .banner_image_large {
     width: 100%;
+    height: 100%;
     display: none;
+    object-fit: cover;
+    flex-grow: 1;
 }
 
 .banner_image_small {
     width: 100%;
+    height: 100%;
     display: block;
+    object-fit: cover;
+    flex-grow: 1;
 }
 
 .banner_button{
@@ -67,7 +84,7 @@
 }
 
 /* Exibir a imagem grande para telas maiores */
-@media (min-width: 768px) {
+@media (min-width: 900px) {
     .banner_image_large {
         display: block;
     }
@@ -79,41 +96,49 @@
     }
 }
 
-/* Highlight Section */
-.highlight-section {
-    max-width: 90%;
+/* carousel Section */
+.carousel-section {
+    width: 90%;
+    min-height: 500px;
+    height: fit-content;
     margin-inline: auto;
-    max-height: 600px;
     object-fit: cover;
-    background-color: #fff;
-    padding: 20px, 0px;
+    background-color: #f1f3f5;
+    padding: 20px 0px;
     margin-bottom: 40px;
     text-align: center;
     position: relative;
 }
 
-.highlightCarousel{
+.carousel-content{
     align-items: stretch;
     display: flex;
     flex-wrap: nowrap;
     gap: 15px;
     overflow: hidden;
     scroll-behavior: smooth;
+    height: 100%;
+    margin: auto;
 }
 
-.highlightCarousel .product-card{
-    min-width: 225px;
+.carousel-content .product-card{
+    min-width: 250px;
+    max-width: 250px;
     justify-content: space-between;
     display: flex;
     flex-direction: column;
-    flex-grow: 3;
-    height: 430px;
+    flex-grow: 0;
+    height: 100%;
 }
 
 /* Grid Section */
 .grid-section {
+    min-height: 500px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
     background-color: #f1f3f5;
-    max-width: 90%;
+    width: 90%;
     margin-inline: auto;
     max-height: fit-content;
     object-fit: cover;
@@ -122,10 +147,17 @@
     text-align: center;
 }
 
-.highlight-section h2, .grid-section h2 {
+.grid-section .product-card{
+    min-width: 200px;
+    max-width: 300px;
+}
+
+.carousel-section h2, .grid-section h2 {
     font-family: Lato, sans-serif;
     font-size: 1.2rem;
     margin-bottom: 15px;
+    width: fit-content;
+    margin: auto;
 }
 
 .links-cards-section{
@@ -145,6 +177,18 @@
     height: 400px;
 }
 
-.links-cards-card{
-    
+@media (min-width: 1920px){
+    .links-cards-section{
+        max-width: 70%;
+    }
+    .carousel-section{
+        max-width: 70%;
+    }
+    .grid-section{
+        max-width: 70%;
+    }
+}
+
+.titleSection{
+    margin-bottom: 20px;
 }

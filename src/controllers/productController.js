@@ -6,7 +6,18 @@ class ProductController {
             const user = req.session.user
             console.log("User: " + JSON.stringify(user))
             const components = await ProductService.getLandingPageData();
-            res.render('client/landingPage', { data: { user: user, components: components } });
+            res.render('client/landingPage', { data: { user: user, components: components, page: { mode: 'main' } } });
+        } catch (error) {
+            res.status(500).json({ error: 'Erro ao carregar a página inicial' });
+        }
+    }
+
+    static async getLandingPageForEdit(req, res) {
+        try {
+            const user = req.session.user
+            console.log("User: " + JSON.stringify(user))
+            const components = await ProductService.getLandingPageData();
+            res.render('client/landingPage', { data: { user: user, components: components, page: { mode: 'edit' } } });
         } catch (error) {
             res.status(500).json({ error: 'Erro ao carregar a página inicial' });
         }

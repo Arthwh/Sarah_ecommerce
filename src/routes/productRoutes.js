@@ -1,9 +1,11 @@
 import express from 'express';
 import ProductController from '../controllers/productController.js';
+import { isAdmin, checkAuth } from '../middlewares/auth.js';
 
 const router = express.Router();
 
 router.get('/', ProductController.getLandingPage);
+router.get('/landing-page/edit', isAdmin, ProductController.getLandingPageForEdit)
 router.get('/products', ProductController.listProducts);
 router.get('/products/:id', ProductController.getSpecificProduct);
 router.post('/products', ProductController.createProduct);

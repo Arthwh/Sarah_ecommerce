@@ -43,8 +43,8 @@
                   <% if(data.user?.role=='3' ){ %>
                     <a href="/admin" class="block py-2 text-white menuItem w-fit">Administrador</a>
                     <% } %>
-                  <a href="/user/profile" class="block pt-2 text-white menuItem w-fit">Perfil</a>
-                  <button onclick="logout()" class="block pt-2 text-white menuItem w-fit">Sair</button>
+                      <a href="/account" class="block pt-2 text-white menuItem w-fit">Perfil</a>
+                      <button onclick="logout()" class="block pt-2 text-white menuItem w-fit">Sair</button>
                 </div>
               </div>
               <div class="hidden md:flex relative space-x-6 ">
@@ -70,15 +70,16 @@
                       title="Painel administrativo" alt="Perfil" class="w-8 h-8 hidden group-hover:block">
                   </a>
                   <% } %>
-                <a href="/user/profile" class="relative inline-block group">
-                  <img id="userIcon" src="/public/images/icons/user_icon.svg" title="Configurações do usuário"
-                    alt="Perfil" class="w-8 h-8 group-hover:hidden">
-                  <img id="userIcon" src="/public/images/icons/user_icon_hover.svg" title="Configurações do usuário"
-                    alt="Perfil" class="w-8 h-8 hidden group-hover:block">
-                </a>
-                <button onclick="logout()" class="relative inline-block">
-                  <img id="userLogout" src="/public/images/icons/logout_icon.svg" alt="logout" title="Sair da conta" class="w-8 h-8">
-                </button>
+                    <a href="/account" class="relative inline-block group">
+                      <img id="userIcon" src="/public/images/icons/user_icon.svg" title="Configurações do usuário"
+                        alt="Perfil" class="w-8 h-8 group-hover:hidden">
+                      <img id="userIcon" src="/public/images/icons/user_icon_hover.svg" title="Configurações do usuário"
+                        alt="Perfil" class="w-8 h-8 hidden group-hover:block">
+                    </a>
+                    <button <%=data.page?.mode !=='edit' ? 'onclick="logout()"' : '' %> class="relative inline-block">
+                      <img id="userLogout" src="/public/images/icons/logout_icon.svg" alt="logout" title="Sair da conta"
+                        class="w-8 h-8">
+                    </button>
               </div>
               <% } else { %>
                 <button onclick="toggleLoginModal()" class="menuItem">Entre ou cadastre-se</button>

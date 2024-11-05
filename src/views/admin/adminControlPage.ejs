@@ -9,6 +9,8 @@
     <link href="/public/css/tailwind/style.css" rel="stylesheet">
     <link href="/public/css/admin/product.css" rel="stylesheet">
     <link href="/public/css/messageModal/modal.css" rel="stylesheet">
+    <link href="/public/css/admin/landingPageEdit/editLandingPage.css" rel="stylesheet">
+
 </head>
 
 <body class="min-h-lvh">
@@ -18,7 +20,7 @@
         <div id="mainContentContainer"
             class="flex flex-grow flex-col md:grid md:grid-cols-6 mb-10 h-full md:m-10 box-border space-y-4 md:space-y-0 md:space-x-4">
             <aside id="optionsMenuContainer"
-                class="hidden md:block border-t border-white md:border-none flex flex-col span-cols-2 bg-black text-white p-4">
+                class="hidden md:block border-t border-white md:border-none flex flex-col span-cols-1 bg-black text-white p-4">
                 <div class="flex mb-10 w-full md:items-center">
                     <h2 class="flex justify-center w-full textColorYellow text-md">Configurações</h2>
                     <button onclick="toggleOptionsMenuSmallScreen()"
@@ -83,7 +85,7 @@
                 </div>
             </aside>
             <div id="optionVisualizationContainer"
-                class="col-span-5 min-w-screen h-full border border-gray-300 md:mr-4">
+                class="overflow-y-hidden col-span-5 min-w-screen border border-gray-300 md:mr-4">
             </div>
         </div>
 
@@ -92,6 +94,7 @@
         <script src="/public/js/admin//product/product_register.js"></script>
         <script src="/public/js/admin/order.js"></script>
         <script src="/public/js/admin/landingPage.js"></script>
+        <script src="/public/js/admin/landingPage/editLandingPage.js"></script>
         <script src="/public/js/admin/logs.js"></script>
         <script src="/public/js/messageModal/toastMessageModal.js"></script>
         <script src="/public/js/messageModal/centralMessageModal.js"></script>

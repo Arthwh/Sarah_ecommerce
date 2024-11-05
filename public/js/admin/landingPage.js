@@ -11,9 +11,21 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 // Funções de renderização para Página Inicial
-function renderAlterLandingPage() {
-    optionVisualizationContainer.innerHTML = '<iframe src="/" frameborder="0" class="w-full h-full"></iframe>';
-};
+async function renderAlterLandingPage() {
+    optionVisualizationContainer.innerHTML = `
+        <div class="utility-bar">
+            <h2>Edição da página inicial</h2>
+            <div>
+            <button onclick="addComponent()">Adicionar Componente</button>
+            <button onclick="saveChanges()">Salvar</button>
+            <button onclick="discardChanges()">Descartar</button>
+            </div>
+        </div>
+        <iframe id="landingPageIframe" src="/landing-page/edit" frameborder="0" class="w-full h-full"></iframe>
+    `;
+    disableAllLinks();
+    // clearEditHistoryLocalStorage()
+}
 
 function renderScheduledChangesLandingPage() {
     optionVisualizationContainer.innerHTML = '<iframe src="/landing-page/scheduled-changes" frameborder="0" class="w-full h-full"></iframe>';

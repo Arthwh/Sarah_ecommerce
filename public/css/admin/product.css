@@ -19,8 +19,8 @@ body.modal-open {
 
 #previewImagesContainer {
     display: grid;
-    grid-template-columns: repeat(5, 1fr); /* 5 colunas fixas */
-    gap: 10px; /* Espaçamento entre os itens */
+    grid-template-columns: repeat(5, 1fr);
+    gap: 10px;
     justify-items: center;
 }
 

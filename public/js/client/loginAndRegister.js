@@ -80,7 +80,7 @@ async function logout() {
         if (!response.ok) {
             throw new Error(`Erro HTTP: ${response.status}`);
         };
-        location.reload();
+        window.location.href = '/';
     } catch (error) {
 
     }

@@ -1,7 +1,13 @@
 function showToast(message, type = 'info') {
+    const existentToast = document.getElementById('toastModal');
+    if (existentToast) {
+        existentToast.remove();
+    };
+
     // Cria o container do toast
     const toast = document.createElement('div');
     toast.classList.add('toast', type);
+    toast.id = 'toastModal'
 
     // Adiciona a mensagem
     toast.innerHTML = `

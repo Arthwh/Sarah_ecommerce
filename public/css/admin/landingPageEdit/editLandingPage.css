@@ -1,0 +1,149 @@
+iframe{
+    max-height: 90%;
+    overflow-y: hidden;
+    margin-top: auto;
+}
+
+.utility-bar {
+    display: flex;
+    width: 100%;
+    background-color: #f7f7f7;
+    color: black;
+    padding: 10px;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    z-index: 1000;
+}
+
+.utility-bar h2{
+    font-size: 18px;
+}
+
+.utility-bar div{
+    justify-items: end;
+}
+
+.utility-bar button {
+    background-color: black;
+    border: none;
+    color: white;
+    padding: 8px 16px;
+    text-align: center;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    border: 2px solid black;
+}
+
+.utility-bar button:hover {
+    background-color: white;
+    color: black;
+}
+
+#w-full {
+    margin-top: 50px; /* Para evitar que o iframe fique coberto pela barra de utilidades */
+}
+
+.edit-button-title{
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    display: none;
+}
+
+.edit-button-title:hover{
+    display: flex;
+    gap: 5px; 
+}
+
+.edit-buttons {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    display: none;
+}
+
+.editable:hover .edit-buttons {
+    display: flex;
+    gap: 5px; 
+}
+
+.edit-btn, .delete-btn, .move-btn, .add-btn {
+    margin-bottom: 10px;
+    padding: 1px;
+    background-color: rgba(0, 0, 0, 0.7);
+    border: none;
+    border-radius: 50%;
+    width: 30px; 
+    height: 30px; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.delete-btn{
+    background-color: rgb(105, 3, 3);
+}
+
+.edit-btn:hover, .delete-btn:hover {
+    background-color: rgba(0, 0, 0, 0.9);
+}
+
+.edit-btn img, .delete-btn img, .move-btn img, .add-btn img {
+    width: 16px; 
+    height: 16px;
+}
+
+/* Estilo do item selecionado */
+.item.selected {
+    background-color: #f0f8ff;
+    border-color: #007bff;
+}
+
+/* Botões de setas */
+.move-buttons {
+    display: flex;
+    gap: 5px;
+}
+
+.move-buttons button {
+    position: absolute;
+    padding: 5px;
+    cursor: pointer;
+    background-color: black;
+    margin: 10px;
+    padding: 10px;
+    border-radius: 50%;
+}
+
+/* Botão para cima */
+.button-up {
+    top: -45px; 
+    left: 50%; 
+    transform: translateX(-50%);
+}
+
+/* Botão para baixo */
+.button-down {
+    bottom: -45px; 
+    left: 50%; 
+    transform: translateX(-50%);
+}
+
+/* Botão para a esquerda */
+.button-left {
+    left: -40px; 
+    top: 50%; 
+    transform: translateY(-50%); 
+}
+
+/* Botão para a direita */
+.button-right {
+    z-index: 10;
+    right: -40px;
+    top: 50%; 
+    transform: translateY(-50%);
+}

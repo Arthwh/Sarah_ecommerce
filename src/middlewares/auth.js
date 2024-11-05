@@ -6,7 +6,8 @@ export function checkAuth(req, res, next) {
         next();
     } else {
         // Se não for válido, enviar erro
-        res.status(403).json({ message: 'Acesso negado.' });
+        req.session.errorMessage = 'Acesso negado.';
+        res.redirect('/');
     }
 }
 
@@ -14,6 +15,7 @@ export function isAdmin(req, res, next) {
     if (req.session.user && req.session.user.role === 3) {
         next();
     } else {
-        res.status(403).json({ message: 'Acesso negado.' });
+        req.session.errorMessage = 'Acesso negado.';
+        res.redirect('/');
     }
 }

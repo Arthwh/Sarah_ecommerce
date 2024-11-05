@@ -15,5 +15,6 @@ router.delete('/users/:id', checkAuth, UserController.deleteUser);
 router.get('/session-debug', (req, res) => {
     res.status(200).json({ data: req.session.user });
 });
+router.get('/account', checkAuth, UserController.getUserAccountPage);
 
 export default router;

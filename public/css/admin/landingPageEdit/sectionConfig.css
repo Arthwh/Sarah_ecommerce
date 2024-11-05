@@ -1,0 +1,83 @@
+.modal-add-banner-overlay, .modal-edit-sections-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-add-banner-overlay .modal-add-banner-content, .modal-edit-sections-overlay .modal-edit-sections-content {
+    background: #fff;
+    padding: 30px;
+    border-radius: 5px;
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.modal-add-banner-content h3, .modal-edit-sections-content h3{
+    display: flex;
+    margin-bottom: 30px;
+    font-size: larger;
+    font-weight: bold;
+    justify-content: center;
+}
+
+.modal-add-banner-content div, .modal-edit-sections-content div {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 15px;
+}
+
+.modal-add-banner-content label, .modal-edit-sections-content label {
+    justify-items: start;
+    margin-bottom: 5px;
+    padding: 2px;
+    font-weight: bold;
+    font-size: large;
+}
+
+.modal-add-banner-content input, .modal-edit-sections-content input{
+    padding: 2px;
+    border-bottom: 2px solid rgb(187, 187, 187);
+    font-size: large;
+}
+
+.modal-add-banner-content select, .modal-edit-sections-content select{
+    padding: 2px;
+    font-size: large;
+    border-bottom: 2px solid rgb(187, 187, 187);
+}
+
+.modal-add-banner-content input:disabled, .modal-edit-sections-content input:disabled, .modal-edit-sections-content input:read-only{
+    color: #A3A9B5;
+}
+
+.modal-add-banner-content input:focus, .modal-edit-sections-content input:focus {
+    border-color: black;
+}
+
+.modal-add-banner-buttons, .modal-edit-sections-buttons {
+    margin: 10px 0;
+    display: flex;
+    gap: 10px;
+}
+
+.modal-add-banner-buttons button, .modal-edit-sections-buttons button {
+    padding: 8px 12px;
+    cursor: pointer;
+    background-color: black;
+    border: 2px solid black;
+    color: white;
+}
+
+.modal-add-banner-buttons button:hover, .modal-edit-sections-buttons button:hover{
+    background-color: white;
+    color: black;
+}

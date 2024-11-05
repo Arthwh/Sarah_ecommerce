@@ -6,7 +6,8 @@ class ProductController {
             const user = req.session.user
             console.log("User: " + JSON.stringify(user))
             const components = await ProductService.getLandingPageData();
-            res.render('client/landingPage', { data: { user: user, components: components, page: { mode: 'main' } } });
+            const categories = await ProductService.getAllProductCategoriesAndSubcategories();
+            res.render('client/landingPage', { data: { user: user, components: components, page: { mode: 'main', categories: categories } } });
         } catch (error) {
             res.status(500).json({ error: 'Erro ao carregar a página inicial' });
         }
@@ -17,18 +18,18 @@ class ProductController {
             const user = req.session.user
             console.log("User: " + JSON.stringify(user))
             const components = await ProductService.getLandingPageData();
-            res.render('client/landingPage', { data: { user: user, components: components, page: { mode: 'edit' } } });
+            res.render('client/landingPage', { data: { user: user, components: components, page: { mode: 'edit', categories: {} } } });
         } catch (error) {
             res.status(500).json({ error: 'Erro ao carregar a página inicial' });
         }
     }
 
-    static async getCategories(req, res) {
+    static async getCategoriesAndSubcategories(req, res) {
         try {
-            const data = await ProductService.getAllProductCategories();
+            const data = await ProductService.getAllProductCategoriesAndSubcategories();
             res.status(200).json(data);
         } catch (error) {
-            res.status(500).json({ error: 'Erro ao buscar categorias' });
+            res.status(500).json({ error: 'Erro ao buscar categorias: ', error });
         }
     }
 
@@ -37,7 +38,8 @@ class ProductController {
             const user = req.session.user
             console.log("User: " + JSON.stringify(user))
             const data = await ProductService.listProducts();
-            res.render('client/productsList', { data: { user: user, page: data.page, pagination: data.pagination, products: data.products } });
+            const categories = await ProductService.getAllProductCategoriesAndSubcategories();
+            res.render('client/productsList', { data: { user: user, page: data.page, pagination: data.pagination, products: data.products }, page: { categories: categories } });
         } catch (error) {
             res.status(500).json({ error: 'Erro ao listar produtos' });
         }
@@ -52,7 +54,8 @@ class ProductController {
                 res.status(404).json({ error: 'Código do produto não informado ou incorreto' })
             }
             const data = await ProductService.getSpecificProduct(id);
-            res.render('client/product', { data: { user: user, page: data.page, product: data.product } });
+            const categories = await ProductService.getAllProductCategoriesAndSubcategories();
+            res.render('client/product', { data: { user: user, page: data.page, product: data.product }, page: { categories: categories } });
         } catch (error) {
             res.status(500).json({ error: 'Erro ao buscar produto' });
         }

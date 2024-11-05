@@ -1,6 +1,7 @@
 import ProductRepository from '../repositories/productRepository.js'
 import ProductVariantRepository from '../repositories/productVariantRepository.js'
 import { getCategories_Mock, getLandingPageComponentsAndData_Mock, getProductsForList_Mock, getProductInfo_Mock, updateProductVariantData_Mock } from '../controllers/mockProductData.js' // Mocks dos dados enquanto nao esta pronto essa parte no backend
+import { Product } from '../models/productModel.js';
 
 class ProductService {
 
@@ -35,7 +36,8 @@ class ProductService {
         try {
             const productResponse = await ProductRepository.createProductRepository(productData);
             const product_id = productResponse.id;
-            await ProductRepository.assignCategoryRepository(product_id, productData);
+            console.log(productData)
+            await ProductRepository.assignSubcategoryRepository(product_id, productData);
             if (productData.variants) {
                 await ProductVariantRepository.createProductVariantRepository(product_id, productData, files);
             }
@@ -52,10 +54,40 @@ class ProductService {
     static async deleteProduct(id) {
     }
 
-    //Dados de mock
-    static async getAllProductCategories() {
-        const data = await getCategories_Mock();
-        return data;
+    static async getAllProductCategoriesAndSubcategories() {
+        try {
+            const rows = await ProductRepository.getCategoriesAndSubcategories();
+            // Organiza os dados
+            const categories = [];
+            const categoriesMap = {};
+
+            rows.forEach(row => {
+                // Adiciona uma nova categoria se ela ainda não existe no mapa
+                if (!categoriesMap[row.category_id]) {
+                    const category = {
+                        id: row.category_id,
+                        name: row.category_name,
+                        subcategories: []
+                    };
+                    categories.push(category);
+                    categoriesMap[row.category_id] = category;
+                }
+
+                // Adiciona subcategoria à categoria correspondente
+                if (row.subcategory_id) {
+                    categoriesMap[row.category_id].subcategories.push({
+                        id: row.subcategory_id,
+                        name: row.subcategory_name
+                    });
+                }
+            });
+
+            console.log(categories);
+            return categories;
+        } catch (error) {
+            console.error('Erro ao processar categorias e subcategorias:', error);
+            throw error;
+        }
     }
 }
 

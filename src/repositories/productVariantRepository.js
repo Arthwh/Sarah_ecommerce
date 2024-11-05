@@ -27,11 +27,13 @@ class ProductVariantRepository {
             variants = JSON.parse(variants);
             const rows = [];
             for (const variant of variants) {
+                console.log(variant);
+                console.log(variant.installments)
                 variant.variantPrice = parseFloat(variant.variantPrice.replace('R$', '').replace(/\./g, '').replace(',', '.'));
                 const resultVariant = await pool.query(
                     // Installments, is_on_sale e stock_quantity possuem um valor temporário
-                    "INSERT INTO product_variant (products_id, color, unit_price, size, installments, is_on_sale, stock_quantity) VALUES ($1, $2, $3, $4, 10, false, 1337) RETURNING *",
-                    [product_id, variant.variantColor, variant.variantPrice, variant.variantSize]
+                    "INSERT INTO product_variant (products_id, color, unit_price, size, installments, is_on_sale, stock_quantity) VALUES ($1, $2, $3, $4, $5, false, 1) RETURNING *",
+                    [product_id, variant.variantColor, variant.variantPrice, variant.variantSize, variant.variantInstallments]
                 );
                 rows.push(resultVariant.rows[0]);
                 for (const file of files) {

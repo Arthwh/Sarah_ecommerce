@@ -19,7 +19,7 @@ function renderProductRegister() {
             return response.text();
         });
 
-    const productCategories = fetch('/api/admin/products/categories')
+    const productCategories = fetch('/api/products/categories/subcategories')
         .then(response => {
             if (!response.ok) {
                 throw new Error('Falha ao carregar categorias');
@@ -159,6 +159,21 @@ function formatPriceForFormData(price) {
     return value;
 }
 
+function calculateInstallmentsValues() {
+    const price = document.getElementById('variantPrice').value;
+    const installments = document.getElementById('variantInstallments').value;
+    const installmentsValue = document.getElementById('variantInstallmentsValue');
+    const showVariantInstallmentsValue = document.getElementById('showVariantInstallmentsValue');
+
+    if (price && installments) {
+        const priceFormated = parseFloat(price.replace('R$', '').replace(/\./g, '').replace(',', '.'));
+        const value = (priceFormated / installments)
+        const valueFormated = value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+        installmentsValue.value = value.toFixed(2);
+        showVariantInstallmentsValue.innerHTML = installments + "x de " + valueFormated;
+    }
+}
+
 function checkIfThereAreImagesToInherit() {
     const inheritImage = document.getElementById('inheritImage');
     console.log(variantsWithImages)
@@ -206,6 +221,7 @@ function addImagesPreview(inputElement) {
 
 function verifyVariantData() {
     const variantPrice = document.getElementById('variantPrice');
+    const variantInstallments = document.getElementById('variantInstallments');
     const variantColor = document.getElementById('variantColor');
     const variantSize = document.getElementById('variantSize');
     const inheritImage = document.getElementById('inheritImage');
@@ -215,6 +231,7 @@ function verifyVariantData() {
     var ok = true;
 
     const variantPriceError = document.getElementById('variantPriceError');
+    const variantInstallmentsError = document.getElementById('variantInstallmentsError');
     const variantColorError = document.getElementById('variantColorError');
     const variantSizeError = document.getElementById('variantSizeError');
     const inheritImageSelectError = document.getElementById('inheritImageSelectError');
@@ -228,6 +245,11 @@ function verifyVariantData() {
     if (!variantPrice.value) {
         variantPriceError.innerHTML = 'O preço do item é um campo obrigatório.';
         variantPriceError.classList.remove('hidden');
+        ok = false;
+    }
+    if (!variantInstallments.value) {
+        variantInstallmentsError.innerHTML = 'O número de parcelas é um campo obrigatório.';
+        variantInstallmentsError.classList.remove('hidden');
         ok = false;
     }
     if (!variantColor.value) {

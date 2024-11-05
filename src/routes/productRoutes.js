@@ -12,5 +12,6 @@ router.post('/products', ProductController.createProduct);
 router.put('/products/:id', ProductController.updateProduct);
 router.delete('/products/:id', ProductController.deleteProduct);
 router.get('/api/products/updateProductVariant/:id', ProductController.getProductVariantData);
+router.get('/api/products/categories/subcategories', ProductController.getCategoriesAndSubcategories);
 
 export default router;

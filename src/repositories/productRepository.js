@@ -40,12 +40,12 @@ class ProductRepository {
         }
     }
 
-    static async assignCategoryRepository(product_id, { category }) {
+    static async assignSubcategoryRepository(product_id, { subcategory }) {
         try {
             const { rows } = await pool.query(`
-                INSERT INTO product_category_assignments(product_id, category_id)
+                INSERT INTO product_subcategory_assignments(product_id, sub_category_id)
                 VALUES($1, $2)
-                    `, [product_id, category[0]]);
+                    `, [product_id, subcategory[0]]);
             return rows[0];
         } catch (error) {
             console.error('Error assigning category:', error);
@@ -87,6 +87,16 @@ class ProductRepository {
             return rows;
         } catch (error) {
             console.error('Error finding all products:', error);
+            throw error;
+        }
+    }
+
+    static async getCategoriesAndSubcategories() {
+        try {
+            const { rows } = await pool.query('SELECT c.id AS category_id, c.name AS category_name, s.id AS subcategory_id, s.name AS subcategory_name FROM categories c LEFT JOIN sub_categories s ON c.id = s.categories_id ORDER BY c.id, s.id;');
+            return rows;
+        } catch (error) {
+            console.error('Error getting categories and subcategories: ', error);
             throw error;
         }
     }

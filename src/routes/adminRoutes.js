@@ -7,7 +7,6 @@ import { isAdmin } from '../middlewares/auth.js';
 const router = express.Router();
 
 router.get('/admin', isAdmin, AdminController.getAdminPage);
-router.get('/api/admin/products/categories', isAdmin, ProductController.getCategories)
 router.post('/api/admin/products/register', isAdmin, uploadProduct.array("variantImages"), ProductController.createProduct)
 router.post('/api/admin/landingPage/save', isAdmin, uploadBanner.any("bannerImages"), AdminController.saveLangingPage)
 

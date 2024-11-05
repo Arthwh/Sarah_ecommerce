@@ -101,11 +101,22 @@
             </h2>
             <div class="flex flex-col space-y-4 p-6 mb-6 overflow-auto">
                 <!-- Preço -->
-                <div>
-                    <label for="variantPrice" class="block font-semibold">Preço</label>
-                    <input type="text" placeholder="R$ 0,00" oninput="formatPriceForInputField(this)" id="variantPrice"
-                        name="variantPrice" class="w-full p-2 border border-gray-300 rounded-md">
-                    <span id="variantPriceError" class="text-sm hidden" style="color: red;"></span>
+                <div class="grid grid-cols-2 space-x-2">
+                    <div>
+                        <label for="variantPrice" class="block font-semibold">Preço</label>
+                        <input type="text" placeholder="R$ 0,00" oninput="formatPriceForInputField(this)"
+                            id="variantPrice" name="variantPrice" class="w-full p-2 border border-gray-300 rounded-md">
+                        <span id="variantPriceError" class="text-sm hidden" style="color: red;"></span>
+                    </div>
+                    <div>
+                        <label for="variantInstallments" class="block font-semibold">Parcelas</label>
+                        <input type="number" placeholder="Máximo de parcelas permitidas"
+                            onfocusout="calculateInstallmentsValues()" id="variantInstallments"
+                            name="variantInstallments" class="w-full p-2 border border-gray-300 rounded-md">
+                        <span id="variantInstallmentsError" class="text-sm hidden" style="color: red"></span>
+                        <span id="showVariantInstallmentsValue" class="p-2 w-full"></span>
+                        <input type="text" hidden id="variantInstallmentsValue" name="variantInstallmentsValue">
+                    </div>
                 </div>
                 <!-- Cor -->
                 <div>

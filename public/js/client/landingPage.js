@@ -16,10 +16,12 @@ function moveBannerCarousel(direction) {
     }
 };
 
-// Carrossel automático
-setInterval(() => {
-    moveBannerCarousel(1);
-}, 5000);
+if (document.querySelector('.bannerDiv')) {
+    // Carrossel automático
+    setInterval(() => {
+        moveBannerCarousel(1);
+    }, 5000);
+}
 
 function movecarousel(direction, componentId) {
     const carouselContent = document.getElementById(`carousel-content_${componentId}`);

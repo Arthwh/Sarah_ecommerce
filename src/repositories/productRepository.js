@@ -53,22 +53,6 @@ class ProductRepository {
         }
     }
 
-    static async createProductImagesRepository(variant_id, files) {
-        try {
-            const rows = [];
-            for (const file of files) {
-                const result = await pool.query(`
-                INSERT INTO product_images(product_id, image_url)
-                VALUES($1, $2) RETURNING *`, [variant_id, file.path]);
-                rows.push(result.rows[0]);
-            }
-            return rows;
-        } catch (error) {
-            console.error('Error uploading images:', error);
-            throw error;
-        }
-    }
-
     static async updateProductRepository(id, { brand_id, name, description, total_stock_quantity }) {
         try {
             const { rows } = await pool.query(

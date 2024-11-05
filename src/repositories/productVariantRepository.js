@@ -22,18 +22,30 @@ class ProductVariantRepository {
         }
     }
 
-    static async createProductVariantRepository(product_id, { variants }) {
+    static async createProductVariantRepository(product_id, { variants }, files) {
         try {
             variants = JSON.parse(variants);
             const rows = [];
             for (const variant of variants) {
                 variant.variantPrice = parseFloat(variant.variantPrice.replace('R$', '').replace(/\./g, '').replace(',', '.'));
-                const result = await pool.query(
+                const resultVariant = await pool.query(
                     // Installments, is_on_sale e stock_quantity possuem um valor temporário
                     "INSERT INTO product_variant (products_id, color, unit_price, size, installments, is_on_sale, stock_quantity) VALUES ($1, $2, $3, $4, 10, false, 1337) RETURNING *",
                     [product_id, variant.variantColor, variant.variantPrice, variant.variantSize]
                 );
-                rows.push(result.rows[0]);
+                rows.push(resultVariant.rows[0]);
+                for (const file of files) {
+                    const id = variant.variantImage;
+                    const file_id = file.originalname;
+                    const regex = new RegExp(id);
+                    const match = regex.test(file_id);
+                    if (match) {
+                        const resultImage = await pool.query(`
+                    INSERT INTO product_images(product_id, image_url)
+                    VALUES($1, $2) RETURNING *`, [resultVariant.rows[0].id, file.path]);
+                        rows.push(resultImage.rows[0]);
+                    }
+                }
             }
             return rows;
         } catch (error) {

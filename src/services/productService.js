@@ -37,13 +37,8 @@ class ProductService {
             const product_id = productResponse.id;
             await ProductRepository.assignCategoryRepository(product_id, productData);
             if (productData.variants) {
-                const variants = await ProductVariantRepository.createProductVariantRepository(product_id, productData);
-                for (const variant of variants) {
-                    const variant_id = variant.id;
-                    await ProductRepository.createProductImagesRepository(variant_id, files);
-                }
+                await ProductVariantRepository.createProductVariantRepository(product_id, productData, files);
             }
-
             return { message: "Product created successfully" };
         } catch (error) {
             console.error('Error creating product: ' + error.message);

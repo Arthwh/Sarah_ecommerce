@@ -2,49 +2,78 @@ import ProductRepository from '../repositories/productRepository.js'
 import ProductVariantRepository from '../repositories/productVariantRepository.js'
 import { getCategories_Mock, getLandingPageComponentsAndData_Mock, getProductsForList_Mock, getProductInfo_Mock, updateProductVariantData_Mock } from '../controllers/mockProductData.js' // Mocks dos dados enquanto nao esta pronto essa parte no backend
 import { Product } from '../models/productModel.js';
+import pool from '../db.js';
 
 class ProductService {
 
     static async getLandingPageData() {
         try {
-            return await ProductRepository.getLandingPageDataRepository();
+            // return await ProductRepository.getLandingPageDataRepository();
+            return await getLandingPageComponentsAndData_Mock();
         } catch (error) {
             console.error('Error getting LandingPage: ' + error.message);
             throw error;
         }
     }
 
-    //Dados de mock
+    static async listProductsMock() {
+        return await getProductsForList_Mock();
+    }
+
     static async listProducts() {
-        const data = await getProductsForList_Mock();
-        return data;
+        try {
+        } catch (error) {
+            console.error('Error fetching product variants:', error);
+            throw error;
+        }
     }
 
-    //Dados de mock
     static async getSpecificProduct(id) {
-        const data = await getProductInfo_Mock(id);
-        return data;
+        try {
+            // const product = await ProductRepository.getProductByIdRepository(id);
+            // const variants = await ProductVariantRepository.getProductVariantsByProductIdRepository(id);
+            // console.log(product);
+            // console.log(variants);
+        } catch (error) {
+            console.error('Error getting product: ' + error.message);
+            throw error;
+        }
     }
 
-    //Dados de mock
+    static async getProductDataMock() {
+        return await getProductInfo_Mock();
+    }
+
     static async getProductVariantData(sku) {
         const data = await updateProductVariantData_Mock(sku);
         return data;
     }
 
+    //FUNCIONANDO CERTO
     static async createProductService(productData, files) {
+        const client = await pool.connect();
         try {
-            const productResponse = await ProductRepository.createProductRepository(productData);
-            const product_id = productResponse.id;
-            console.log(productData)
-            await ProductRepository.assignSubcategoryRepository(product_id, productData);
+            //Inicia a transaction
+            await client.query('BEGIN');
+            const product_id = await ProductRepository.createProductRepository(client, productData);
+            await ProductRepository.assignSubcategoryRepository(client, product_id, productData.subcategory)
             if (productData.variants) {
-                await ProductVariantRepository.createProductVariantRepository(product_id, productData, files);
+                const variants = await ProductVariantRepository.createProductVariantRepository(client, product_id, productData.variants);
+                const images = await ProductVariantRepository.insertVariantImages(client, files);
+                await ProductVariantRepository.assignVariantImageRepository(client, variants, images);
             }
+            //Commita as alterações se todas deram certo
+            await client.query('COMMIT')
             return { message: "Product created successfully" };
         } catch (error) {
+            // Se ocorrer algum erro, faz o rollback
+            await client.query('ROLLBACK');
             console.error('Error creating product: ' + error.message);
-            throw error;
+            throw Error('Error creating product: ' + error.message);
+        }
+        finally {
+            // Libera a conexão
+            client.release();
         }
     }
 
@@ -57,7 +86,6 @@ class ProductService {
     static async getAllProductCategoriesAndSubcategories() {
         try {
             const rows = await ProductRepository.getCategoriesAndSubcategories();
-            // Organiza os dados
             const categories = [];
             const categoriesMap = {};
 
@@ -81,8 +109,6 @@ class ProductService {
                     });
                 }
             });
-
-            console.log(categories);
             return categories;
         } catch (error) {
             console.error('Erro ao processar categorias e subcategorias:', error);

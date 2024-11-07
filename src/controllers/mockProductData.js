@@ -306,7 +306,651 @@ export async function getProductsForList_Mock(req, res) {
                 url: '/masculino/camisetas/camiseta-basica-branca',
                 category: 'masculino',
                 subcategory: 'camisetas'
-            }
+            },
+            {
+                id: '2',
+                name: 'Camiseta Básica Branca',
+                price: '59,90',
+                promoPrice: null,
+                isOnSale: false,
+                images: [
+                    '/public/mockImages/12.webp',
+                    '/public/mockImages/13.webp'
+                ],
+                url: '/masculino/camisetas/camiseta-basica-branca',
+                category: 'masculino',
+                subcategory: 'camisetas'
+            },
+            {
+                id: '2',
+                name: 'Camiseta Básica Branca',
+                price: '59,90',
+                promoPrice: null,
+                isOnSale: false,
+                images: [
+                    '/public/mockImages/12.webp',
+                    '/public/mockImages/13.webp'
+                ],
+                url: '/masculino/camisetas/camiseta-basica-branca',
+                category: 'masculino',
+                subcategory: 'camisetas'
+            },
+            {
+                id: '2',
+                name: 'Camiseta Básica Branca',
+                price: '59,90',
+                promoPrice: null,
+                isOnSale: false,
+                images: [
+                    '/public/mockImages/12.webp',
+                    '/public/mockImages/13.webp'
+                ],
+                url: '/masculino/camisetas/camiseta-basica-branca',
+                category: 'masculino',
+                subcategory: 'camisetas'
+            },
+            {
+                id: '2',
+                name: 'Camiseta Básica Branca',
+                price: '59,90',
+                promoPrice: null,
+                isOnSale: false,
+                images: [
+                    '/public/mockImages/12.webp',
+                    '/public/mockImages/13.webp'
+                ],
+                url: '/masculino/camisetas/camiseta-basica-branca',
+                category: 'masculino',
+                subcategory: 'camisetas'
+            },
+            {
+                id: '2',
+                name: 'Camiseta Básica Branca',
+                price: '59,90',
+                promoPrice: null,
+                isOnSale: false,
+                images: [
+                    '/public/mockImages/12.webp',
+                    '/public/mockImages/13.webp'
+                ],
+                url: '/masculino/camisetas/camiseta-basica-branca',
+                category: 'masculino',
+                subcategory: 'camisetas'
+            },
+            {
+                id: '2',
+                name: 'Camiseta Básica Branca',
+                price: '59,90',
+                promoPrice: null,
+                isOnSale: false,
+                images: [
+                    '/public/mockImages/12.webp',
+                    '/public/mockImages/13.webp'
+                ],
+                url: '/masculino/camisetas/camiseta-basica-branca',
+                category: 'masculino',
+                subcategory: 'camisetas'
+            },
+            {
+                id: '2',
+                name: 'Camiseta Básica Branca',
+                price: '59,90',
+                promoPrice: null,
+                isOnSale: false,
+                images: [
+                    '/public/mockImages/12.webp',
+                    '/public/mockImages/13.webp'
+                ],
+                url: '/masculino/camisetas/camiseta-basica-branca',
+                category: 'masculino',
+                subcategory: 'camisetas'
+            },
+            {
+                id: '2',
+                name: 'Camiseta Básica Branca',
+                price: '59,90',
+                promoPrice: null,
+                isOnSale: false,
+                images: [
+                    '/public/mockImages/12.webp',
+                    '/public/mockImages/13.webp'
+                ],
+                url: '/masculino/camisetas/camiseta-basica-branca',
+                category: 'masculino',
+                subcategory: 'camisetas'
+            },
+            {
+                id: '2',
+                name: 'Camiseta Básica Branca',
+                price: '59,90',
+                promoPrice: null,
+                isOnSale: false,
+                images: [
+                    '/public/mockImages/12.webp',
+                    '/public/mockImages/13.webp'
+                ],
+                url: '/masculino/camisetas/camiseta-basica-branca',
+                category: 'masculino',
+                subcategory: 'camisetas'
+            },
+            {
+                id: '2',
+                name: 'Camiseta Básica Branca',
+                price: '59,90',
+                promoPrice: null,
+                isOnSale: false,
+                images: [
+                    '/public/mockImages/12.webp',
+                    '/public/mockImages/13.webp'
+                ],
+                url: '/masculino/camisetas/camiseta-basica-branca',
+                category: 'masculino',
+                subcategory: 'camisetas'
+            },
+            {
+                id: '2',
+                name: 'Camiseta Básica Branca',
+                price: '59,90',
+                promoPrice: null,
+                isOnSale: false,
+                images: [
+                    '/public/mockImages/12.webp',
+                    '/public/mockImages/13.webp'
+                ],
+                url: '/masculino/camisetas/camiseta-basica-branca',
+                category: 'masculino',
+                subcategory: 'camisetas'
+            },
+            {
+                id: '2',
+                name: 'Camiseta Básica Branca',
+                price: '59,90',
+                promoPrice: null,
+                isOnSale: false,
+                images: [
+                    '/public/mockImages/12.webp',
+                    '/public/mockImages/13.webp'
+                ],
+                url: '/masculino/camisetas/camiseta-basica-branca',
+                category: 'masculino',
+                subcategory: 'camisetas'
+            },
+            {
+                id: '2',
+                name: 'Camiseta Básica Branca',
+                price: '59,90',
+                promoPrice: null,
+                isOnSale: false,
+                images: [
+                    '/public/mockImages/12.webp',
+                    '/public/mockImages/13.webp'
+                ],
+                url: '/masculino/camisetas/camiseta-basica-branca',
+                category: 'masculino',
+                subcategory: 'camisetas'
+            },
+            {
+                id: '2',
+                name: 'Camiseta Básica Branca',
+                price: '59,90',
+                promoPrice: null,
+                isOnSale: false,
+                images: [
+                    '/public/mockImages/12.webp',
+                    '/public/mockImages/13.webp'
+                ],
+                url: '/masculino/camisetas/camiseta-basica-branca',
+                category: 'masculino',
+                subcategory: 'camisetas'
+            },
+            {
+                id: '2',
+                name: 'Camiseta Básica Branca',
+                price: '59,90',
+                promoPrice: null,
+                isOnSale: false,
+                images: [
+                    '/public/mockImages/12.webp',
+                    '/public/mockImages/13.webp'
+                ],
+                url: '/masculino/camisetas/camiseta-basica-branca',
+                category: 'masculino',
+                subcategory: 'camisetas'
+            },
+            {
+                id: '2',
+                name: 'Camiseta Básica Branca',
+                price: '59,90',
+                promoPrice: null,
+                isOnSale: false,
+                images: [
+                    '/public/mockImages/12.webp',
+                    '/public/mockImages/13.webp'
+                ],
+                url: '/masculino/camisetas/camiseta-basica-branca',
+                category: 'masculino',
+                subcategory: 'camisetas'
+            },
+            {
+                id: '2',
+                name: 'Camiseta Básica Branca',
+                price: '59,90',
+                promoPrice: null,
+                isOnSale: false,
+                images: [
+                    '/public/mockImages/12.webp',
+                    '/public/mockImages/13.webp'
+                ],
+                url: '/masculino/camisetas/camiseta-basica-branca',
+                category: 'masculino',
+                subcategory: 'camisetas'
+            },
+            {
+                id: '2',
+                name: 'Camiseta Básica Branca',
+                price: '59,90',
+                promoPrice: null,
+                isOnSale: false,
+                images: [
+                    '/public/mockImages/12.webp',
+                    '/public/mockImages/13.webp'
+                ],
+                url: '/masculino/camisetas/camiseta-basica-branca',
+                category: 'masculino',
+                subcategory: 'camisetas'
+            },
+            {
+                id: '2',
+                name: 'Camiseta Básica Branca',
+                price: '59,90',
+                promoPrice: null,
+                isOnSale: false,
+                images: [
+                    '/public/mockImages/12.webp',
+                    '/public/mockImages/13.webp'
+                ],
+                url: '/masculino/camisetas/camiseta-basica-branca',
+                category: 'masculino',
+                subcategory: 'camisetas'
+            },
+            {
+                id: '2',
+                name: 'Camiseta Básica Branca',
+                price: '59,90',
+                promoPrice: null,
+                isOnSale: false,
+                images: [
+                    '/public/mockImages/12.webp',
+                    '/public/mockImages/13.webp'
+                ],
+                url: '/masculino/camisetas/camiseta-basica-branca',
+                category: 'masculino',
+                subcategory: 'camisetas'
+            },
+            {
+                id: '2',
+                name: 'Camiseta Básica Branca',
+                price: '59,90',
+                promoPrice: null,
+                isOnSale: false,
+                images: [
+                    '/public/mockImages/12.webp',
+                    '/public/mockImages/13.webp'
+                ],
+                url: '/masculino/camisetas/camiseta-basica-branca',
+                category: 'masculino',
+                subcategory: 'camisetas'
+            },
+            {
+                id: '2',
+                name: 'Camiseta Básica Branca',
+                price: '59,90',
+                promoPrice: null,
+                isOnSale: false,
+                images: [
+                    '/public/mockImages/12.webp',
+                    '/public/mockImages/13.webp'
+                ],
+                url: '/masculino/camisetas/camiseta-basica-branca',
+                category: 'masculino',
+                subcategory: 'camisetas'
+            },
+            {
+                id: '2',
+                name: 'Camiseta Básica Branca',
+                price: '59,90',
+                promoPrice: null,
+                isOnSale: false,
+                images: [
+                    '/public/mockImages/12.webp',
+                    '/public/mockImages/13.webp'
+                ],
+                url: '/masculino/camisetas/camiseta-basica-branca',
+                category: 'masculino',
+                subcategory: 'camisetas'
+            },
+            {
+                id: '2',
+                name: 'Camiseta Básica Branca',
+                price: '59,90',
+                promoPrice: null,
+                isOnSale: false,
+                images: [
+                    '/public/mockImages/12.webp',
+                    '/public/mockImages/13.webp'
+                ],
+                url: '/masculino/camisetas/camiseta-basica-branca',
+                category: 'masculino',
+                subcategory: 'camisetas'
+            },
+            {
+                id: '2',
+                name: 'Camiseta Básica Branca',
+                price: '59,90',
+                promoPrice: null,
+                isOnSale: false,
+                images: [
+                    '/public/mockImages/12.webp',
+                    '/public/mockImages/13.webp'
+                ],
+                url: '/masculino/camisetas/camiseta-basica-branca',
+                category: 'masculino',
+                subcategory: 'camisetas'
+            },
+            {
+                id: '2',
+                name: 'Camiseta Básica Branca',
+                price: '59,90',
+                promoPrice: null,
+                isOnSale: false,
+                images: [
+                    '/public/mockImages/12.webp',
+                    '/public/mockImages/13.webp'
+                ],
+                url: '/masculino/camisetas/camiseta-basica-branca',
+                category: 'masculino',
+                subcategory: 'camisetas'
+            },
+            {
+                id: '2',
+                name: 'Camiseta Básica Branca',
+                price: '59,90',
+                promoPrice: null,
+                isOnSale: false,
+                images: [
+                    '/public/mockImages/12.webp',
+                    '/public/mockImages/13.webp'
+                ],
+                url: '/masculino/camisetas/camiseta-basica-branca',
+                category: 'masculino',
+                subcategory: 'camisetas'
+            },
+            {
+                id: '2',
+                name: 'Camiseta Básica Branca',
+                price: '59,90',
+                promoPrice: null,
+                isOnSale: false,
+                images: [
+                    '/public/mockImages/12.webp',
+                    '/public/mockImages/13.webp'
+                ],
+                url: '/masculino/camisetas/camiseta-basica-branca',
+                category: 'masculino',
+                subcategory: 'camisetas'
+            },
+            {
+                id: '2',
+                name: 'Camiseta Básica Branca',
+                price: '59,90',
+                promoPrice: null,
+                isOnSale: false,
+                images: [
+                    '/public/mockImages/12.webp',
+                    '/public/mockImages/13.webp'
+                ],
+                url: '/masculino/camisetas/camiseta-basica-branca',
+                category: 'masculino',
+                subcategory: 'camisetas'
+            },
+            {
+                id: '2',
+                name: 'Camiseta Básica Branca',
+                price: '59,90',
+                promoPrice: null,
+                isOnSale: false,
+                images: [
+                    '/public/mockImages/12.webp',
+                    '/public/mockImages/13.webp'
+                ],
+                url: '/masculino/camisetas/camiseta-basica-branca',
+                category: 'masculino',
+                subcategory: 'camisetas'
+            },
+            {
+                id: '2',
+                name: 'Camiseta Básica Branca',
+                price: '59,90',
+                promoPrice: null,
+                isOnSale: false,
+                images: [
+                    '/public/mockImages/12.webp',
+                    '/public/mockImages/13.webp'
+                ],
+                url: '/masculino/camisetas/camiseta-basica-branca',
+                category: 'masculino',
+                subcategory: 'camisetas'
+            },
+            {
+                id: '2',
+                name: 'Camiseta Básica Branca',
+                price: '59,90',
+                promoPrice: null,
+                isOnSale: false,
+                images: [
+                    '/public/mockImages/12.webp',
+                    '/public/mockImages/13.webp'
+                ],
+                url: '/masculino/camisetas/camiseta-basica-branca',
+                category: 'masculino',
+                subcategory: 'camisetas'
+            },
+            {
+                id: '2',
+                name: 'Camiseta Básica Branca',
+                price: '59,90',
+                promoPrice: null,
+                isOnSale: false,
+                images: [
+                    '/public/mockImages/12.webp',
+                    '/public/mockImages/13.webp'
+                ],
+                url: '/masculino/camisetas/camiseta-basica-branca',
+                category: 'masculino',
+                subcategory: 'camisetas'
+            },
+            {
+                id: '2',
+                name: 'Camiseta Básica Branca',
+                price: '59,90',
+                promoPrice: null,
+                isOnSale: false,
+                images: [
+                    '/public/mockImages/12.webp',
+                    '/public/mockImages/13.webp'
+                ],
+                url: '/masculino/camisetas/camiseta-basica-branca',
+                category: 'masculino',
+                subcategory: 'camisetas'
+            },
+            {
+                id: '2',
+                name: 'Camiseta Básica Branca',
+                price: '59,90',
+                promoPrice: null,
+                isOnSale: false,
+                images: [
+                    '/public/mockImages/12.webp',
+                    '/public/mockImages/13.webp'
+                ],
+                url: '/masculino/camisetas/camiseta-basica-branca',
+                category: 'masculino',
+                subcategory: 'camisetas'
+            },
+            {
+                id: '2',
+                name: 'Camiseta Básica Branca',
+                price: '59,90',
+                promoPrice: null,
+                isOnSale: false,
+                images: [
+                    '/public/mockImages/12.webp',
+                    '/public/mockImages/13.webp'
+                ],
+                url: '/masculino/camisetas/camiseta-basica-branca',
+                category: 'masculino',
+                subcategory: 'camisetas'
+            },
+            {
+                id: '2',
+                name: 'Camiseta Básica Branca',
+                price: '59,90',
+                promoPrice: null,
+                isOnSale: false,
+                images: [
+                    '/public/mockImages/12.webp',
+                    '/public/mockImages/13.webp'
+                ],
+                url: '/masculino/camisetas/camiseta-basica-branca',
+                category: 'masculino',
+                subcategory: 'camisetas'
+            },
+            {
+                id: '2',
+                name: 'Camiseta Básica Branca',
+                price: '59,90',
+                promoPrice: null,
+                isOnSale: false,
+                images: [
+                    '/public/mockImages/12.webp',
+                    '/public/mockImages/13.webp'
+                ],
+                url: '/masculino/camisetas/camiseta-basica-branca',
+                category: 'masculino',
+                subcategory: 'camisetas'
+            },
+            {
+                id: '2',
+                name: 'Camiseta Básica Branca',
+                price: '59,90',
+                promoPrice: null,
+                isOnSale: false,
+                images: [
+                    '/public/mockImages/12.webp',
+                    '/public/mockImages/13.webp'
+                ],
+                url: '/masculino/camisetas/camiseta-basica-branca',
+                category: 'masculino',
+                subcategory: 'camisetas'
+            },
+            {
+                id: '2',
+                name: 'Camiseta Básica Branca',
+                price: '59,90',
+                promoPrice: null,
+                isOnSale: false,
+                images: [
+                    '/public/mockImages/12.webp',
+                    '/public/mockImages/13.webp'
+                ],
+                url: '/masculino/camisetas/camiseta-basica-branca',
+                category: 'masculino',
+                subcategory: 'camisetas'
+            },
+            {
+                id: '2',
+                name: 'Camiseta Básica Branca',
+                price: '59,90',
+                promoPrice: null,
+                isOnSale: false,
+                images: [
+                    '/public/mockImages/12.webp',
+                    '/public/mockImages/13.webp'
+                ],
+                url: '/masculino/camisetas/camiseta-basica-branca',
+                category: 'masculino',
+                subcategory: 'camisetas'
+            },
+            {
+                id: '2',
+                name: 'Camiseta Básica Branca',
+                price: '59,90',
+                promoPrice: null,
+                isOnSale: false,
+                images: [
+                    '/public/mockImages/12.webp',
+                    '/public/mockImages/13.webp'
+                ],
+                url: '/masculino/camisetas/camiseta-basica-branca',
+                category: 'masculino',
+                subcategory: 'camisetas'
+            },
+            {
+                id: '2',
+                name: 'Camiseta Básica Branca',
+                price: '59,90',
+                promoPrice: null,
+                isOnSale: false,
+                images: [
+                    '/public/mockImages/12.webp',
+                    '/public/mockImages/13.webp'
+                ],
+                url: '/masculino/camisetas/camiseta-basica-branca',
+                category: 'masculino',
+                subcategory: 'camisetas'
+            },
+            {
+                id: '2',
+                name: 'Camiseta Básica Branca',
+                price: '59,90',
+                promoPrice: null,
+                isOnSale: false,
+                images: [
+                    '/public/mockImages/12.webp',
+                    '/public/mockImages/13.webp'
+                ],
+                url: '/masculino/camisetas/camiseta-basica-branca',
+                category: 'masculino',
+                subcategory: 'camisetas'
+            },
+            {
+                id: '2',
+                name: 'Camiseta Básica Branca',
+                price: '59,90',
+                promoPrice: null,
+                isOnSale: false,
+                images: [
+                    '/public/mockImages/12.webp',
+                    '/public/mockImages/13.webp'
+                ],
+                url: '/masculino/camisetas/camiseta-basica-branca',
+                category: 'masculino',
+                subcategory: 'camisetas'
+            },
+            {
+                id: '2',
+                name: 'Camiseta Básica Branca',
+                price: '59,90',
+                promoPrice: null,
+                isOnSale: false,
+                images: [
+                    '/public/mockImages/12.webp',
+                    '/public/mockImages/13.webp'
+                ],
+                url: '/masculino/camisetas/camiseta-basica-branca',
+                category: 'masculino',
+                subcategory: 'camisetas'
+            },
             // Adicione mais produtos conforme necessário
         ],
         pagination: {

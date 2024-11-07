@@ -1,16 +1,36 @@
+import { compareSync } from 'bcrypt';
 import pool from '../db.js';
 import { ProductVariant } from '../models/productVariantModel.js'
 
 class ProductVariantRepository {
-    static async getAllProductVariantsRepository() {
-        try {
-            const { rows } = await pool.query('SELECT * FROM product_variant');
-            return rows.map(row => new ProductVariant(row));
-        } catch (error) {
-            console.error('Error finding all product variants:', error);
-            throw error;
-        }
-    }
+    // static async getAllProductVariantsRepository(orderby, limit) {
+    //     try {
+    //         const query = `
+    //             SELECT 
+    //             pv.id AS id,
+    //             pv.unit_price AS price,
+    //             pv.is_on_sale AS variant_is_on_sale,
+    //             pva.image_url AS variant_image_url,
+    //             p.id AS product_id,
+    //             p.name AS product_name
+    //             FROM 
+    //                 product_variant pv
+    //             LEFT JOIN 
+    //                 product_variant_images pva ON pv.id = pva.product_variant_id
+    //             JOIN 
+    //                 products p ON pv.products_id = p.id
+    //             WHERE 
+    //             pv.products_id IS NOT NULL
+    //             LIMIT '${limit}';
+    //         `
+    //         const { rows } = await pool.query(query);
+    //         // return rows.map(row => new ProductVariant(row));
+    //         return rows;
+    //     } catch (error) {
+    //         console.error('Error finding all product variants:', error);
+    //         throw error;
+    //     }
+    // }
 
     static async getProductVariantByIdRepository(id) {
         try {
@@ -22,37 +42,75 @@ class ProductVariantRepository {
         }
     }
 
-    static async createProductVariantRepository(product_id, { variants }, files) {
+    static async getProductVariantsByProductIdRepository(id) {
+        try {
+            const { rows } = await pool.query('SELECT * FROM product_variant WHERE products_id = $1', [id]);
+            return rows;
+        } catch (error) {
+            console.error('Error finding all product variant by product id:', error);
+            throw error;
+        }
+    }
+
+    //FUNCIONANDO CERTO
+    static async createProductVariantRepository(client, product_id, variants) {
         try {
             variants = JSON.parse(variants);
             const rows = [];
             for (const variant of variants) {
-                console.log(variant);
-                console.log(variant.installments)
                 variant.variantPrice = parseFloat(variant.variantPrice.replace('R$', '').replace(/\./g, '').replace(',', '.'));
-                const resultVariant = await pool.query(
-                    // Installments, is_on_sale e stock_quantity possuem um valor temporário
-                    "INSERT INTO product_variant (products_id, color, unit_price, size, installments, is_on_sale, stock_quantity) VALUES ($1, $2, $3, $4, $5, false, 1) RETURNING *",
-                    [product_id, variant.variantColor, variant.variantPrice, variant.variantSize, variant.variantInstallments]
+                const resultVariant = await client.query(
+                    //is_on_sale tem valor default de false
+                    "INSERT INTO product_variant (products_id, color, color_code, unit_price, installments, size, is_on_sale, stock_quantity) VALUES ($1, $2, $3, $4, $5, $6, false, $7) RETURNING *",
+                    [product_id, variant.variantColor, variant.variantColorCode, variant.variantPrice, variant.variantInstallments, variant.variantSize, variant.variantInitialStock]
                 );
-                rows.push(resultVariant.rows[0]);
-                for (const file of files) {
-                    const id = variant.variantImage;
-                    const file_id = file.originalname;
-                    const regex = new RegExp(id);
-                    const match = regex.test(file_id);
-                    if (match) {
-                        const resultImage = await pool.query(`
-                    INSERT INTO product_images(product_id, image_url)
-                    VALUES($1, $2) RETURNING *`, [resultVariant.rows[0].id, file.path]);
-                        rows.push(resultImage.rows[0]);
-                    }
-                }
+                rows.push({ variantId: resultVariant.rows[0].id, variantImage: variant.variantImage });
             }
             return rows;
         } catch (error) {
             console.error('Error creating product variant:', error);
-            throw error;
+            throw Error('Error creating product variant:', error);
+        }
+    }
+
+    //FUNCIONANDO CERTO
+    static async insertVariantImages(client, files) {
+        try {
+            const images = [];
+            for (const file of files) {
+                const filePath = `../public/images/products/${file.originalname}`
+                const variantAssignment = file.originalname.split('_')[0];
+                const rows = await client.query("INSERT INTO product_variant_images (image_url) VALUES ($1) RETURNING id, image_url", [filePath]);
+                const imageId = rows.rows[0].id
+                images.push({ imageId: imageId, variantAssignment: variantAssignment });
+            }
+            return images;
+        } catch (error) {
+            console.error('Error inserting variant images:', error);
+            throw Error('Error inserting variant images:', error);
+        }
+    }
+
+    //FUNCIONANDO CERTO
+    static async assignVariantImageRepository(client, variants, images) {
+        try {
+            const assignments = [];
+            for (const variant of variants) {
+                for (const image of images) {
+                    if (variant.variantImage == image.variantAssignment) {
+                        assignments.push([variant.variantId, image.imageId]);
+                    }
+                }
+            }
+
+            if (assignments.length > 0) {
+                const values = assignments.map((_, i) => `($${i * 2 + 1}, $${i * 2 + 2})`).join(', ');
+                const flattenedValues = assignments.flat();
+                await client.query(`INSERT INTO product_variant_images_assignments (product_variant_id, product_variant_images_id) VALUES ${values}`, flattenedValues);
+            }
+        } catch (error) {
+            console.error('Error assigning variant images:', error);
+            throw Error('Error assigning variant images:', error);
         }
     }
 

@@ -12,44 +12,52 @@ class ProductRepository {
         }
     }
 
+    static async listProductVariantsRepository() {
+        try {
+            const { rows } = await pool.query('SELECT * FROM product_variants');
+
+        } catch (error) {
+
+        }
+    }
+
     static async getProductByIdRepository(id) {
         try {
             const { rows } = await pool.query('SELECT * FROM products WHERE id = $1', [id]);
-            return new Product(rows[0]);
+            return rows;
         } catch (error) {
             console.error('Error finding product by id:', error);
             throw error;
         }
     }
 
-    static async createProductRepository({
-        productName,
-        productDescription,
-        brand
-    }) {
+    //FUNCIONANDO CERTO
+    static async createProductRepository(client, { productName, productDescription, brand }) {
         try {
-            // Quantidade em estoque temporária
-            const { rows } = await pool.query(`
+            const { rows } = await client.query(`
                 INSERT INTO products (brand_id, name, description, total_stock_quantity)
-                VALUES ($1, $2, $3, 1337) RETURNING id
+                VALUES ($1, $2, $3, 1) RETURNING id
             `, [brand, productName, productDescription]);
-            return rows[0];
+            const productId = rows[0].id
+            return productId;
         } catch (error) {
-            console.error('Error creating product:', error);
-            throw error;
+            console.error('Error inserting in products table:', error);
+            throw Error('Error inserting in products table:', error);
         }
     }
 
-    static async assignSubcategoryRepository(product_id, { subcategory }) {
+    //FUNCIONANDO CERTO
+    static async assignSubcategoryRepository(client, product_id, subcategories) {
         try {
-            const { rows } = await pool.query(`
-                INSERT INTO product_subcategory_assignments(product_id, sub_category_id)
-                VALUES($1, $2)
-                    `, [product_id, subcategory[0]]);
-            return rows[0];
+            for (const subcategory of subcategories) {
+                await client.query(`
+                    INSERT INTO product_subcategory_assignments(product_id, sub_category_id)
+                    VALUES($1, $2)
+                        `, [product_id, parseInt(subcategory)]);
+            }
         } catch (error) {
-            console.error('Error assigning category:', error);
-            throw error;
+            console.error('Error assigning categories: ', error);
+            throw Error('Error assigning categories: ', error);
         }
     }
 

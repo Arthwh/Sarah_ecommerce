@@ -54,10 +54,10 @@
                                     <div class="product-images">
                                         <!-- Primeira imagem (imagem padrão) -->
                                         <img src="<%= product.images[0] %>" alt="<%= product.name %>"
-                                            class="product-image-default">
+                                            class="product-image-default" loading="lazy">
                                         <!-- Segunda imagem (imagem ao hover) -->
                                         <img src="<%= product.images[1] %>" alt="<%= product.name %>"
-                                            class="product-image-hover">
+                                            class="product-image-hover" loading="lazy">
                                     </div>
                                 </a>
 
@@ -65,9 +65,9 @@
                                 <div class="wishlist-button-wrapper">
                                     <button onclick="addItemToWishlist('<%= product.sku %>')" class="favorite-btn">
                                         <img src="/public/images/icons/favorite_icon_border_black.svg" alt="Favoritar"
-                                            class="favorite-icon">
+                                            class="favorite-icon" loading="lazy">
                                         <img src="/public/images/icons/favorite_icon_fill_black.svg" alt="Favoritado"
-                                            class="favorite-icon-hover">
+                                            class="favorite-icon-hover" loading="lazy">
                                     </button>
                                 </div>
                             </div>
@@ -112,14 +112,13 @@
 
                         <div class="text-xl">
                             <span class="font-bold">
-                                <%= data.pagination.currentPage %>
+                                <%= data.pagination?.currentPage %>
                             </span> | <span>
-                                <%= data.pagination.totalPages %>
+                                <%= data.pagination?.totalPages %>
                             </span>
                         </div>
 
-                        <button <% if( data.pagination.currentPage===data.pagination.totalPages) { %>
-
+                        <button <% if( data.pagination?.currentPage===data.pagination?.totalPages) { %>
                             class="bg-white text-black border border-black px-4 py-2" disabled
                             <% } else{ %>
                                 class="bg-white text-black border border-black px-4 py-2 hover:bg-black hover:text-white

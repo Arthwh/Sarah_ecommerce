@@ -123,12 +123,12 @@ function toggleVariantModal() {
     }
     else {
         variantModal.classList.add('hidden');
-        clearInputsVariantModal();
+        clearDataVariantModal();
         document.getElementById('previewImagesContainer').innerHTML = '';
     }
 }
 
-function clearInputsVariantModal() {
+function clearDataVariantModal() {
     const variantModalContent = document.getElementById('variantModalContent');
     const inputs = variantModalContent.querySelectorAll('input');
     inputs.forEach(input => {
@@ -143,6 +143,11 @@ function clearInputsVariantModal() {
     selects.forEach(select => {
         select.selectedIndex = 0; // Define o valor para o primeiro <option>
     });
+
+    const spans = variantModalContent.querySelectorAll('span');
+    spans.forEach(span => {
+        span.innerHTML = '';
+    })
 }
 
 function formatPriceForInputField(input) {
@@ -223,7 +228,9 @@ function verifyVariantData() {
     const variantPrice = document.getElementById('variantPrice');
     const variantInstallments = document.getElementById('variantInstallments');
     const variantColor = document.getElementById('variantColor');
+    const variantColorCode = document.getElementById('variantColorCode');
     const variantSize = document.getElementById('variantSize');
+    const variantInitialStock = document.getElementById('variantInitialStock');
     const inheritImage = document.getElementById('inheritImage');
     const inheritImageSelect = document.getElementById('inheritImageSelect');
     const variantImages = document.getElementById('variantImages');
@@ -233,7 +240,9 @@ function verifyVariantData() {
     const variantPriceError = document.getElementById('variantPriceError');
     const variantInstallmentsError = document.getElementById('variantInstallmentsError');
     const variantColorError = document.getElementById('variantColorError');
+    const variantColorCodeError = document.getElementById('variantColorCodeError');
     const variantSizeError = document.getElementById('variantSizeError');
+    const variantInitialStockError = document.getElementById('variantInitialStockError');
     const inheritImageSelectError = document.getElementById('inheritImageSelectError');
     const variantImagesError = document.getElementById('variantImagesError');
 
@@ -257,11 +266,21 @@ function verifyVariantData() {
         variantColorError.classList.remove('hidden');
         ok = false;
     }
+    if (!variantColorCode.value) {
+        variantColorCodeError.innerHTML = 'O código da cor é um campo obrigatório.';
+        variantColorCodeError.classList.remove('hidden');
+        ok = false;
+    }
     if (!variantSize.value) {
         variantSizeError.innerHTML = 'O tamanho do item é um campo obrigatório.';
         variantSizeError.classList.remove('hidden');
         ok = false;
     }
+    if (!variantInitialStock.value) {
+        variantInitialStockError.innerHTML = 'O estoque inicial é um campo obrigatório.';
+        variantInitialStockError.classList.remove('hidden');
+        ok = false;
+    };
     if (!inheritImage.checked && variantImages.files.length === 0) {
         variantImagesError.innerHTML = 'Pelo menos uma imagem é necessária.';
         variantImagesError.classList.remove('hidden');
@@ -318,9 +337,9 @@ function updateInheritImageSelect() {
 function convertInputsToVariantObject(variantData, variantId) {
     let variantObject = {};
     let images = [];
-    let idVariantImages = variantId;
 
     variantObject["variantId"] = variantId;
+    variantObject["variantImage"] = variantId;
 
     variantData.forEach(input => {
         if (input.type === 'checkbox') {
@@ -342,7 +361,9 @@ function convertInputsToVariantObject(variantData, variantId) {
         }
     });
 
-    variantObject["variantImage"] = `${idVariantImages}`;
+    if (variantObject.inheritImage) {
+        variantObject.variantImage = +variantObject.inheritImageSelect;
+    }
 
     return { variantObject, images };
 }
@@ -490,7 +511,8 @@ async function createProduct(event) {
             body: mergedFormData
         });
         if (response.ok) {
-            showToast("Produto criado com sucesso!", "success")
+            showToast("Produto criado com sucesso!", "success");
+            renderProductRegister();
         } else {
             const errorText = await response.message;
             showToast(`Erro no processamento: ${errorText || "Desconhecido"} (Status: ${response.status})`, "error")
@@ -512,4 +534,8 @@ function mergeFormData(formData1, formData2) {
     }
 
     return mergedFormData;
+}
+
+function clearFormsData() {
+
 }

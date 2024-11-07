@@ -41,8 +41,7 @@
             <ul id="<%= category.name %>Submenu" class="hidden mt-10 space-y-4">
                 <% category.subcategories.forEach(subcategory=> { %>
                     <li class="pl-2">
-                        <a href="/categoria/<%= category.name.toLowerCase() %>/<%= subcategory.name.toLowerCase() %>"
-                            class="menuItem">
+                        <a href="/products?search=subcategoryId:<%= subcategory.id%>" class="menuItem">
                             <%= subcategory.name %>
                         </a>
                     </li>

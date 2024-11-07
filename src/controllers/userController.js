@@ -1,4 +1,5 @@
 import UserService from '../services/userService.js';
+import ProductService from '../services/productService.js';
 
 class UserController {
     static async getAllUsers(req, res) {
@@ -84,72 +85,13 @@ class UserController {
         if (!user) {
             return res.status(401).send({ message: 'Você precisa estar logado para acessar essa página' });
         }
+        const categories = await ProductService.getAllProductCategoriesAndSubcategories();
         res.render('client/userConfig', {
             data: {
-                user: user,
+                user: user, page: { categories: categories }
             }
         });
     }
-
-    // static async listUsers(req, res) {
-    //     try {
-    //         const users = await UserService.listUsers();
-    //         res.json(users);
-    //     } catch (error) {
-    //         res.status(500).json({ error: 'Erro ao listar usuários' });
-    //     }
-    // }
-
-    // static async getUser(req, res) {
-    //     try {
-    //         const user = await UserService.getUser(req.params.id);
-    //         if (!user) return res.status(404).json({ error: 'Usuário não encontrado' });
-    //         res.json(user);
-    //     } catch (error) {
-    //         res.status(500).json({ error: 'Erro ao buscar usuário' });
-    //     }
-    // }
-
-    // static async getUserByEmail(req, res) {
-    //     try {
-    //         const user = await UserService.getUserByEmail(req.params.email);
-    //         if (!user) return res.status(404).json({ error: 'Usuário não encontrado' });
-    //         res.json(user);
-    //     } catch (error) {
-    //         res.status(500).json({ error: 'Erro ao buscar usuário' });
-    //     }
-    // }
-
-
-
-    // static async createUser(req, res) {
-    //     try {
-    //         const newUser = await UserService.createUser(req.body);
-    //         res.status(201).json(newUser);
-    //     } catch (error) {
-    //         res.status(500).json({ error: 'Erro ao criar usuário' });
-    //     }
-    // }
-
-    // static async updateUser(req, res) {
-    //     try {
-    //         const updatedUser = await UserService.updateUser(req.params.id, req.body);
-    //         if (!updatedUser) return res.status(404).json({ error: 'Usuário não encontrado' });
-    //         res.json(updatedUser);
-    //     } catch (error) {
-    //         res.status(500).json({ error: 'Erro ao atualizar usuário' });
-    //     }
-    // }
-
-    // static async deleteUser(req, res) {
-    //     try {
-    //         const deletedUser = await UserService.deleteUser(req.params.id);
-    //         if (!deletedUser) return res.status(404).json({ error: 'Usuário não encontrado' });
-    //         res.json({ message: 'Usuário deletado com sucesso' });
-    //     } catch (error) {
-    //         res.status(500).json({ error: 'Erro ao deletar usuário' });
-    //     }
-    // }
 }
 
 export default UserController;

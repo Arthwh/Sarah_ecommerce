@@ -47,7 +47,6 @@
             <span id="categoriesAndSubcategoriesError" class="text-sm hidden" style="color: red;"></span>
         </div>
 
-
         <!-- Marca -->
         <div class="mb-4">
             <h3 class="text-lg font-semibold mb-2">Marca</h3>
@@ -122,8 +121,15 @@
                 <div>
                     <label for="variantColor" class="block font-semibold">Cor</label>
                     <input type="text" id="variantColor" name="variantColor"
-                        class="w-full p-2 border border-gray-300 rounded-md">
+                        class="w-full border border-gray-300 rounded-md">
                     <span id="variantColorError" class="text-sm hidden" style="color: red;"></span>
+                </div>
+                <!-- Codigo da cor -->
+                <div>
+                    <label for="variantColorCode" class="block font-semibold">Selecione a cor</label>
+                    <input type="color" id="variantColorCode" name="variantColorCode"
+                        class="w-full border border-gray-300 rounded-md">
+                    <span id="variantColorCodeError" class="text-sm hidden" style="color: red;"></span>
                 </div>
                 <!-- Tamanho -->
                 <div>
@@ -138,6 +144,13 @@
                         <option value="XG">XG</option>
                     </select>
                     <span id="variantSizeError" class="text-sm hidden" style="color: red;"></span>
+                </div>
+                <!-- Estoque inicial -->
+                <div>
+                    <label for="variantInitialStock" class="block font-semibold">Estoque incial</label>
+                    <input type="number" name="variantInitialStock" id="variantInitialStock"
+                        class="w-full p-2 border border-gray-300 rounded-md">
+                    <span id="variantInitialStockError" class="text-sm hidden" style="color: red;"></span>
                 </div>
                 <!-- Checkbox para herdar imagem -->
                 <div class="items-center">

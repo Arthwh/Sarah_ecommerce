@@ -1,4 +1,6 @@
-export class ProductVariant {
+import { Product } from "../models/productModel.js";
+
+export class ProductVariant extends Product {
     constructor({ id, product_id, public_id, color, unit_price, installments, is_on_sale, size, stock_quantity }) {
         this.id = id;
         this.product_id = product_id;
@@ -8,7 +10,7 @@ export class ProductVariant {
         this.installments = installments;
         this.is_on_sale = is_on_sale;
         this.size = size;
-        this.stock_quantity = stock_quantity;
+        this.stock_quantity = stock_quantity || 0;
     }
 
 }

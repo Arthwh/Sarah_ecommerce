@@ -75,6 +75,7 @@ class UserRepository {
                 FROM shopping_cart_items sci
                 JOIN shopping_carts sc ON sc.id = sci.shopping_cart_id
                 WHERE sc.user_id = $1`, [userId]);
+
             return parseInt(rows[0].count);
         } catch (error) {
             console.error('Error getting cart count:', error);
@@ -88,6 +89,7 @@ class UserRepository {
                 SELECT COUNT(1) AS email_count
                 FROM users
                 WHERE email = $1`, [email]);
+
             return parseInt(rows[0].email_count) > 0
         } catch (error) {
             console.error('Error checking if email exists:', error);

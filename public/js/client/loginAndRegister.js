@@ -82,7 +82,8 @@ async function logout() {
         };
         window.location.href = '/';
     } catch (error) {
-
+        console.error('Erro no logout:', error);
+        showToast('Ocorreu um erro ao deslogar da conta.', 'error');
     }
 }
 

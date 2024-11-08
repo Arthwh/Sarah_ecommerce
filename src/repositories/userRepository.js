@@ -85,14 +85,10 @@ class UserRepository {
     static async checkIfEmailExists(email) {
         try {
             const { rows } = await pool.query(`
-                SELECT COUNT(1)
+                SELECT COUNT(1) AS email_count
                 FROM users
                 WHERE email = $1`, [email]);
-            if ((parseInt(rows[0].count, 10)) == 0) {
-                return false
-            } else {
-                return true
-            }
+            return parseInt(rows[0].email_count) > 0
         } catch (error) {
             console.error('Error checking if email exists:', error);
             throw error;

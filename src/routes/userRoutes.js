@@ -5,7 +5,7 @@ import UserController from '../controllers/userController.js';
 const router = express.Router();
 
 router.post('/api/login', UserController.login); //
-router.post('/api/logout',  checkAuth, UserController.logout); //
+router.post('/api/logout', UserController.logout); //
 router.get('/users', checkAuth, UserController.getAllUsers); //
 router.get('/users/:id', checkAuth, UserController.getUserById); //
 router.get('/users/email/:email', checkAuth, UserController.getUserByEmail); //

@@ -36,7 +36,7 @@ class UserService {
                 userData.role = 1;
             }
             if (UserRepository.checkIfEmailExists(userData.email)) {
-                const error = new Error('Error creating user: E-mail already exists');
+                const error = new Error('E-mail already exists');
                 console.error(error.message);
                 throw error;
             }

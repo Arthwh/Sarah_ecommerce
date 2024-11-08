@@ -6,8 +6,12 @@ export function checkAuth(req, res, next) {
         next();
     } else {
         const message = "É preciso fazer login para acessar essa página.";
-        const title = "Acesso negado"
-        ErrorController.renderErrorPage(req, res, message, title);
+        const title = "Acesso negado";
+        const buttonAction = 'toggleLoginModal';
+        const buttonText = 'Fazer login';
+        const link = '/';
+        const linkText = 'Voltar para a página inicial';
+        ErrorController.renderErrorPage(req, res, message, title, buttonAction, buttonText, link, linkText);
     }
 }
 
@@ -17,8 +21,12 @@ export function isAdmin(req, res, next) {
         next();
     } else {
         const message = "Você não tem permissão para acessar essa página.";
-        const title = "Acesso negado"
-        ErrorController.renderErrorPage(req, res, message, title);
+        const title = "Acesso negado";
+        const buttonAction = null;
+        const buttonText = null;
+        const link = '/';
+        const linkText = 'Voltar para a página inicial';
+        ErrorController.renderErrorPage(req, res, message, title, buttonAction, buttonText, link, linkText);
     }
 }
 

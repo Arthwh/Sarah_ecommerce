@@ -9,6 +9,7 @@
     <link href="/public/css/tailwind/style.css" rel="stylesheet">
     <link href="/public/css/client/footer.css" rel="stylesheet">
     <link href="/public/css/messageModal/modal.css" rel="stylesheet">
+    <link href="/public/css/client/errorPage.css" rel="stylesheet">
 
     <script>
         // Obtem os dados enviados do backend e converte para JSON
@@ -29,13 +30,28 @@
     <!-- Header -->
     <%- include('partials/_header') %>
         <main class="w-full h-full flex-grow flex flex-col">
-            <!-- Conteúdo da página -->
-            <h1>
-                <%= data.title %>
-            </h1>
-            <p>
-                <%= data.message%>
-            </p>
+            <div>
+                <h1 id="errorTitle">
+                    <%= data.title %>
+                </h1>
+            </div>
+            <div>
+                <p id="errorMessage">
+                    <%= data.message%>
+                </p>
+            </div>
+            <div>
+                <% if(data.buttonText && data.buttonAction){ %>
+                    <button id="action-button-error-page" onclick="<%= data.buttonAction %>()">
+                        <%= data.buttonText %>
+                    </button>
+                    <% } %>
+                <% if(data.link && data.linkText){ %>
+                    <a id="link-error-page" href="<%= data.link %>">
+                        <%= data.linkText %>
+                    </a>
+                <% } %>
+            </div>
         </main>
 
         <!-- Footer -->

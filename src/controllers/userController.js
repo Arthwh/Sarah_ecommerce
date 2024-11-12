@@ -81,16 +81,32 @@ class UserController {
     }
 
     static async getUserAccountPage(req, res) {
-        const user = req.session.user;
-        if (!user) {
-            return res.status(401).send({ message: 'Você precisa estar logado para acessar essa página' });
-        }
-        const categories = await ProductService.getAllProductCategoriesAndSubcategories();
-        res.render('client/userConfig', {
-            data: {
-                user: user, page: { categories: categories }
+        try {
+            const user = req.session.user;
+            if (!user) {
+                return res.status(401).send({ message: 'Você precisa estar logado para acessar essa página' });
             }
-        });
+            const categories = await ProductService.getAllProductCategoriesAndSubcategories();
+            res.render('client/userConfig', {
+                data: {
+                    user: user, page: { categories: categories, displayRegisterModal: true }
+                }
+            });
+        } catch (error) {
+            res.status(400).send({ message: error.message });
+        }
+    }
+
+    static async getUserLogged(req, res) {
+        try {
+            const user = req.session.user;
+            if (!user) {
+                return res.send({ message: 'Usuário não logado', user: undefined });
+            }
+            res.send({ message: "Usuário Logado", user: user });
+        } catch (error) {
+            res.status(400).send({ message: error.message });
+        }
     }
 }
 

@@ -164,7 +164,7 @@ function updateMiniImageCarousel() {
         li.classList.add('flex-shrink-0');
         li.innerHTML = `
         <button onclick="changeMainImage('${image.url}', this)">
-          <img class="w-28 h-auto hover:border border-gray-500" src="${image.url}" alt="${actualProductData.name}">
+            <img class="w-28 h-auto hover:border border-gray-500" src="${image.url}" alt="${actualProductData.name}">
         </button>`;
         miniImageCarousel.appendChild(li);
     });

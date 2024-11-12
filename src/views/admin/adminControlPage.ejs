@@ -11,6 +11,17 @@
     <link href="/public/css/messageModal/modal.css" rel="stylesheet">
     <link href="/public/css/admin/landingPageEdit/editLandingPage.css" rel="stylesheet">
 
+    <script>
+        // Obtem os dados enviados do backend e converte para JSON
+        const data = JSON.parse('<%- JSON.stringify(data) %>') || {};
+        if (!data) {
+            console.error('Erro ao carregar a página: Dados incompletos.');
+            window.location.href = "/";
+        }
+        // Separa os dados em variáveis
+        const user = data.user;
+        const page = data.page;
+    </script>
 </head>
 
 <body class="min-h-lvh">
@@ -89,15 +100,19 @@
             </div>
         </div>
 
+        <script src="/public/js/messageModal/toastMessageModal.js"></script>
+        <script src="/public/js/messageModal/centralMessageModal.js"></script>
+        <script src="/public/js/messageModal/sessionExpiredModal.js"></script>
+        <script src="/public/js/messageModal/loginNeddedMessageModal.js"></script>
+        <script src="/public/js/statusHandler/statusHandler.js"></script>
+        <script src="/public/js/client/loginAndRegister.js"></script>
         <script src="/public/js/admin/adminControlPage.js"></script>
-        <script src="/public/js/admin//product/product.js"></script>
-        <script src="/public/js/admin//product/product_register.js"></script>
+        <script src="/public/js/admin/product/product.js"></script>
+        <script src="/public/js/admin/product/product_register.js"></script>
         <script src="/public/js/admin/order.js"></script>
         <script src="/public/js/admin/landingPage.js"></script>
         <script src="/public/js/admin/landingPage/editLandingPage.js"></script>
         <script src="/public/js/admin/logs.js"></script>
-        <script src="/public/js/messageModal/toastMessageModal.js"></script>
-        <script src="/public/js/messageModal/centralMessageModal.js"></script>
 </body>
 
 </html>

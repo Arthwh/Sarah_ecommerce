@@ -4,15 +4,26 @@ const registerModal = document.getElementById('registerModal');
 const formLogin = document.getElementById('formLogin');
 const formRegister = document.getElementById('formRegister');
 
-function toggleLoginModal() {
+function toggleLoginModal(enableClosing = true) {
     clearErrors();
     clearInputs();
+    const loginRegisterModalOverlay = document.getElementById('loginRegisterModalOverlay');
+    const loginRegisterModalCloseBtn = document.getElementById('loginRegisterModalCloseBtn');
+    if (enableClosing) {
+        loginRegisterModalOverlay.onclick = toggleLoginModal;
+        loginRegisterModalCloseBtn.onclick = toggleLoginModal;
+        loginRegisterModalCloseBtn.classList.remove('hidden');
+    } else {
+        loginRegisterModalOverlay.onclick = null;
+        loginRegisterModalCloseBtn.onclick = null;
+        loginRegisterModalCloseBtn.classList.add('hidden');
+    }
     if (mainModal.classList.contains("hidden")) {
         mainModal.classList.remove("hidden");
-        registerModal.classList.add("hidden");
+        registerModal?.classList.add("hidden");
     } else {
         mainModal.classList.add("hidden");
-        registerModal.classList.add('hidden');
+        registerModal?.classList.add('hidden');
         if (loginModal.classList.contains('hidden')) {
             loginModal.classList.remove('hidden');
         }

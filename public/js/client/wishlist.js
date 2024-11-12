@@ -26,8 +26,11 @@
 //     }
 // }
 
-function addItemToWishlist(baseProductId) {
-    console.log("Item Adicionado Wishlist.")
+async function addItemToWishlist(baseProductId) {
+    const userLogged = await checkUserLogged();
+    if (userLogged) {
+        console.log("Item Adicionado Wishlist.")
+    }
     // if (verifyIfProductIsAddedToWishlist(baseProductId)) {
     //     return "Produto já adicionado na lista de desejos!";
     // }

@@ -13,7 +13,7 @@
 
     <script>
         // Obtem os dados enviados do backend e converte para JSON
-        const data = JSON.parse('<%- JSON.stringify(data) %>');
+        data = JSON.parse('<%- JSON.stringify(data) %>');
         if (!data) {
             console.error('Dados incompletos.');
             window.location.href = "/error";
@@ -42,15 +42,15 @@
             </div>
             <div>
                 <% if(data.buttonText && data.buttonAction){ %>
-                    <button id="action-button-error-page" onclick="<%= data.buttonAction %>()">
+                    <button id="action-button-error-page" onclick="'<%= data.buttonAction %>'()">
                         <%= data.buttonText %>
                     </button>
                     <% } %>
-                <% if(data.link && data.linkText){ %>
-                    <a id="link-error-page" href="<%= data.link %>">
-                        <%= data.linkText %>
-                    </a>
-                <% } %>
+                        <% if(data.link && data.linkText){ %>
+                            <a id="link-error-page" href="<%= data.link %>">
+                                <%= data.linkText %>
+                            </a>
+                            <% } %>
             </div>
         </main>
 
@@ -58,6 +58,9 @@
         <%- include('partials/_footer') %>
             <script src="/public/js/messageModal/toastMessageModal.js"></script>
             <script src="/public/js/messageModal/centralMessageModal.js"></script>
+            <script src="/public/js/messageModal/sessionExpiredModal.js"></script>
+            <script src="/public/js/messageModal/loginNeddedMessageModal.js"></script>
+            <script src="/public/js/statusHandler/statusHandler.js"></script>
             <script src="/public/js/client/categoryAsideMenu.js"></script>
             <script src="/public/js/client/header.js"></script>
             <script src="/public/js/client/loginAndRegister.js"></script>

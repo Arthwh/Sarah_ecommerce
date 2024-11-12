@@ -17,10 +17,10 @@
 
     <script>
         // Obtem os dados enviados do backend e converte para JSON
-        const data = JSON.parse('<%- JSON.stringify(data) %>');
+        const data = JSON.parse('<%- JSON.stringify(data) %>') || {};
         if (!data) {
-            console.error('Dados incompletos.');
-            window.location.href = "/error";
+            console.error('Erro ao carregar a página: Dados incompletos.');
+            window.location.href = "/";
         }
         // Separa os dados em variáveis
         const user = data.user;
@@ -54,6 +54,9 @@
 
             <script src="/public/js/messageModal/toastMessageModal.js"></script>
             <script src="/public/js/messageModal/centralMessageModal.js"></script>
+            <script src="/public/js/messageModal/sessionExpiredModal.js"></script>
+            <script src="/public/js/messageModal/loginNeddedMessageModal.js"></script>
+            <script src="/public/js/statusHandler/statusHandler.js"></script>
             <script src="/public/js/client/categoryAsideMenu.js"></script>
             <script src="/public/js/client/header.js"></script>
             <script src="/public/js/client/loginAndRegister.js"></script>

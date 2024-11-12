@@ -7,7 +7,7 @@ class ProductController {
             const user = req.session.user
             const components = await ProductService.getLandingPageData();
             const categories = await ProductService.getAllProductCategoriesAndSubcategories();
-            res.render('client/landingPage', { data: { user: user, components: components, page: { mode: 'main', categories: categories } } });
+            res.render('client/landingPage', { data: { user: user, components: components, page: { mode: 'main', categories: categories, displayRegisterModal: true } } });
         } catch (error) {
             res.status(500).json({ error: 'Erro ao carregar a página inicial' });
         }
@@ -19,7 +19,7 @@ class ProductController {
             const user = req.session.user
             const components = await ProductService.getLandingPageData();
             const categories = await ProductService.getAllProductCategoriesAndSubcategories();
-            res.render('client/landingPage', { data: { user: user, components: components, page: { mode: 'edit', categories: categories } } });
+            res.render('client/landingPage', { data: { user: user, components: components, page: { mode: 'edit', categories: categories, displayRegisterModal: true } } });
         } catch (error) {
             res.status(500).json({ error: 'Erro ao carregar a página inicial' });
         }
@@ -42,7 +42,7 @@ class ProductController {
             // const data = await ProductService.listProducts(filter, search, orderby, limit);
             const data = await ProductService.listProductsMock();
             const categories = await ProductService.getAllProductCategoriesAndSubcategories();
-            res.render('client/productsList', { data: { user: user, page: { categories: categories, title: data.page.title, quantResults: data.page.quantResults, breadcrumbs: data.page.breadcrumbs }, pagination: data.pagination, products: data.products } });
+            res.render('client/productsList', { data: { user: user, page: { categories: categories, displayRegisterModal: true, title: data.page.title, quantResults: data.page.quantResults, breadcrumbs: data.page.breadcrumbs }, pagination: data.pagination, products: data.products } });
         } catch (error) {
             res.status(500).json({ error: 'Erro ao listar produtos' });
         }
@@ -63,7 +63,7 @@ class ProductController {
             // const data = await ProductService.getSpecificProduct(id, sku);
             const data = await ProductService.getProductDataMock();
             const categories = await ProductService.getAllProductCategoriesAndSubcategories();
-            res.render('client/product', { data: { user: user, page: { categories: categories }, product: data.product } });
+            res.render('client/product', { data: { user: user, page: { categories: categories, displayRegisterModal: true }, product: data.product } });
         } catch (error) {
             res.status(500).json({ error: 'Erro ao buscar produto' });
         }

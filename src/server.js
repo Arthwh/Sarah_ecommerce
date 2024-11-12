@@ -7,6 +7,7 @@ import session from 'express-session';
 import userRoutes from "./routes/userRoutes.js"
 import productRoutes from './routes/productRoutes.js'
 import adminRoutes from './routes/adminRoutes.js'
+
 dotenv.config();
 
 const app = express(); // inicia o servidor
@@ -23,10 +24,10 @@ app.use(express.urlencoded({ extended: true }));
 
 //Sessão do usuário
 app.use(session({
-  secret: 'token',
+  secret: process.env.SESSION_SECRET,
   resave: false,
   saveUninitialized: true,
-  cookie: { secure: false }
+  cookie: { secure: false, maxAge: 1800000 }
 }));
 
 //Configura os arquivos de rotas

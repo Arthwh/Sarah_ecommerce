@@ -124,8 +124,6 @@ async function saveChanges() {
             });
         }
     }
-
-    sendLandingPageData(formData);
 }
 
 async function collectSections() {
@@ -164,6 +162,7 @@ async function getSectionsData(sections) {
 
 async function sendLandingPageData(landingPageData) {
     try {
+        await checkSessionExpired();
         const response = await fetch(`/api/admin/landingPage/save`, {
             method: 'POST',
             body: landingPageData

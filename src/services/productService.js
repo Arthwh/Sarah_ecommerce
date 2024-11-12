@@ -83,6 +83,7 @@ class ProductService {
     static async deleteProduct(id) {
     }
 
+    //FUNCIONANDO CERTO
     static async getAllProductCategoriesAndSubcategories() {
         try {
             const rows = await ProductRepository.getCategoriesAndSubcategories();
@@ -112,6 +113,16 @@ class ProductService {
             return categories;
         } catch (error) {
             console.error('Erro ao processar categorias e subcategorias:', error);
+            throw error;
+        }
+    }
+
+    static async getAllBrands() {
+        try {
+            const brands = await ProductRepository.getAllBrands();
+            return brands;
+        } catch (error) {
+            console.error('Erro ao processar marcas:', error);
             throw error;
         }
     }

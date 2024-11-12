@@ -34,6 +34,15 @@ class ProductController {
         }
     }
 
+    static async getBrands(req, res) {
+        try {
+            const data = await ProductService.getAllBrands();
+            res.status(200).json(data);
+        } catch (error) {
+            res.status(500).json({ error: 'Erro ao buscar marcas: ', error });
+        }
+    }
+
     //mock
     static async listProducts(req, res) {
         try {

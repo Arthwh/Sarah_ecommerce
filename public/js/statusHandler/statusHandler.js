@@ -4,15 +4,17 @@ var logged = userLoggedOnLoad;
 async function checkSessionExpired() {
     try {
         const user = await fetchUserSession();
-        console.log(user)
         if (!user) {
             logged = false;
-            console.log("Teste");
             showSessionExpiredModal();
+            return false;
         }
+        return true;
     } catch (error) {
         console.error('Erro ao verificar sessão', error);
-        window.reload();
+        logged = false;
+        showCentralModal("Erro ao verificar sessão", "Não foi possível verificar a sessão atual. Tente novamente mais tarde.", redirectToHome);
+        throw Error('Erro ao verificar sessão', error);
     }
 }
 
@@ -27,6 +29,8 @@ async function checkUserLogged() {
         return true;
     } catch (error) {
         console.error('Erro ao verificar usuário logado', error);
+        logged = false;
+        showCentralModal("Erro ao verificar dados do usuário", "Não foi possível verificar os dados do usuário. Tente novamente mais tarde.", redirectToHome);
         throw Error('Erro ao verificar usuário logado', error);
     }
 }
@@ -34,12 +38,10 @@ async function checkUserLogged() {
 async function fetchUserSession() {
     try {
         const response = await fetch("/api/user/check-logged");
-        console.log(response);
         if (!response.ok) {
             throw Error(response.status);
         }
         const data = await response.json();
-        console.log(data);
         if (!data || data.user === undefined) {
             return false;
         }

@@ -1,44 +1,67 @@
 var categoriesAndSubcategories = [];
+var allBrands = [];
 var variantsWithImages = [];
 const formData = new FormData();
 
 // Função de renderização do cadastro de produtos
-function renderProductRegister() {
-    const optionVisualizationContainer = document.getElementById('optionVisualizationContainer');
-    if (!optionVisualizationContainer) {
-        showCentralModal("Cadastro de produto", "Container para renderização não encontrado.<br>Tente novamente mais tarde.")
-        console.error('Container para renderização não encontrado.');
-        return;
+async function renderProductRegister() {
+    try {
+        await checkSessionExpired();
+
+        const optionVisualizationContainer = document.getElementById('optionVisualizationContainer');
+        if (!optionVisualizationContainer) {
+            throw new Error("Container para renderização não encontrado")
+        }
+
+        const [form, categories, brands] = await Promise.all([
+            fetch('/public/html/admin/productRegisterForm.html').then(response => {
+                if (!response.ok) {
+                    throw new Error('Falha ao carregar o formulário');
+                }
+                return response.text();
+            }),
+            fetch('/api/products/categories/subcategories').then(response => {
+                if (!response.ok) {
+                    throw new Error('Falha ao carregar categorias');
+                }
+                return response.json();
+            }),
+            fetch('/api/products/brands').then(response => {
+                if (!response.ok) {
+                    throw new Error('Falha ao carregar marcas');
+                }
+                return response.json();
+            })
+        ]);
+
+        optionVisualizationContainer.innerHTML = form;
+        categoriesAndSubcategories = categories;
+        const categoriesDiv = document.getElementById('categoriesAndSubcategoriesContent');
+        addOptionsToCategorySelect(categoriesDiv.querySelector('select'));
+        allBrands = brands;
+        addBrandsIntoSelect(brands)
+    } catch (error) {
+        showCentralModal("Cadastro de produto", error.message + ".<br>Tente novamente mais tarde.");
+        console.error(error);
     }
+}
 
-    const requestFormRegister = fetch('/public/html/admin/productRegisterForm.html')
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Falha ao carregar o formulário');
-            }
-            return response.text();
+async function addBrandsIntoSelect(brands) {
+    try {
+        const brandSelect = document.getElementById('brand');
+        if (brands.length === 0) {
+            throw new Error('Nenhuma marca encontrada.')
+        }
+        brands.forEach(brand => {
+            const option = document.createElement('option');
+            option.value = brand.id;
+            option.textContent = brand.name;
+            brandSelect.appendChild(option);
         });
-
-    const productCategories = fetch('/api/products/categories/subcategories')
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Falha ao carregar categorias');
-            }
-            return response.json();
-        });
-
-    Promise.all([requestFormRegister, productCategories])
-        .then(([form, categories]) => {
-            optionVisualizationContainer.innerHTML = form;
-            categoriesAndSubcategories = categories;
-            const categoriesDiv = document.getElementById('categoriesAndSubcategoriesContent');
-            addOptionsToCategorySelect(categoriesDiv.querySelector('select'));
-        })
-        .catch(error => {
-            showCentralModal("Cadastro de produto", error + ".<br>Tente novamente mais tarde.")
-            console.error(error);
-        });
-};
+    } catch (error) {
+        throw Error(error);
+    }
+}
 
 function addOptionsToCategorySelect(selectElement) {
     if (selectElement) {

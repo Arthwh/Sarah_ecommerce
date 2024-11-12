@@ -108,6 +108,16 @@ class ProductRepository {
             throw error;
         }
     }
+
+    static async getAllBrands() {
+        try {
+            const { rows } = await pool.query('SELECT id, name FROM brands ORDER BY id;');
+            return rows;
+        } catch (error) {
+            console.error('Error getting brands: ', error);
+            throw error;
+        }
+    }
 }
 
 export default ProductRepository

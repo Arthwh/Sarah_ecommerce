@@ -13,6 +13,7 @@ router.put('/products/:id', ProductController.updateProduct);
 router.delete('/products/:id', ProductController.deleteProduct);
 router.get('/api/products/updateProductVariant/:id', ProductController.getProductVariantData);
 router.get('/api/products/categories/subcategories', ProductController.getCategoriesAndSubcategories);
+router.get('/api/products/brands', ProductController.getBrands);
 router.get('/:category/:subcategory', ProductController.listProductsBySubcategory)
 
 export default router;

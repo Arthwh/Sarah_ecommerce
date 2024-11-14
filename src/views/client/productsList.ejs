@@ -10,6 +10,7 @@
     <link href="/public/css/messageModal/modal.css" rel="stylesheet">
     <link href="/public/css/client/productCard.css" rel="stylesheet">
     <link href="/public/css/client/footer.css" rel="stylesheet">
+    <link href="/public/css/client/productsList.css" rel="stylesheet">
 
     <script>
         // Obtem os dados enviados do backend e converte para JSON
@@ -35,123 +36,151 @@
     <%- include('partials/_header') %>
 
         <main class="container mx-auto py-10 w-full px-5 xl:px-0 xl:w-full min-h-full items-center flex-grow z-0">
-            <!-- Breadcrumbs -->
-            <%- include('partials/_breadcrumbs') %>
-                <!-- titulo e botao de filtro -->
-                <div class="flex flex-col md:flex-row w-full mb-10 mx-auto justify-between items-center">
-                    <!-- Titulo e quantidade de resultados -->
-                    <div class="flex flex-col md:flex-row items-center space-x-4">
-                        <!-- Titulo -->
-                        <div class="text-xl flex text-center">
-                            <span>
-                                <%= data.page?.title %>
-                            </span>
+            <% if (data.products.length> 0) { %>
+                <!-- Breadcrumbs -->
+                <%- include('partials/_breadcrumbs') %>
+                    <!-- titulo e botao de filtro -->
+                    <div class="flex flex-col md:flex-row w-full mb-10 mx-auto justify-between items-center">
+                        <!-- Titulo e quantidade de resultados -->
+                        <div class="flex flex-col md:flex-row items-center space-x-4">
+                            <!-- Titulo -->
+                            <div class="text-xl flex text-center">
+                                <span>
+                                    <%= data.page?.title %>
+                                </span>
+                            </div>
+                            <!-- Quantidade de resultados (produtos) -->
+                            <div class="text-sm">
+                                <span>
+                                    <% if (data.page?.quantResults> 1) { %>
+                                        <%= data.page?.quantResults %> produtos
+                                            <% } else { %>
+                                                <%= data.page.quantResults %> produto
+                                                    <% } %>
+                                </span>
+                            </div>
                         </div>
-                        <!-- Quantidade de resultados (produtos) -->
-                        <div class="text-sm">
-                            <p>
-                                <%= data.page?.quantResults %> produtos
-                            </p>
-                        </div>
+                        <!-- Botão Filtrar e Ordenar -->
+                        <button
+                            class="bg-white w-full mt-4 md:w-auto md:mt-0 text-black border border-black hover:bg-black hover:text-white font-bold p-2">
+                            Filtrar e Ordenar
+                        </button>
                     </div>
-                    <!-- Botão Filtrar e Ordenar -->
-                    <button
-                        class="bg-white w-full mt-4 md:w-auto md:mt-0 text-black border border-black hover:bg-black hover:text-white font-bold p-2">
-                        Filtrar e Ordenar
-                    </button>
-                </div>
-                <!-- Filtros -->
 
-                <!-- Lista de Produtos -->
-                <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
-                    <% data.products?.forEach(product=> { %>
-                        <div class="product-card">
-                            <div class="product-image-wrapper">
-                                <!-- Link e imagens do produto -->
-                                <a href="<%= product.url %>" class="product-link">
-                                    <div class="product-images">
-                                        <!-- Primeira imagem (imagem padrão) -->
-                                        <img src="<%= product.images[0] %>" alt="<%= product.name %>"
-                                            class="product-image-default" loading="lazy">
-                                        <!-- Segunda imagem (imagem ao hover) -->
-                                        <img src="<%= product.images[1] %>" alt="<%= product.name %>"
-                                            class="product-image-hover" loading="lazy">
+                    <!-- Lista de Produtos -->
+                    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+                        <% data.products?.forEach(product=> { %>
+                            <div class="product-card">
+                                <div class="product-image-wrapper">
+                                    <!-- Link e imagens do produto -->
+                                    <a href="#" class="product-link">
+                                        <div class="product-images">
+                                            <!-- Primeira imagem (imagem padrão) -->
+                                            <img src="<%= product.variant_images[0] %>"
+                                                alt="<%= product.product_name %>" class="product-image-default"
+                                                loading="lazy">
+                                            <!-- Segunda imagem (imagem ao hover) -->
+                                            <img src="<%= product.variant_images[1] %>"
+                                                alt="<%= product.product_name %>" class="product-image-hover">
+                                        </div>
+                                    </a>
+
+                                    <!-- Botão de favoritos -->
+                                    <div class="wishlist-button-wrapper">
+                                        <button onclick="addItemToWishlist('<%= product.product_public_id %>')"
+                                            class="favorite-btn">
+                                            <img src="/public/images/icons/favorite_icon_border_black.svg"
+                                                alt="Favoritar" class="favorite-icon" loading="lazy">
+                                            <img src="/public/images/icons/favorite_icon_fill_black.svg"
+                                                alt="Favoritado" class="favorite-icon-hover">
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <!-- Nome e Preço do Produto -->
+                                <a href="#" class="product-info-link">
+                                    <div class="product-info">
+                                        <h3 class="product-name">
+                                            <%= product.product_name %>
+                                        </h3>
+                                        <div class="product-price">
+                                            <% if (product.variant_is_on_sale) { %>
+                                                <span class="price-old">R$ <%= product.variant_unit_price %></span>
+                                                <span class="price-new">R$ <%= product.variant_offer_value %></span>
+                                                <span class="price-installments">
+                                                    <%= product.variant_offer_installments %>x de R$ <%=
+                                                            ((parseInt(product.variant_offer_value))/product.variant_offer_installments).toFixed(2)
+                                                            %>*
+                                                </span>
+                                                <% } else { %>
+                                                    <span class="price-current">R$ <%= product.variant_unit_price %>
+                                                    </span>
+                                                    <span class="price-installments">
+                                                        <%= product.variant_installments %>x de R$ <%=
+                                                                ((parseInt(product.variant_unit_price))/product.variant_installments).toFixed(2)
+                                                                %>*
+                                                    </span>
+                                                    <% } %>
+                                        </div>
                                     </div>
                                 </a>
+                            </div>
+                            <% }); %>
+                    </div>
 
-                                <!-- Botão de favoritos -->
-                                <div class="wishlist-button-wrapper">
-                                    <button onclick="addItemToWishlist('<%= product.sku %>')" class="favorite-btn">
-                                        <img src="/public/images/icons/favorite_icon_border_black.svg" alt="Favoritar"
-                                            class="favorite-icon" loading="lazy">
-                                        <img src="/public/images/icons/favorite_icon_fill_black.svg" alt="Favoritado"
-                                            class="favorite-icon-hover" loading="lazy">
-                                    </button>
-                                </div>
+                    <!-- Paginação -->
+                    <div class="flex flex-col mt-10">
+                        <div class="flex justify-center items-center p-2">
+                            <p class="text-sm">VOCÊ ESTÁ NA PÁGINA</p>
+                        </div>
+                        <div class="flex justify-center items-center space-x-2">
+                            <button <% if( data.pagination?.currentPage) { %>
+                                class="bg-white text-black border border-black px-4 py-2" disabled
+                                <% } else{ %>
+                                    class="bg-white text-black border border-black px-4 py-2 hover:bg-black
+                                    hover:text-white
+                                    font-bold"
+                                    <% } %>>
+                                        Anterior
+                            </button>
+
+                            <div class="text-xl">
+                                <span class="font-bold">
+                                    <%= data.pagination?.currentPage %>
+                                </span> | <span>
+                                    <%= data.pagination?.totalPages %>
+                                </span>
                             </div>
 
-                            <!-- Nome e Preço do Produto -->
-                            <a href="<%= product.url %>" class="product-info-link">
-                                <div class="product-info">
-                                    <h3 class="product-name">
-                                        <%= product.name %>
-                                    </h3>
-                                    <div class="product-price">
-                                        <% if (product.isOnSale) { %>
-                                            <span class="price-old">R$ <%= product.price %></span>
-                                            <span class="price-new">R$ <%= product.promoPrice %></span>
-                                            <% } else { %>
-                                                <span class="price-current">R$ <%= product.price %></span>
-                                                <% } %>
-                                                    <span class="price-installments">3x de R$ <%=
-                                                            ((parseInt(product.promoPrice ||
-                                                            product.price))/3).toFixed(2) %>*</span>
-                                    </div>
+                            <button <% if( data.pagination?.currentPage===data.pagination?.totalPages) { %>
+                                class="bg-white text-black border border-black px-4 py-2" disabled
+                                <% } else{ %>
+                                    class="bg-white text-black border border-black px-4 py-2 hover:bg-black
+                                    hover:text-white
+                                    font-bold"
+                                    <% } %>>
+                                        Próxima
+                            </button>
+                        </div>
+                    </div>
+                    <% } else { %>
+                        <div class="no-products-message">
+                            <div class="message-content">
+                                <h2>Ops, não encontramos nenhum produto!</h2>
+                                <p>Não se preocupe, isso pode acontecer. Talvez o que você procura tenha se esgotado ou
+                                    ainda não foi adicionado à nossa loja.</p>
+                                <p>Que tal tentar outra categoria ou realizar uma nova busca? Estamos sempre atualizando
+                                    nossos produtos para trazer o melhor para você!</p>
+                                <div class="suggestions">
+                                    <a href="/" class="suggestion-link">Voltar para a página inicial</a>
                                 </div>
-                            </a>
+                            </div>
                         </div>
-                        <% }); %>
-                </div>
-
-                <!-- Paginação -->
-                <div class="flex flex-col mt-10">
-                    <div class="flex justify-center items-center p-2">
-                        <p class="text-sm">VOCÊ ESTÁ NA PÁGINA</p>
-                    </div>
-                    <div class="flex justify-center items-center space-x-2">
-                        <button <% if( data.pagination?.currentPage) { %>
-                            class="bg-white text-black border border-black px-4 py-2" disabled
-                            <% } else{ %>
-                                class="bg-white text-black border border-black px-4 py-2 hover:bg-black hover:text-white
-                                font-bold"
-                                <% } %>>
-                                    Anterior
-                        </button>
-
-                        <div class="text-xl">
-                            <span class="font-bold">
-                                <%= data.pagination?.currentPage %>
-                            </span> | <span>
-                                <%= data.pagination?.totalPages %>
-                            </span>
-                        </div>
-
-                        <button <% if( data.pagination?.currentPage===data.pagination?.totalPages) { %>
-                            class="bg-white text-black border border-black px-4 py-2" disabled
-                            <% } else{ %>
-                                class="bg-white text-black border border-black px-4 py-2 hover:bg-black hover:text-white
-                                font-bold"
-                                <% } %>>
-                                    Próxima
-                        </button>
-                    </div>
-                </div>
-
+                        <% } %>
         </main>
         <!-- Footer -->
         <%- include('partials/_footer') %>
 
-            
             <script src="/public/js/messageModal/toastMessageModal.js"></script>
             <script src="/public/js/messageModal/centralMessageModal.js"></script>
             <script src="/public/js/messageModal/sessionExpiredModal.js"></script>
@@ -161,7 +190,6 @@
             <script src="/public/js/client/header.js"></script>
             <script src="/public/js/client/loginAndRegister.js"></script>
             <script src="/public/js/client/wishlist.js"></script>
-
 </body>
 
 </html>

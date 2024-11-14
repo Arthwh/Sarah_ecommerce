@@ -10,8 +10,8 @@ import adminRoutes from './routes/adminRoutes.js'
 
 dotenv.config();
 
-const app = express(); // inicia o servidor
-const port = process.env.SERVER_PORT || 3000; //Obtem o numero da porta do arquivo .env, ou atribui 3000 se nao tiver outro valor
+const app = express();
+const port = process.env.SERVER_PORT || 3000;
 
 const __filename = fileURLToPath(import.meta.url); // Obtém o caminho completo do arquivo atual
 const __dirname = path.dirname(__filename); // Obtém o diretório atual a partir do caminho
@@ -27,7 +27,7 @@ app.use(session({
   secret: process.env.SESSION_SECRET,
   resave: false,
   saveUninitialized: true,
-  cookie: { secure: false, maxAge: 1800000 }
+  cookie: { secure: false, maxAge: 3600000 }
 }));
 
 //Configura os arquivos de rotas

@@ -1,0 +1,56 @@
+.no-products-message {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    padding: 30px;
+    margin-top: 30px;
+    background-color: #f7f9fc;
+    border: 1px solid #e0e0e0;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.message-content {
+    text-align: center;
+    max-width: 600px;
+    padding: 20px;
+}
+
+.no-products-message h2 {
+    color: #333;
+    font-size: 24px;
+    font-weight: 600;
+    margin-bottom: 15px;
+}
+
+.no-products-message p {
+    color: #666;
+    font-size: 16px;
+    margin-bottom: 15px;
+}
+
+.suggestions {
+    margin-top: 20px;
+}
+
+.suggestion-link {
+    display: inline-block;
+    background-color: black;
+    color: white;
+    padding: 10px 20px;
+    margin: 5px;
+    text-decoration: none;
+    font-size: 16px;
+    border: 2px solid black;
+}
+
+.suggestion-link:hover {
+    background-color: white;
+    color: black;
+    transform: scale(1.05);
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+.suggestion-link:active {
+    background-color: #004085;
+}

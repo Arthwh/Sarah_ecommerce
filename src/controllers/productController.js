@@ -43,21 +43,28 @@ class ProductController {
         }
     }
 
-    //mock
-    static async listProducts(req, res) {
+    static async listProductsBySubcategory(req, res) {
         try {
-            const user = req.session.user
-            // const { filter, search, orderby, limit } = req.params
-            // const data = await ProductService.listProducts(filter, search, orderby, limit);
-            const data = await ProductService.listProductsMock();
+            const { category, subcategory } = req.params;
+            const user = req.session.user;
             const categories = await ProductService.getAllProductCategoriesAndSubcategories();
+            const data = await ProductService.listProductsBySubcategoryService(subcategory, category);
+            if (!data) {
+                return res.status(404).json({ error: 'Subcategoria não encontrada' });
+            }
             res.render('client/productsList', { data: { user: user, page: { categories: categories, displayRegisterModal: true, title: data.page.title, quantResults: data.page.quantResults, breadcrumbs: data.page.breadcrumbs }, pagination: data.pagination, products: data.products } });
         } catch (error) {
-            res.status(500).json({ error: 'Erro ao listar produtos' });
+            res.status(500).json({ error: 'Erro ao buscar produtos por subcategoria', error });
         }
     }
 
-    static async listProductsBySubcategory(req, res) {
+    static async listProductsByCategory(req, res) {
+        try {
+            console.log("teste")
+            res.json("teste")
+        } catch (error) {
+            res.status(500).json({ error: 'Erro ao buscar produtos por categoria', error });
+        }
     }
 
     //mock

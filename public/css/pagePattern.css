@@ -18,13 +18,23 @@ body{
     background-color: #F7F7F7;
 }
 
-.menuItem:hover{
+.menuItem:hover, .categoryMenuItemGetAll:hover{
     color: #E9C495; 
     border-bottom-color: #E9C495;
 }
 .menuItem{
     padding-bottom: 1px;
     margin-bottom: 2px;
+    box-sizing: border-box;
+    border-bottom: 1px solid transparent; /* Espaço reservado para o border */
+    transition: border-color 0.3s, color 0.3s; /* Suaviza a transição */
+}
+
+.categoryMenuItemGetAll{
+    padding-bottom: 1px;
+    margin-bottom: 20px;
+    font-weight: bold;
+    font-size: x-large;
     box-sizing: border-box;
     border-bottom: 1px solid transparent; /* Espaço reservado para o border */
     transition: border-color 0.3s, color 0.3s; /* Suaviza a transição */

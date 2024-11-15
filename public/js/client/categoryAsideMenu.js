@@ -21,14 +21,14 @@ function toggleSubmenu(id) {
     const submenuContainter = document.getElementById('submenuContainer')
     if (id) {
         const submenu = document.getElementById(id);
-        submenu.classList.toggle('hidden');
-        submenuContainter.classList.toggle('hidden')
+        submenu.classList.toggle('active');
+        submenuContainter.classList.toggle('active')
         activeSubmenu = id
         return;
     }
-    if (!submenuContainter.classList.contains('hidden') && id == undefined) {
-        submenuContainter.classList.add('hidden');
-        document.getElementById(activeSubmenu).classList.add('hidden')
+    if (submenuContainter.classList.contains('active') && id == undefined) {
+        submenuContainter.classList.remove('active');
+        document.getElementById(activeSubmenu).classList.remove('active')
     }
 }
 
@@ -36,20 +36,20 @@ function toggleSubmenu(id) {
 function toggleCategoryAsideMenu() {
     const sideMenu = document.getElementById('category-aside-menu');
     const overlay = document.getElementById('categoriesOverlay')
-    sideMenu.classList.toggle('hidden');
-    overlay.classList.toggle('hidden')
+    sideMenu.classList.toggle('active');
+    overlay.classList.toggle('active')
 }
 
 //Função para fechar o menu de categorias ao clicar no overlay
 function closeCategoriesMenu() {
-    document.getElementById('category-aside-menu').classList.add('hidden');
-    document.getElementById('submenuContainer').classList.add('hidden');
+    document.getElementById('category-aside-menu').classList.remove('active');
+    document.getElementById('submenuContainer').classList.remove('active');
     if (activeSubmenu != undefined) {
         let submenu = document.getElementById(activeSubmenu)
-        if (submenu && !submenu.classList.contains('hidden'))
-            document.getElementById(activeSubmenu).classList.add('hidden');
+        if (submenu && submenu.classList.contains('active'))
+            document.getElementById(activeSubmenu).classList.remove('active');
     }
-    document.getElementById('categoriesOverlay').classList.add('hidden');
+    document.getElementById('categoriesOverlay').classList.remove('active');
 }
 
 

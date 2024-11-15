@@ -12,6 +12,8 @@
   <link href="/public/css/client/carouselControllStyles.css" rel="stylesheet">
   <link href="/public/css/messageModal/modal.css" rel="stylesheet">
   <link href="/public/css/client/footer.css" rel="stylesheet">
+  <link href="/public/css/client/categoryAsideMenu.css" rel="stylesheet">
+  <link href="/public/css/client/loginRegisterModal.css" rel="stylesheet">
 
   <script>
     // Obtem os dados enviados do backend e converte para JSON
@@ -33,6 +35,8 @@
 <body>
   <!-- Header -->
   <%- include('partials/_header') %>
+  <%- include('partials/_categoryAsideMenu') %>
+      <%- include('partials/_loginRegisterModal') %>
     <main class="container mx-auto py-10 w-full xl:w-4/5 h-full flex-grow">
       <!-- Breadcrumbs -->
       <%- include('partials/_breadcrumbs') %>

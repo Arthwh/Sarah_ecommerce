@@ -2,9 +2,11 @@ import pool from '../db.js';
 import { Product } from '../models/productModel.js'
 
 class ProductRepository {
-    static async listProductsBySubcategoryRepository(subcategory, category) {
+    static async listProductsBySubcategoryRepository(category, subcategory, limit, offset) {
         try {
-            const { rows } = await pool.query(`
+            var parameters = [category];
+
+            const selectAndJoinsQuery = `
                     SELECT
                         p.public_id AS product_public_id,
                         p.name AS product_name,
@@ -66,18 +68,75 @@ class ProductRepository {
                             INNER JOIN sub_categories sbc ON sbc.id = psa.sub_category_id
                             INNER JOIN categories ca ON sbc.categories_id = ca.id
                         ) product_subcategories ON product_subcategories.product_id = p.id
-                    WHERE unique_colors.variant_id = pv.id AND product_subcategories.subcategory_name ILIKE $1 AND product_subcategories.category_name ILIKE $2
+            `;
+            if (subcategory) parameters.push(subcategory);
+            const whereQuery = `
+                WHERE unique_colors.variant_id = pv.id ${subcategory ? 'AND product_subcategories.subcategory_name ILIKE $2' : ''} AND product_subcategories.category_name ILIKE $1
+            `;
+            const groupByQuery = `
                     GROUP BY
                         p.id,
                         pv.id,
                         variant_offers.offer_type,
                         variant_offers.offer_value,
                         variant_offers.offer_installments
-                    ORDER BY p.id, pv.color;
-                `, [subcategory, category]);
+            `;
+            const orderByQuery = `
+                    ORDER BY p.id, pv.color
+            `;
+            const paginationQuery = `
+                LIMIT $${parameters.length + 1} OFFSET $${parameters.length + 2}
+            `;
+            parameters.push(limit, offset);
+
+            const { rows } = await pool.query((selectAndJoinsQuery + whereQuery + groupByQuery + orderByQuery + paginationQuery), parameters);
             return rows;
         } catch (error) {
             console.error('Error finding all products:', error);
+            throw error;
+        }
+    }
+
+    static async countTotalProducts(category, subcategory) {
+        try {
+            var parameters = [category];
+
+            const selectAndJoinsQuery = `
+                    SELECT
+                        COUNT(DISTINCT pv.id) AS total_count
+                    FROM
+                        products p
+                        INNER JOIN product_variant pv ON p.id = pv.products_id
+                        -- Aplica DISTINCT ON para pegar a primeira linha por produto e cor
+                        LEFT JOIN (
+                            SELECT DISTINCT ON (p.id, pv.color) p.id AS product_id, pv.color, pv.id AS variant_id
+                            FROM products p
+                            INNER JOIN product_variant pv ON p.id = pv.products_id
+                            WHERE pv.stock_quantity > 0
+                            ORDER BY p.id, pv.color, pv.id DESC
+                        ) unique_colors ON unique_colors.product_id = p.id AND unique_colors.color = pv.color
+                        -- Subconsulta para agrupar subcategorias por produto
+                        LEFT JOIN (
+                            SELECT 
+                                psa.product_id,
+                                sbc.id AS subcategory_id,
+                                sbc.name AS subcategory_name,
+                                sbc.description AS subcategory_description,
+                                ca.id AS category_id,
+                                ca.name AS category_name
+                            FROM product_subcategory_assignments psa
+                            INNER JOIN sub_categories sbc ON sbc.id = psa.sub_category_id
+                            INNER JOIN categories ca ON sbc.categories_id = ca.id
+                        ) product_subcategories ON product_subcategories.product_id = p.id
+            `;
+            if (subcategory) parameters.push(subcategory);
+            const whereQuery = `
+                WHERE unique_colors.variant_id = pv.id ${subcategory ? 'AND product_subcategories.subcategory_name ILIKE $2' : ''} AND product_subcategories.category_name ILIKE $1
+            `;
+            const { rows } = await pool.query((selectAndJoinsQuery + whereQuery), parameters);
+            return rows[0];
+        } catch (error) {
+            console.error('Error counting total products:', error);
             throw error;
         }
     }
@@ -122,43 +181,43 @@ class ProductRepository {
         }
     }
 
-    static async updateProductRepository(id, { brand_id, name, description, total_stock_quantity }) {
-        try {
-            const { rows } = await pool.query(
-                'UPDATE products SET brand_id = $1, name = $2, description = $3, total_stock_quantity = $4 WHERE ID = $5 RETURNING *',
-                [brand_id, name, description, total_stock_quantity, id]
-            );
-            return rows[0];
-        } catch (error) {
-            console.error('Error updating product:', error);
-            throw error;
-        }
-    }
+    // static async updateProductRepository(id, { brand_id, name, description, total_stock_quantity }) {
+    //     try {
+    //         const { rows } = await pool.query(
+    //             'UPDATE products SET brand_id = $1, name = $2, description = $3, total_stock_quantity = $4 WHERE ID = $5 RETURNING *',
+    //             [brand_id, name, description, total_stock_quantity, id]
+    //         );
+    //         return rows[0];
+    //     } catch (error) {
+    //         console.error('Error updating product:', error);
+    //         throw error;
+    //     }
+    // }
 
-    static async deleteProductRepository(id) {
-        try {
-            const { rows } = await pool.query('DELETE FROM products WHERE id = $1 RETURNING *', [id]);
-            return rows[0];
-        } catch (error) {
-            console.error('Error deleting product:', error);
-            throw error;
-        }
-    }
+    // static async deleteProductRepository(id) {
+    //     try {
+    //         const { rows } = await pool.query('DELETE FROM products WHERE id = $1 RETURNING *', [id]);
+    //         return rows[0];
+    //     } catch (error) {
+    //         console.error('Error deleting product:', error);
+    //         throw error;
+    //     }
+    // }
 
-    static async updateProductVariantRepository(sku) {
+    // static async updateProductVariantRepository(sku) {
 
-        return rows[0];
-    }
+    //     return rows[0];
+    // }
 
-    static async getLandingPageDataRepository() {
-        try {
-            const { rows } = await pool.query('');
-            return rows;
-        } catch (error) {
-            console.error('Error finding all products:', error);
-            throw error;
-        }
-    }
+    // static async getLandingPageDataRepository() {
+    //     try {
+    //         const { rows } = await pool.query('');
+    //         return rows;
+    //     } catch (error) {
+    //         console.error('Error finding all products:', error);
+    //         throw error;
+    //     }
+    // }
 
     static async getCategoriesAndSubcategories() {
         try {
@@ -176,6 +235,16 @@ class ProductRepository {
             return rows;
         } catch (error) {
             console.error('Error getting brands: ', error);
+            throw error;
+        }
+    }
+
+    static async getAllActiveProductColors() {
+        try {
+            const { rows } = pool.query(`SELECT DISTINCT ON (pv.color) pv.color FROM product_variant pv GROUP BY pv.color`);
+            return rows;
+        } catch (error) {
+            console.error('Error getting active product colors: ', error);
             throw error;
         }
     }

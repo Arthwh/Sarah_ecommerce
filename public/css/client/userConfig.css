@@ -5,6 +5,7 @@
     margin-inline: auto;
     margin-top: 20px;
     margin-bottom: 20px;
+    z-index: 0;
 }
 
 .menu-lateral {

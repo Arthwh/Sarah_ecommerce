@@ -43,27 +43,29 @@ class ProductController {
         }
     }
 
-    static async listProductsBySubcategory(req, res) {
+    static async getProductColors(req, res) {
         try {
-            const { category, subcategory } = req.params;
-            const user = req.session.user;
-            const categories = await ProductService.getAllProductCategoriesAndSubcategories();
-            const data = await ProductService.listProductsBySubcategoryService(subcategory, category);
-            if (!data) {
-                return res.status(404).json({ error: 'Subcategoria não encontrada' });
-            }
-            res.render('client/productsList', { data: { user: user, page: { categories: categories, displayRegisterModal: true, title: data.page.title, quantResults: data.page.quantResults, breadcrumbs: data.page.breadcrumbs }, pagination: data.pagination, products: data.products } });
+            const data = await ProductService.getAllActiveProductColors();
+            res.status(200).json(data);
         } catch (error) {
-            res.status(500).json({ error: 'Erro ao buscar produtos por subcategoria', error });
+            res.status(500).json({ error: 'Erro ao buscar cores: ', error });
         }
     }
 
-    static async listProductsByCategory(req, res) {
+    static async listProductsByCategoryOrSubcategory(req, res) {
         try {
+            const { category, subcategory } = req.params;
+            const { limit, page } = req.query;
+            const user = req.session.user;
+            const categories = await ProductService.getAllProductCategoriesAndSubcategories();
+            const data = await ProductService.listProductsByCategoryOrSubcategoryService(category, subcategory, limit, page);
             console.log("teste")
-            res.json("teste")
+            if (!data) {
+                return res.status(404).json({ error: 'Dados não encontrados' });
+            }
+            res.render('client/productsList', { data: { user: user, page: { categories: categories, displayRegisterModal: true, title: data.page.title, quantResults: data.page.quantResults, breadcrumbs: data.page.breadcrumbs }, pagination: data.pagination, products: data.products } });
         } catch (error) {
-            res.status(500).json({ error: 'Erro ao buscar produtos por categoria', error });
+            res.status(500).json({ error: 'Erro ao buscar produtos', error });
         }
     }
 
@@ -99,6 +101,7 @@ class ProductController {
         }
     }
 
+    //FUNCIONANDO CERTO
     static async createProduct(req, res) {
         try {
             const productData = req.body;

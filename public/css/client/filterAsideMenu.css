@@ -1,0 +1,91 @@
+.filter-menu {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 280px;
+    height: 100vh;
+    background-color: #f8f9fa;
+    border-left: 1px solid #ddd;
+    padding: 20px;
+    overflow-y: auto;
+    transform: translateX(100%);
+    transition: transform 0.3s ease-in-out;
+    z-index: 997;
+    display: flex;
+    flex-direction: column;
+}
+
+.filter-menu.active {
+    transform: translateX(0);
+    box-shadow: -4px 0 10px rgba(0, 0, 0, 0.2);
+}
+
+.filter-menu h2 {
+    font-size: 20px;
+    font-weight: 600;
+    color: #333;
+    flex-grow: 1;
+}
+
+.content-section{
+    flex-grow: 1;
+}
+
+.filter-section {
+    margin-bottom: 20px;
+}
+
+.filter-section h3 {
+    font-size: 16px;
+    font-weight: 500;
+    margin-bottom: 10px;
+    color: #555;
+}
+
+.filter-section label {
+    display: block;
+    font-size: 14px;
+    color: #333;
+    margin: 5px 0;
+}
+
+.filter-section input[type="radio"],
+.filter-section input[type="checkbox"] {
+    margin-right: 8px;
+}
+
+.apply-filters {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    font-weight: 600;
+    background-color: black;
+    color: #fff;
+    border: 2px solid black;
+    cursor: pointer;
+}
+
+.apply-filters:hover {
+    background-color: white;
+    color: black;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+.title-close-menu{
+    display: flex;
+    margin-bottom: 20px;
+}
+
+.price-filter {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-width: 300px;
+}
+
+input[type="number"] {
+    padding: 5px;
+    width: 100%;
+    box-sizing: border-box;
+    border: 1px solid #ddd;
+}

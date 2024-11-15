@@ -13,7 +13,8 @@ router.delete('/products/:id', ProductController.deleteProduct);
 router.get('/api/products/updateProductVariant/:id', ProductController.getProductVariantData);
 router.get('/api/products/categories/subcategories', ProductController.getCategoriesAndSubcategories);
 router.get('/api/products/brands', ProductController.getBrands);
-router.get('/:category/:subcategory', ProductController.listProductsBySubcategory);
-router.get('/:category', ProductController.listProductsByCategory);
+router.get('/api/products/colors', ProductController.getProductColors);
+router.get('/:category', ProductController.listProductsByCategoryOrSubcategory);
+router.get('/:category/:subcategory', ProductController.listProductsByCategoryOrSubcategory);
 
 export default router;

@@ -9,6 +9,8 @@
     <link href="/public/css/messageModal/modal.css" rel="stylesheet">
     <link href="/public/css/client/userConfig.css" rel="stylesheet">
     <link href="/public/css/client/footer.css" rel="stylesheet">
+    <link href="/public/css/client/categoryAsideMenu.css" rel="stylesheet">
+    <link href="/public/css/client/loginRegisterModal.css" rel="stylesheet">
 
     <script>
         // Obtem os dados enviados do backend e converte para JSON
@@ -32,38 +34,42 @@
 
 <body>
     <%- include('partials/_header') %>
-        <main class="settings-container">
-            <!-- Menu Lateral -->
-            <aside class="menu-lateral">
-                <ul>
-                    <li><a href="#" class="menuItem" data-section="userProfile">Informações Pessoais</a></li>
-                    <li><a href="#" class="menuItem" data-section="userAddresses">Endereços</a></li>
-                    <li><a href="#" class="menuItem" data-section="userOrders">Pedidos</a></li>
-                    <li><a href="#" class="menuItem" data-section="userPaymentMethods">Métodos de Pagamento</a></li>
-                    <li><a href="#" class="menuItem" data-section="userNotifications">Notificações</a></li>
-                    <li><a href="#" class="menuItem" data-section="userSecurity">Segurança e Privacidade</a></li>
-                </ul>
-            </aside>
+        <%- include('partials/_categoryAsideMenu') %>
+            <%- include('partials/_loginRegisterModal') %>
+                <main class="settings-container">
+                    <!-- Menu Lateral -->
+                    <aside class="menu-lateral">
+                        <ul>
+                            <li><a href="#" class="menuItem" data-section="userProfile">Informações Pessoais</a></li>
+                            <li><a href="#" class="menuItem" data-section="userAddresses">Endereços</a></li>
+                            <li><a href="#" class="menuItem" data-section="userOrders">Pedidos</a></li>
+                            <li><a href="#" class="menuItem" data-section="userPaymentMethods">Métodos de Pagamento</a>
+                            </li>
+                            <li><a href="#" class="menuItem" data-section="userNotifications">Notificações</a></li>
+                            <li><a href="#" class="menuItem" data-section="userSecurity">Segurança e Privacidade</a>
+                            </li>
+                        </ul>
+                    </aside>
 
-            <!-- Conteúdo Dinâmico -->
-            <section class="config-content" id="configContent">
-                <h1>Bem-vindo à área de configurações do usuário!</h1>
-                <p>Selecione uma opção no menu para visualizar os detalhes.</p>
-            </section>
-        </main>
+                    <!-- Conteúdo Dinâmico -->
+                    <section class="config-content" id="configContent">
+                        <h1>Bem-vindo à área de configurações do usuário!</h1>
+                        <p>Selecione uma opção no menu para visualizar os detalhes.</p>
+                    </section>
+                </main>
 
-        <!-- Footer -->
-        <%- include('partials/_footer') %>
+                <!-- Footer -->
+                <%- include('partials/_footer') %>
 
-            <script src="/public/js/messageModal/toastMessageModal.js"></script>
-            <script src="/public/js/messageModal/centralMessageModal.js"></script>
-            <script src="/public/js/messageModal/sessionExpiredModal.js"></script>
-            <script src="/public/js/messageModal/loginNeddedMessageModal.js"></script>
-            <script src="/public/js/statusHandler/statusHandler.js"></script>
-            <script src="/public/js/client/categoryAsideMenu.js"></script>
-            <script src="/public/js/client/header.js"></script>
-            <script src="/public/js/client/loginAndRegister.js"></script>
-            <script src="/public/js/client/wishlist.js"></script>
+                    <script src="/public/js/messageModal/toastMessageModal.js"></script>
+                    <script src="/public/js/messageModal/centralMessageModal.js"></script>
+                    <script src="/public/js/messageModal/sessionExpiredModal.js"></script>
+                    <script src="/public/js/messageModal/loginNeddedMessageModal.js"></script>
+                    <script src="/public/js/statusHandler/statusHandler.js"></script>
+                    <script src="/public/js/client/categoryAsideMenu.js"></script>
+                    <script src="/public/js/client/header.js"></script>
+                    <script src="/public/js/client/loginAndRegister.js"></script>
+                    <script src="/public/js/client/wishlist.js"></script>
 
 </body>
 

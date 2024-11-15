@@ -1,6 +1,6 @@
 import ProductRepository from '../repositories/productRepository.js'
 import ProductVariantRepository from '../repositories/productVariantRepository.js'
-import {getLandingPageComponentsAndData_Mock, getProductInfo_Mock, updateProductVariantData_Mock } from '../controllers/mockProductData.js' // Mocks dos dados enquanto nao esta pronto essa parte no backend
+import { getLandingPageComponentsAndData_Mock, getProductInfo_Mock, updateProductVariantData_Mock } from '../controllers/mockProductData.js' // Mocks dos dados enquanto nao esta pronto essa parte no backend
 import { Product } from '../models/productModel.js';
 import pool from '../db.js';
 
@@ -16,35 +16,48 @@ class ProductService {
         }
     }
 
-    static async listProductsBySubcategoryService(subcategory, category) {
+    //FUNCIONANDO CERTO
+    static async listProductsByCategoryOrSubcategoryService(category, subcategory, limitParam, pageParam) {
         try {
-            if (!subcategory || !category) {
-                throw Error("Category and subcategory invalid or missing.");
+            if (!category) {
+                throw Error("Category missing.");
             }
-            const products = await ProductRepository.listProductsBySubcategoryRepository(subcategory, category);
+            const countProducts = await ProductRepository.countTotalProducts(category, subcategory);
+            const totalProducts = countProducts.total_count
+            const limit = parseInt(limitParam, 10) || 20;
+            const totalPages = Math.ceil(totalProducts / limit);
+            if (pageParam > totalPages) {
+                pageParam = totalPages;
+            }
+            const page = parseInt(pageParam, 10) || 1;
+            const offset = limit * (page - 1);
+            console.log("OFFSET: " + offset)
+
+            const products = await ProductRepository.listProductsBySubcategoryRepository(category, subcategory, limit, offset);
             const results = products.length;
-            const subcategoryCapitalized = subcategory.charAt(0).toUpperCase() + subcategory.slice(1);
+            const subcategoryCapitalized = subcategory?.charAt(0).toUpperCase() + subcategory?.slice(1) || '';
             const categoryCapitalized = category.charAt(0).toUpperCase() + category.slice(1);
             const data = {
                 products: products,
                 page: {
-                    title: `${subcategoryCapitalized} ${categoryCapitalized}`,
+                    title: subcategoryCapitalized ? `${subcategoryCapitalized} ${categoryCapitalized}` : categoryCapitalized,
                     quantResults: results,
                     breadcrumbs: [
                         { name: 'Início', url: '/' },
                         { name: categoryCapitalized, url: `/${categoryCapitalized}` },
-                        { name: subcategoryCapitalized, url: `/masculino/${subcategory}` }
+                        subcategoryCapitalized ? { name: subcategoryCapitalized, url: `/masculino/${subcategory}` } : ''
                     ]
                 },
                 pagination: {
-                    currentPage: 1,
-                    totalPages: 1,
-                    itemsPerPage: 10
+                    currentPage: page,
+                    totalPages: totalPages,
+                    itemsPerPage: limit,
+                    offset: offset
                 }
             }
             return data;
         } catch (error) {
-            console.error('Error getting products by subcategory: ' + error.message);
+            console.error('Error getting products: ' + error.message);
             throw error;
         }
     }
@@ -144,6 +157,17 @@ class ProductService {
             return brands;
         } catch (error) {
             console.error('Erro ao processar marcas:', error);
+            throw error;
+        }
+    }
+
+    static async getAllActiveProductColors() {
+        try {
+            const colors = await ProductRepository.getAllActiveProductColors();
+            console.log(colors);
+            return colors;
+        } catch (error) {
+            console.error('Erro ao processar cores:', error);
             throw error;
         }
     }

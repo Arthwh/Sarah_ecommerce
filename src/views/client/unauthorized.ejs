@@ -10,6 +10,8 @@
     <link href="/public/css/client/footer.css" rel="stylesheet">
     <link href="/public/css/messageModal/modal.css" rel="stylesheet">
     <link href="/public/css/client/errorPage.css" rel="stylesheet">
+    <link href="/public/css/client/categoryAsideMenu.css" rel="stylesheet">
+    <link href="/public/css/client/loginRegisterModal.css" rel="stylesheet">
 
     <script>
         // Obtem os dados enviados do backend e converte para JSON
@@ -29,6 +31,8 @@
 <body>
     <!-- Header -->
     <%- include('partials/_header') %>
+    <%- include('partials/_categoryAsideMenu') %>
+        <%- include('partials/_loginRegisterModal') %>
         <main class="w-full h-full flex-grow flex flex-col">
             <div>
                 <h1 id="errorTitle">

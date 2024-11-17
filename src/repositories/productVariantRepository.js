@@ -3,52 +3,71 @@ import pool from '../db.js';
 import { ProductVariant } from '../models/productVariantModel.js'
 
 class ProductVariantRepository {
-    // static async getAllProductVariantsRepository(orderby, limit) {
-    //     try {
-    //         const query = `
-    //             SELECT 
-    //             pv.id AS id,
-    //             pv.unit_price AS price,
-    //             pv.is_on_sale AS variant_is_on_sale,
-    //             pva.image_url AS variant_image_url,
-    //             p.id AS product_id,
-    //             p.name AS product_name
-    //             FROM 
-    //                 product_variant pv
-    //             LEFT JOIN 
-    //                 product_variant_images pva ON pv.id = pva.product_variant_id
-    //             JOIN 
-    //                 products p ON pv.products_id = p.id
-    //             WHERE 
-    //             pv.products_id IS NOT NULL
-    //             LIMIT '${limit}';
-    //         `
-    //         const { rows } = await pool.query(query);
-    //         // return rows.map(row => new ProductVariant(row));
-    //         return rows;
-    //     } catch (error) {
-    //         console.error('Error finding all product variants:', error);
-    //         throw error;
-    //     }
-    // }
-
-    static async getProductVariantByIdRepository(id) {
+    //FUNCIONANDO CERTO
+    static async getAllProductVariantsByProductIdRepository(id) {
         try {
-            const { rows } = await pool.query('SELECT * FROM product_variant WHERE id = $1', [id]);
-            return new ProductVariant(rows[0]);
-        } catch (error) {
-            console.error('Error finding product variant by id:', error);
-            throw error;
-        }
-    }
-
-    static async getProductVariantsByProductIdRepository(id) {
-        try {
-            const { rows } = await pool.query('SELECT * FROM product_variant WHERE products_id = $1', [id]);
+            const { rows } = await pool.query(`
+                    SELECT 
+						p.public_id AS product_public_id,
+						pv.public_id AS variant_public_id,
+                        pv.color AS variant_color_name,
+                        pv.color_code AS variant_color_code,
+                        pv.size AS variant_size,
+                        pv.stock_quantity AS variant_stock_quantity
+						FROM products p
+                        INNER JOIN product_variant pv ON p.id = pv.products_id
+					WHERE p.public_id = $1 AND p.is_active = true
+					GROUP BY
+						p.id,
+                        pv.id
+                `, [id]);
             return rows;
         } catch (error) {
             console.error('Error finding all product variant by product id:', error);
             throw error;
+        }
+    }
+
+    static async getVariantDataBySku(sku) {
+        try {
+            const { rows } = await pool.query(`
+                    SELECT 
+						p.public_id AS product_public_id,
+						p.name AS product_name,
+						p.description AS product_description,
+						pv.public_id AS variant_public_id,
+                        pv.color AS variant_color_name,
+                        pv.color_code AS variant_color_code,
+                        pv.size AS variant_size,
+                        pv.unit_price AS variant_unit_price,
+                        pv.stock_quantity AS variant_stock_quantity,
+						array_agg(DISTINCT pvi.image_url) AS variant_images,
+                        variant_offers.offer_type AS variant_offer_type,
+                        variant_offers.offer_value AS variant_offer_value,
+                        variant_offers.offer_installments AS variant_offer_installments
+						FROM products p
+                        INNER JOIN product_variant pv ON p.id = pv.products_id
+                        INNER JOIN product_variant_images_assignments pvia ON pv.id = pvia.product_variant_id
+                        INNER JOIN product_variant_images pvi ON pvia.product_variant_images_id = pvi.id
+						-- Aplica DISTINCT ON para pegar a primeira linha da tabela de ofertas por variante
+                        LEFT JOIN (
+                            SELECT DISTINCT ON (pvo.product_variant_id) pvo.offer_type, pvo.offer_value, pvo.offer_installments, pvo.product_variant_id
+                            FROM product_variant pv
+                            INNER JOIN product_variant_offers pvo ON pv.id = pvo.product_variant_id
+                            WHERE pvo.is_active = true
+                            ORDER BY pvo.product_variant_id DESC
+                        ) variant_offers ON variant_offers.product_variant_id = pv.id
+					WHERE pv.public_id = $1
+					GROUP BY
+						p.id,
+                        pv.id,
+						variant_offers.offer_type,
+                        variant_offers.offer_value,
+                        variant_offers.offer_installments
+                `, [sku]);
+            return rows[0];
+        } catch (error) {
+            console.error('Error finding variant data by sku: ', error);
         }
     }
 

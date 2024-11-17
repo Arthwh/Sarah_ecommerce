@@ -2,10 +2,10 @@ import pool from '../db.js';
 import { Product } from '../models/productModel.js'
 
 class ProductRepository {
+    //FUNCIONANDO CERTO
     static async listProductsBySubcategoryRepository(category, subcategory, limit, offset) {
         try {
             var parameters = [category];
-
             const selectAndJoinsQuery = `
                     SELECT
                         p.public_id AS product_public_id,
@@ -45,7 +45,6 @@ class ProductRepository {
                             INNER JOIN product_variant_offers pvo ON pv.id = pvo.product_variant_id
                             WHERE pvo.is_active = true
                             ORDER BY pvo.product_variant_id DESC
-                            LIMIT 1
                         ) variant_offers ON variant_offers.product_variant_id = pv.id
                         -- Aplica DISTINCT ON para pegar a primeira linha por produto e cor
                         LEFT JOIN (
@@ -88,7 +87,6 @@ class ProductRepository {
                 LIMIT $${parameters.length + 1} OFFSET $${parameters.length + 2}
             `;
             parameters.push(limit, offset);
-
             const { rows } = await pool.query((selectAndJoinsQuery + whereQuery + groupByQuery + orderByQuery + paginationQuery), parameters);
             return rows;
         } catch (error) {
@@ -97,6 +95,7 @@ class ProductRepository {
         }
     }
 
+    //FUNCIONANDO CERTO
     static async countTotalProducts(category, subcategory) {
         try {
             var parameters = [category];
@@ -141,15 +140,147 @@ class ProductRepository {
         }
     }
 
-    static async getProductByIdRepository(id) {
+    //FUNCIONANDO CERTO
+    static async getProductAndFirstVariantByProductIdRepository(id) {
         try {
-            const { rows } = await pool.query('SELECT * FROM products WHERE id = $1', [id]);
-            return rows;
+            const { rows } = await pool.query(`
+                    SELECT
+                        p.public_id AS product_public_id,
+						p.name AS product_name,
+						p.description AS product_description,
+						p.total_stock_quantity,
+						pv.public_id AS variant_public_id,
+                        pv.color AS variant_color_name,
+                        pv.color_code AS variant_color_code,
+                        pv.unit_price AS variant_unit_price,
+                        pv.installments AS variant_installments,
+                        pv.is_on_sale AS variant_is_on_sale,
+                        pv.size AS variant_size,
+                        pv.stock_quantity AS variant_stock_quantity,
+                        array_agg(DISTINCT pvi.image_url) AS variant_images,
+                        variant_offers.offer_type AS variant_offer_type,
+                        variant_offers.offer_value AS variant_offer_value,
+                        variant_offers.offer_installments AS variant_offer_installments,
+                        COALESCE(
+                            array_agg(DISTINCT jsonb_build_object(
+                                'subcategory_id', product_subcategories.subcategory_id,
+                                'subcategory_name', product_subcategories.subcategory_name,
+                                'subcategory_description', product_subcategories.subcategory_description,
+                                'category_id', product_subcategories.category_id,
+                                'category_name', product_subcategories.category_name
+                            )),
+                            '{}'
+                        ) AS subcategories
+						FROM products p
+                        INNER JOIN product_variant pv ON p.id = pv.products_id
+                        INNER JOIN product_variant_images_assignments pvia ON pv.id = pvia.product_variant_id
+                        INNER JOIN product_variant_images pvi ON pvia.product_variant_images_id = pvi.id
+                        -- Aplica DISTINCT ON para pegar a primeira linha da tabela de ofertas por variante
+                        LEFT JOIN (
+                            SELECT DISTINCT ON (pvo.product_variant_id) pvo.offer_type, pvo.offer_value, pvo.offer_installments, pvo.product_variant_id
+                            FROM product_variant pv
+                            INNER JOIN product_variant_offers pvo ON pv.id = pvo.product_variant_id
+                            WHERE pvo.is_active = true
+                            ORDER BY pvo.product_variant_id DESC
+                        ) variant_offers ON variant_offers.product_variant_id = pv.id
+                        -- Subconsulta para agrupar subcategorias por produto
+                        LEFT JOIN (
+                            SELECT 
+                                psa.product_id,
+                                sbc.id AS subcategory_id,
+                                sbc.name AS subcategory_name,
+                                sbc.description AS subcategory_description,
+                                ca.id AS category_id,
+                                ca.name AS category_name
+                            FROM product_subcategory_assignments psa
+                            INNER JOIN sub_categories sbc ON sbc.id = psa.sub_category_id
+                            INNER JOIN categories ca ON sbc.categories_id = ca.id
+                        ) product_subcategories ON product_subcategories.product_id = p.id
+					WHERE p.public_id = $1 AND pv.stock_quantity > 0
+					GROUP BY
+						p.id,
+                        pv.id,
+						variant_offers.offer_type,
+                        variant_offers.offer_value,
+                        variant_offers.offer_installments
+                `, [id]);
+            return rows[0];
         } catch (error) {
             console.error('Error finding product by id:', error);
             throw error;
         }
-    }
+    };
+
+    //FUNCIONANDO CERTO
+    static async getProductByProductAndVariantIdRepository(id, sku) {
+        try {
+            const { rows } = await pool.query(`
+                    SELECT
+                        p.public_id AS product_public_id,
+						p.name AS product_name,
+						p.description AS product_description,
+						p.total_stock_quantity,
+						pv.public_id AS variant_public_id,
+                        pv.color AS variant_color_name,
+                        pv.color_code AS variant_color_code,
+                        pv.unit_price AS variant_unit_price,
+                        pv.installments AS variant_installments,
+                        pv.is_on_sale AS variant_is_on_sale,
+                        pv.size AS variant_size,
+                        pv.stock_quantity AS variant_stock_quantity,
+                        array_agg(DISTINCT pvi.image_url) AS variant_images,
+                        variant_offers.offer_type AS variant_offer_type,
+                        variant_offers.offer_value AS variant_offer_value,
+                        variant_offers.offer_installments AS variant_offer_installments,
+                        COALESCE(
+                            array_agg(DISTINCT jsonb_build_object(
+                                'subcategory_id', product_subcategories.subcategory_id,
+                                'subcategory_name', product_subcategories.subcategory_name,
+                                'subcategory_description', product_subcategories.subcategory_description,
+                                'category_id', product_subcategories.category_id,
+                                'category_name', product_subcategories.category_name
+                            )),
+                            '{}'
+                        ) AS subcategories
+						FROM products p
+                        INNER JOIN product_variant pv ON p.id = pv.products_id
+                        INNER JOIN product_variant_images_assignments pvia ON pv.id = pvia.product_variant_id
+                        INNER JOIN product_variant_images pvi ON pvia.product_variant_images_id = pvi.id
+                        -- Aplica DISTINCT ON para pegar a primeira linha da tabela de ofertas por variante
+                        LEFT JOIN (
+                            SELECT DISTINCT ON (pvo.product_variant_id) pvo.offer_type, pvo.offer_value, pvo.offer_installments, pvo.product_variant_id
+                            FROM product_variant pv
+                            INNER JOIN product_variant_offers pvo ON pv.id = pvo.product_variant_id
+                            WHERE pvo.is_active = true
+                            ORDER BY pvo.product_variant_id DESC
+                        ) variant_offers ON variant_offers.product_variant_id = pv.id
+                        -- Subconsulta para agrupar subcategorias por produto
+                        LEFT JOIN (
+                            SELECT 
+                                psa.product_id,
+                                sbc.id AS subcategory_id,
+                                sbc.name AS subcategory_name,
+                                sbc.description AS subcategory_description,
+                                ca.id AS category_id,
+                                ca.name AS category_name
+                            FROM product_subcategory_assignments psa
+                            INNER JOIN sub_categories sbc ON sbc.id = psa.sub_category_id
+                            INNER JOIN categories ca ON sbc.categories_id = ca.id
+                        ) product_subcategories ON product_subcategories.product_id = p.id
+					WHERE p.public_id = $1 AND p.is_active = true AND pv.public_id = $2
+					GROUP BY
+						p.id,
+                        pv.id,
+						variant_offers.offer_type,
+                        variant_offers.offer_value,
+                        variant_offers.offer_installments
+                `, [id, sku]);
+            return rows[0];
+        } catch (error) {
+            console.error('Error finding product by id:', error);
+            throw error;
+        }
+    };
 
     //FUNCIONANDO CERTO
     static async createProductRepository(client, { productName, productDescription, brand }) {
@@ -181,44 +312,7 @@ class ProductRepository {
         }
     }
 
-    // static async updateProductRepository(id, { brand_id, name, description, total_stock_quantity }) {
-    //     try {
-    //         const { rows } = await pool.query(
-    //             'UPDATE products SET brand_id = $1, name = $2, description = $3, total_stock_quantity = $4 WHERE ID = $5 RETURNING *',
-    //             [brand_id, name, description, total_stock_quantity, id]
-    //         );
-    //         return rows[0];
-    //     } catch (error) {
-    //         console.error('Error updating product:', error);
-    //         throw error;
-    //     }
-    // }
-
-    // static async deleteProductRepository(id) {
-    //     try {
-    //         const { rows } = await pool.query('DELETE FROM products WHERE id = $1 RETURNING *', [id]);
-    //         return rows[0];
-    //     } catch (error) {
-    //         console.error('Error deleting product:', error);
-    //         throw error;
-    //     }
-    // }
-
-    // static async updateProductVariantRepository(sku) {
-
-    //     return rows[0];
-    // }
-
-    // static async getLandingPageDataRepository() {
-    //     try {
-    //         const { rows } = await pool.query('');
-    //         return rows;
-    //     } catch (error) {
-    //         console.error('Error finding all products:', error);
-    //         throw error;
-    //     }
-    // }
-
+    //FUNCIONANDO CERTO
     static async getCategoriesAndSubcategories() {
         try {
             const { rows } = await pool.query('SELECT c.id AS category_id, c.name AS category_name, s.id AS subcategory_id, s.name AS subcategory_name FROM categories c LEFT JOIN sub_categories s ON c.id = s.categories_id ORDER BY c.id, s.id;');
@@ -229,6 +323,7 @@ class ProductRepository {
         }
     }
 
+    //FUNCIONANDO CERTO
     static async getAllBrands() {
         try {
             const { rows } = await pool.query('SELECT id, name FROM brands ORDER BY id;');
@@ -239,6 +334,7 @@ class ProductRepository {
         }
     }
 
+    //FUNCIONANDO CERTO
     static async getAllActiveProductColors() {
         try {
             const { rows } = pool.query(`SELECT DISTINCT ON (pv.color) pv.color FROM product_variant pv GROUP BY pv.color`);

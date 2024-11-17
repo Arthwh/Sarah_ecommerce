@@ -18,7 +18,6 @@
     <script>
         // Obtem os dados enviados do backend e converte para JSON
         const data = JSON.parse('<%- JSON.stringify(data) %>');
-        console.log(data)
         if (!data) {
             const redirect = () => {
                 window.location.href = '/';
@@ -47,13 +46,12 @@
                         <% if (data.products.length> 0) { %>
                             <!-- Breadcrumbs -->
                             <%- include('partials/_breadcrumbs') %>
-                                <!-- titulo e botao de filtro -->
                                 <div
                                     class="flex flex-col md:flex-row w-full mb-10 mx-auto justify-between items-center">
                                     <!-- Titulo e quantidade de resultados -->
                                     <div class="flex flex-col md:flex-row items-center space-x-4">
                                         <!-- Titulo -->
-                                        <div class="text-xl flex text-center">
+                                        <div class="text-2xl flex text-center">
                                             <span>
                                                 <%= data.page?.title %>
                                             </span>
@@ -81,14 +79,15 @@
                                         <div class="product-card">
                                             <div class="product-image-wrapper">
                                                 <!-- Link e imagens do produto -->
-                                                <a href="#" class="product-link">
+                                                <a href="/p/<%= product.product_public_id %>?sku=<%= product.variant_public_id %>"
+                                                    class="product-link">
                                                     <div class="product-images">
                                                         <!-- Primeira imagem (imagem padrão) -->
-                                                        <img src="<%= product.variant_images[0] %>"
+                                                        <img src="../<%= product.variant_images[0] %>"
                                                             alt="<%= product.product_name %>"
                                                             class="product-image-default" loading="lazy">
                                                         <!-- Segunda imagem (imagem ao hover) -->
-                                                        <img src="<%= product.variant_images[1] %>"
+                                                        <img src="../<%= product.variant_images[1] %>"
                                                             alt="<%= product.product_name %>"
                                                             class="product-image-hover">
                                                     </div>
@@ -108,7 +107,8 @@
                                             </div>
 
                                             <!-- Nome e Preço do Produto -->
-                                            <a href="#" class="product-info-link">
+                                            <a href="/p/<%= product.product_public_id %>?sku=<%= product.variant_public_id %>"
+                                                class="product-info-link">
                                                 <div class="product-info">
                                                     <h3 class="product-name">
                                                         <%= product.product_name %>
@@ -147,7 +147,7 @@
                                         <p class="text-sm">VOCÊ ESTÁ NA PÁGINA</p>
                                     </div>
                                     <div class="flex justify-center items-center space-x-2">
-                                        <button id="prevPageButton" <% if( data.pagination?.currentPage == 1) { %>
+                                        <button id="prevPageButton" <% if( data.pagination?.currentPage==1) { %>
                                             class="bg-white text-black border border-black px-4 py-2" disabled
                                             <% } else{ %>
                                                 class="bg-white text-black border border-black px-4 py-2 hover:bg-black

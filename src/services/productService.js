@@ -1,11 +1,11 @@
 import ProductRepository from '../repositories/productRepository.js'
 import ProductVariantRepository from '../repositories/productVariantRepository.js'
-import { getLandingPageComponentsAndData_Mock, getProductInfo_Mock, updateProductVariantData_Mock } from '../controllers/mockProductData.js' // Mocks dos dados enquanto nao esta pronto essa parte no backend
+import { getLandingPageComponentsAndData_Mock } from '../controllers/mockProductData.js' // Mocks dos dados enquanto nao esta pronto essa parte no backend
 import { Product } from '../models/productModel.js';
 import pool from '../db.js';
 
 class ProductService {
-
+    //mock
     static async getLandingPageData() {
         try {
             // return await ProductRepository.getLandingPageDataRepository();
@@ -31,12 +31,12 @@ class ProductService {
             }
             const page = parseInt(pageParam, 10) || 1;
             const offset = limit * (page - 1);
-            console.log("OFFSET: " + offset)
 
             const products = await ProductRepository.listProductsBySubcategoryRepository(category, subcategory, limit, offset);
             const results = products.length;
-            const subcategoryCapitalized = subcategory?.charAt(0).toUpperCase() + subcategory?.slice(1) || '';
-            const categoryCapitalized = category.charAt(0).toUpperCase() + category.slice(1);
+            var subcategoryCapitalized = '';
+            subcategory ? subcategoryCapitalized = capitalizeWords(subcategory) : '';
+            const categoryCapitalized = capitalizeWords(category);
             const data = {
                 products: products,
                 page: {
@@ -62,25 +62,55 @@ class ProductService {
         }
     }
 
-    static async getSpecificProduct(id) {
+    //FUNCIONANDO CERTO
+    static async getSpecificProduct(id, sku) {
         try {
-            // const product = await ProductRepository.getProductByIdRepository(id);
-            // const variants = await ProductVariantRepository.getProductVariantsByProductIdRepository(id);
-            // console.log(product);
-            // console.log(variants);
+            var productData = {};
+            if (!id) {
+                throw Error("Product ID missing.");
+            }
+            if (!sku || sku === 'undefined') {
+                //Pega a primeira variante com estoque
+                productData = await ProductRepository.getProductAndFirstVariantByProductIdRepository(id);
+            }
+            else {
+                productData = await ProductRepository.getProductByProductAndVariantIdRepository(id, sku);
+            }
+            const variantsData = await ProductVariantRepository.getAllProductVariantsByProductIdRepository(id);
+            if (variantsData) {
+                productData['variants'] = variantsData;
+            }
+            const category = productData.subcategories[0].category_name;
+            const subcategory = productData.subcategories[0].subcategory_name;
+            const data = {
+                product: productData,
+                page: {
+                    breadcrumbs: [
+                        { name: 'Início', url: '/' },
+                        { name: category, url: `/c/${category.toLowerCase()}` },
+                        { name: subcategory, url: `/c/${category.toLowerCase()}/${subcategory.toLowerCase()}` },
+                        { name: productData.product_name, url: `/p/${productData.product_public_id}` }
+                    ]
+                }
+            }
+            return data;
         } catch (error) {
-            console.error('Error getting product: ' + error.message);
+            console.error('Error getting product: ', error);
             throw error;
         }
     }
 
-    static async getProductDataMock() {
-        return await getProductInfo_Mock();
-    }
-
+    //FUNCIONANDO CERTO
     static async getProductVariantData(sku) {
-        const data = await updateProductVariantData_Mock(sku);
-        return data;
+        try {
+            if (!sku) {
+                throw new Error('Product SKU missing.');
+            }
+            const variantData = await ProductVariantRepository.getVariantDataBySku(sku);
+            return variantData;
+        } catch (error) {
+            console.error('Error getting product variant data: ', error);
+        }
     }
 
     //FUNCIONANDO CERTO
@@ -134,7 +164,6 @@ class ProductService {
                     categories.push(category);
                     categoriesMap[row.category_id] = category;
                 }
-
                 // Adiciona subcategoria à categoria correspondente
                 if (row.subcategory_id) {
                     categoriesMap[row.category_id].subcategories.push({
@@ -171,6 +200,11 @@ class ProductService {
             throw error;
         }
     }
+}
+
+function capitalizeWords(word) {
+    const wordCapitalized = word.charAt(0).toUpperCase() + word.slice(1);
+    return wordCapitalized;
 }
 
 export default ProductService;

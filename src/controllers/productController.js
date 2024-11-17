@@ -25,6 +25,7 @@ class ProductController {
         }
     }
 
+    //FUNCIONANDO CERTO
     static async getCategoriesAndSubcategories(req, res) {
         try {
             const data = await ProductService.getAllProductCategoriesAndSubcategories();
@@ -34,6 +35,7 @@ class ProductController {
         }
     }
 
+    //FUNCIONANDO CERTO
     static async getBrands(req, res) {
         try {
             const data = await ProductService.getAllBrands();
@@ -52,6 +54,7 @@ class ProductController {
         }
     }
 
+    //FUNCIONANDO CERTO
     static async listProductsByCategoryOrSubcategory(req, res) {
         try {
             const { category, subcategory } = req.params;
@@ -59,7 +62,6 @@ class ProductController {
             const user = req.session.user;
             const categories = await ProductService.getAllProductCategoriesAndSubcategories();
             const data = await ProductService.listProductsByCategoryOrSubcategoryService(category, subcategory, limit, page);
-            console.log("teste")
             if (!data) {
                 return res.status(404).json({ error: 'Dados não encontrados' });
             }
@@ -69,28 +71,27 @@ class ProductController {
         }
     }
 
-    //mock
+    //FUNCIONANDO CERTO
     static async getSpecificProduct(req, res) {
         try {
-            const user = req.session.user
-            // const id = req.params.id;
-            // const sku = req.query.sku || '';
-            // if (!id) {
-            //     res.status(404).json({ error: 'Código do produto não informado ou incorreto' })
-            // }
-            // const data = await ProductService.getSpecificProduct(id, sku);
-            const data = await ProductService.getProductDataMock();
+            const user = req.session.user;
+            const { id } = req.params;
+            const { sku } = req.query || undefined;
             const categories = await ProductService.getAllProductCategoriesAndSubcategories();
-            res.render('client/product', { data: { user: user, page: { categories: categories, displayRegisterModal: true }, product: data.product } });
+            const data = await ProductService.getSpecificProduct(id, sku);
+            if (!data) {
+                return res.status(404).json({ error: 'Dados não encontrados' });
+            }
+            res.render('client/product', { data: { user: user, page: { categories: categories, displayRegisterModal: true, breadcrumbs: data.page.breadcrumbs }, product: data.product } });
         } catch (error) {
             res.status(500).json({ error: 'Erro ao buscar produto' });
         }
     }
 
-    //mock
+    //FUNCIONANDO CERTO
     static async getProductVariantData(req, res) {
         try {
-            const sku = req.params.id;
+            const { sku } = req.params;
             const data = await ProductService.getProductVariantData(sku);
             if (!data) {
                 res.status(404).json({ error: 'Produto não encontrado' });

@@ -37,6 +37,9 @@ class ProductService {
             var subcategoryCapitalized = '';
             subcategory ? subcategoryCapitalized = capitalizeWords(subcategory) : '';
             const categoryCapitalized = capitalizeWords(category);
+            products.forEach(product => {
+                product.product_description = product.product_description.replace(/\r?\n/g, '<br>');
+            });
             const data = {
                 products: products,
                 page: {
@@ -44,8 +47,8 @@ class ProductService {
                     quantResults: results,
                     breadcrumbs: [
                         { name: 'Início', url: '/' },
-                        { name: categoryCapitalized, url: `/${categoryCapitalized}` },
-                        subcategoryCapitalized ? { name: subcategoryCapitalized, url: `/masculino/${subcategory}` } : ''
+                        { name: categoryCapitalized, url: `/c/${category}` },
+                        subcategoryCapitalized ? { name: subcategoryCapitalized, url: `/c/masculino/${subcategory}` } : null
                     ]
                 },
                 pagination: {
@@ -80,6 +83,13 @@ class ProductService {
             if (variantsData) {
                 productData['variants'] = variantsData;
             }
+            console.log(productData);
+            var productStock = 0;
+            productData.variants.forEach(product => {
+                productStock += product.variant_stock_quantity;
+            });
+            productData.total_stock_quantity = productStock;
+            productData.product_description = productData.product_description.replace(/\r?\n/g, '<br>');
             const category = productData.subcategories[0].category_name;
             const subcategory = productData.subcategories[0].subcategory_name;
             const data = {
@@ -107,6 +117,7 @@ class ProductService {
                 throw new Error('Product SKU missing.');
             }
             const variantData = await ProductVariantRepository.getVariantDataBySku(sku);
+            variantData['product_description'] = variantData.product_description.replace(/\r?\n/g, '<br>');
             return variantData;
         } catch (error) {
             console.error('Error getting product variant data: ', error);
@@ -119,10 +130,16 @@ class ProductService {
         try {
             //Inicia a transaction
             await client.query('BEGIN');
+            const variantsData = JSON.parse(productData.variants);
+            var totalStock = 0;
+            for (const variant of variantsData) {
+                totalStock += parseInt(variant.variantInitialStock);
+            }
+            productData['productTotalStock'] = totalStock;
             const product_id = await ProductRepository.createProductRepository(client, productData);
             await ProductRepository.assignSubcategoryRepository(client, product_id, productData.subcategory)
             if (productData.variants) {
-                const variants = await ProductVariantRepository.createProductVariantRepository(client, product_id, productData.variants);
+                const variants = await ProductVariantRepository.createProductVariantRepository(client, product_id, variantsData);
                 const images = await ProductVariantRepository.insertVariantImages(client, files);
                 await ProductVariantRepository.assignVariantImageRepository(client, variants, images);
             }

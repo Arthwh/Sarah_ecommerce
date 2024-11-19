@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Listagem de Produtos - SARAH</title>
+    <link rel="shortcut icon" href="/public/images/logo/logo_dourado_preto_icon.ico" type="image/x-icon">
     <link href="/public/css/pagePattern.css" rel="stylesheet">
     <link href="/public/css/tailwind/style.css" rel="stylesheet">
     <link href="/public/css/messageModal/modal.css" rel="stylesheet">
@@ -18,6 +19,7 @@
     <script>
         // Obtem os dados enviados do backend e converte para JSON
         const data = JSON.parse('<%- JSON.stringify(data) %>');
+        console.log(data)
         if (!data) {
             const redirect = () => {
                 window.location.href = '/';
@@ -85,11 +87,11 @@
                                                         <!-- Primeira imagem (imagem padrão) -->
                                                         <img src="../<%= product.variant_images[0] %>"
                                                             alt="<%= product.product_name %>"
-                                                            class="product-image-default" loading="lazy">
+                                                            class="product-image product-image-default" loading="lazy">
                                                         <!-- Segunda imagem (imagem ao hover) -->
                                                         <img src="../<%= product.variant_images[1] %>"
                                                             alt="<%= product.product_name %>"
-                                                            class="product-image-hover">
+                                                            class="product-image product-image-hover">
                                                     </div>
                                                 </a>
 
@@ -113,28 +115,35 @@
                                                     <h3 class="product-name">
                                                         <%= product.product_name %>
                                                     </h3>
-                                                    <div class="product-price">
-                                                        <% if (product.variant_is_on_sale) { %>
-                                                            <span class="price-old">R$ <%= product.variant_unit_price %>
-                                                            </span>
-                                                            <span class="price-new">R$ <%= product.variant_offer_value
-                                                                    %></span>
-                                                            <span class="price-installments">
-                                                                <%= product.variant_offer_installments %>x de R$ <%=
-                                                                        ((parseInt(product.variant_offer_value))/product.variant_offer_installments).toFixed(2)
-                                                                        %>*
-                                                            </span>
-                                                            <% } else { %>
-                                                                <span class="price-current">R$ <%=
+                                                    <% if (product.variant_stock_quantity> 0) { %>
+                                                        <div class="product-price">
+                                                            <% if (product.variant_is_on_sale) { %>
+                                                                <span class="price-old">R$ <%=
                                                                         product.variant_unit_price %>
                                                                 </span>
+                                                                <span class="price-new">R$ <%=
+                                                                        product.variant_offer_value %></span>
                                                                 <span class="price-installments">
-                                                                    <%= product.variant_installments %>x de R$ <%=
-                                                                            ((parseInt(product.variant_unit_price))/product.variant_installments).toFixed(2)
+                                                                    <%= product.variant_offer_installments %>x de R$ <%=
+                                                                            ((parseInt(product.variant_offer_value))/product.variant_offer_installments).toFixed(2)
                                                                             %>*
                                                                 </span>
-                                                                <% } %>
-                                                    </div>
+                                                                <% } else { %>
+                                                                    <span class="price-current">R$ <%=
+                                                                            product.variant_unit_price %>
+                                                                    </span>
+                                                                    <span class="price-installments">
+                                                                        <%= product.variant_installments %>x de R$ <%=
+                                                                                ((parseInt(product.variant_unit_price))/product.variant_installments).toFixed(2)
+                                                                                %>*
+                                                                    </span>
+                                                                    <% } %>
+                                                        </div>
+                                                        <% } else { %>
+                                                            <div class="out-of-stock-container">
+                                                                <p class="out-of-stock-message">Produto Indisponível</p>
+                                                            </div>
+                                                            <% } %>
                                                 </div>
                                             </a>
                                         </div>

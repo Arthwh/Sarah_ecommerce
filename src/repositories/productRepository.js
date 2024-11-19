@@ -11,6 +11,7 @@ class ProductRepository {
                         p.public_id AS product_public_id,
                         p.name AS product_name,
                         p.description AS product_description,
+                        p.total_stock_quantity AS product_total_stock_quantity,
                         pv.public_id AS variant_public_id,
                         pv.color AS variant_color_name,
                         pv.color_code AS variant_color_code,
@@ -51,8 +52,8 @@ class ProductRepository {
                             SELECT DISTINCT ON (p.id, pv.color) p.id AS product_id, pv.color, pv.id AS variant_id
                             FROM products p
                             INNER JOIN product_variant pv ON p.id = pv.products_id
-                            WHERE pv.stock_quantity > 0
-                            ORDER BY p.id, pv.color, pv.id DESC
+
+                            ORDER BY p.id, pv.color, pv.stock_quantity DESC
                         ) unique_colors ON unique_colors.product_id = p.id AND unique_colors.color = pv.color
                         -- Subconsulta para agrupar subcategorias por produto
                         LEFT JOIN (
@@ -81,7 +82,7 @@ class ProductRepository {
                         variant_offers.offer_installments
             `;
             const orderByQuery = `
-                    ORDER BY p.id, pv.color
+                    ORDER BY p.total_stock_quantity DESC
             `;
             const paginationQuery = `
                 LIMIT $${parameters.length + 1} OFFSET $${parameters.length + 2}
@@ -283,12 +284,12 @@ class ProductRepository {
     };
 
     //FUNCIONANDO CERTO
-    static async createProductRepository(client, { productName, productDescription, brand }) {
+    static async createProductRepository(client, { productName, productDescription, brand, productTotalStock }) {
         try {
             const { rows } = await client.query(`
                 INSERT INTO products (brand_id, name, description, total_stock_quantity)
-                VALUES ($1, $2, $3, 1) RETURNING id
-            `, [brand, productName, productDescription]);
+                VALUES ($1, $2, $3, $4) RETURNING id
+            `, [brand, productName, productDescription, productTotalStock]);
             const productId = rows[0].id
             return productId;
         } catch (error) {

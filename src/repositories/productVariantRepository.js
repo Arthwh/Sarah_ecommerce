@@ -74,7 +74,6 @@ class ProductVariantRepository {
     //FUNCIONANDO CERTO
     static async createProductVariantRepository(client, product_id, variants) {
         try {
-            variants = JSON.parse(variants);
             const rows = [];
             for (const variant of variants) {
                 variant.variantPrice = parseFloat(variant.variantPrice.replace('R$', '').replace(/\./g, '').replace(',', '.'));

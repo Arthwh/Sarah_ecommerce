@@ -51,16 +51,3 @@ input:focus{
 .custom-scrollbar::-webkit-scrollbar{
     display: none;
 }
-
-.sizeSelected{
-    background-color: black;
-    color: white;
-}
-
-/* Efeito de troca da imagem do botao de favorito na listagem de produtos */
-.favorite-btn:hover .favorite-icon {
-    display: none;
-}
-.favorite-btn:hover .favorite-icon-hover {
-    display: block;
-}

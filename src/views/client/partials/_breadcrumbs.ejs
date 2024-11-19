@@ -1,13 +1,13 @@
 <div id="breadCrumbs_wrapper" class="hidden md:block">
     <ul class="space-x-2 flex">
         <% var count=0; if(data.page?.breadcrumbs){ data.page.breadcrumbs.forEach(breadcrumb=> {
-            if (count> 0 && count < data.page.breadcrumbs.length ){ %>
+            if (count > 0 && count < data.page.breadcrumbs.length && breadcrumb !==null){ %>
                 <span class="h-4 w-4 flex pt-2 items-center"><img
                         src="/public/images/icons/chevron_right_icon_black.svg" alt="..."></span>
                 <% }%>
                     <li class="menuItem">
-                        <a href="<%= breadcrumb.url %>">
-                            <%= breadcrumb.name %>
+                        <a href="<%= breadcrumb?.url %>">
+                            <%= breadcrumb?.name %>
                         </a>
                     </li>
                     <% count++; }); }%>

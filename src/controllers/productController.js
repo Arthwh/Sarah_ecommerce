@@ -65,6 +65,7 @@ class ProductController {
             if (!data) {
                 return res.status(404).json({ error: 'Dados não encontrados' });
             }
+            console.log(data)
             res.render('client/productsList', { data: { user: user, page: { categories: categories, displayRegisterModal: true, title: data.page.title, quantResults: data.page.quantResults, breadcrumbs: data.page.breadcrumbs }, pagination: data.pagination, products: data.products } });
         } catch (error) {
             res.status(500).json({ error: 'Erro ao buscar produtos', error });

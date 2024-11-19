@@ -18,39 +18,50 @@ document.addEventListener('DOMContentLoaded', () => {
     updateMainImageSmallScreen(currentIndex);
     smallScreenImagemCarousel.classList.remove('hidden');
 
-    //Seleciona a cor e tamamho do item atual
-    markSizeSelected(product.variant_public_id);
-    markColorSelected(product.variant_public_id);
+    clearColorsSelected();
+    clearSizesSelected();
+    if (!product.total_stock_quantity == 0) {
+        markColorSelected(product.variant_public_id);
+        if (!product.variant_stock_quantity == 0) {
+            markSizeSelected(product.variant_public_id);
+        }
+    }
 
     //Adiciona listener para quando a tela carregar e quando houver redimensionamento dela para verificar o overflow do carrossel de imagens
     window.addEventListener('resize', checkCarouselOverflow);
     window.addEventListener('load', checkCarouselOverflow);
 });
 
-//Adiciona uma marca no tamanho selecionado
-function markSizeSelected(sizeSKU) {
+async function clearSizesSelected() {
     const productSizeComponent = document.getElementById('productSizesComponent')
     productSizeComponent.querySelectorAll('button').forEach(size => {
         if (size.classList.contains('sizeSelected')) {
             size.classList.remove('sizeSelected');
         }
-    })
+    });
+}
+
+async function clearColorsSelected() {
+    const productColorVariants = document.getElementById('productColorVariants')
+    productColorVariants.querySelectorAll('.colorOption').forEach(div => {
+        if (div.classList.contains('colorSelected')) {
+            div.classList.remove('colorSelected');
+        }
+    });
+}
+
+//Adiciona uma marca no tamanho selecionado
+async function markSizeSelected(sizeSKU) {
+    await clearSizesSelected();
     const button = document.getElementById(`productSize_${sizeSKU}`).querySelector('button')
-    button.classList.add('sizeSelected')
+    button.classList.add('sizeSelected');
 }
 
 //Adiciona uma marca na cor selecionada
-function markColorSelected() {
-    const productColorVariants = document.getElementById('productColorVariants')
-    productColorVariants.querySelectorAll('div').forEach(div => {
-        if (div.classList.contains('border-black')) {
-            div.classList.remove('border-black');
-            div.classList.add('border-gray-300')
-        }
-    });
+async function markColorSelected() {
+    await clearColorsSelected();
     const colorSelectedDiv = document.querySelector(`div[data-variantColor="${actualProductData.variant_color_name}"]`);
-    colorSelectedDiv.classList.add('border-black')
-    colorSelectedDiv.classList.remove('border-gray-300')
+    colorSelectedDiv.classList.add('colorSelected');
 }
 
 function changeMainImage(newImageUrl, buttonElement) {
@@ -109,26 +120,31 @@ function loadVariantData(button) {
 
 // Função para atualizar as informações do produto no DOM
 function updateProductInfo(product, variantType, variantId) {
-    images = product.variant_images
-    actualProductData = product
+    images = product.variant_images;
+    actualProductData = product;
     const mainImage = document.getElementById('mainVisualizationProductImage').querySelector('img');
     mainImage.src = actualProductData.variant_images[0];
     const productName = document.getElementById('productName');
     productName.innerHTML = `${actualProductData.product_name} ${actualProductData.variant_color_name}`;
     const productPrice = document.getElementById('productPrice');
     productPrice.innerHTML = `R$ ${actualProductData.variant_unit_price}`;
+    if (productPrice.classList.contains('hidden')) {
+        productPrice.classList.remove('hidden');
+    }
     const productDescription = document.getElementById('ProductDescription');
-    productDescription.innerHTML = actualProductData.product_description;
+    productDescription.innerHTML = actualProductData.product_description.split('<br>')[0];
 
     updateMiniImageCarousel();
     updateVariantSizes();
     updateVariantColors();
 
-    smallScreenImagemCarousel.querySelector('img').src = actualProductData.variant_images[0]
+    smallScreenImagemCarousel.querySelector('img').src = actualProductData.variant_images[0];
 
-    markSizeSelected(actualProductData.variant_public_id)
-    markColorSelected(actualProductData.variant_public_id)
-    updateUrl(actualProductData.variant_public_id)
+    markSizeSelected(actualProductData.variant_public_id);
+    markColorSelected(actualProductData.variant_public_id);
+    updateUrl(actualProductData.variant_public_id);
+    enableShopAndFavoriteButtons();
+    removeUnavaliableMessage();
 }
 
 function updateMiniImageCarousel() {
@@ -157,20 +173,16 @@ function updateVariantSizes() {
             sizeDiv.dataset.productsku = variant.variant_public_id;
             sizeDiv.dataset.productstock = variant.variant_stock_quantity;
             sizeDiv.dataset.varianttype = 'size';
-
             const button = document.createElement('button');
-            button.className = 'px-2 py-2 mr-4 w-12 mt-2 border hover:border-black';
+            button.className = 'sizeOption';
             button.innerHTML = variant.variant_size;
-
             if (variant.variant_stock_quantity <= 0) {
                 button.disabled = true;
-                button.classList.add('bg-gray-100', 'text-gray-300', 'cursor-not-allowed');
             } else {
                 button.onclick = function () {
                     loadVariantData(this);
                 };
             }
-
             sizeDiv.appendChild(button);
             sizeVariantsContainer.appendChild(sizeDiv);
         }
@@ -235,6 +247,21 @@ function updateUrl(sku) {
     const url = new URL(window.location.href);
     url.searchParams.set('sku', sku);
     history.pushState(null, "", url.toString());
+}
+
+function enableShopAndFavoriteButtons() {
+    const favoriteAndShopContainer = document.getElementById('favoriteAndShopContainer');
+    favoriteAndShopContainer.classList.remove('disabled');
+    favoriteAndShopContainer.querySelectorAll('button').forEach(button => {
+        button.disabled = false;
+    });
+}
+
+function removeUnavaliableMessage() {
+    const unavaliableMessage = document.getElementById('unavaliableMessage');
+    if (unavaliableMessage) {
+        unavaliableMessage.remove();
+    }
 }
 
 async function addRemoveProductFromWishlist() {

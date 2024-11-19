@@ -38,7 +38,7 @@ class UserRepository {
                 "INSERT INTO users (name, email, password, role, phone_number, birthdate, gender, cpf) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *",
                 [name, email, password, role, phone_number, birthdate, gender, cpf]
             );
-            return rows[0];
+            return rows[0].id;
         } catch (error) {
             console.error('Error creating user:', error);
             throw error;

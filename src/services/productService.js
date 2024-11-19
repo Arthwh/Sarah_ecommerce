@@ -83,7 +83,6 @@ class ProductService {
             if (variantsData) {
                 productData['variants'] = variantsData;
             }
-            console.log(productData);
             var productStock = 0;
             productData.variants.forEach(product => {
                 productStock += product.variant_stock_quantity;

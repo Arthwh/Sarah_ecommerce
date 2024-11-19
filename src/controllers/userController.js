@@ -1,5 +1,6 @@
 import UserService from '../services/userService.js';
 import ProductService from '../services/productService.js';
+import { getUserAgent, getUserIP, logAction } from '../services/logsService.js'
 
 class UserController {
     static async getAllUsers(req, res) {
@@ -29,12 +30,11 @@ class UserController {
     static async createUser(req, res) {
         try {
             const userData = req.body;
-            console.log(userData)
             if (!userData) {
                 res.status(400).send({ message: 'Please provide user data' });
             }
-            await UserService.createUserService(userData);
-            res.status(200).send({ message: 'User created successfully' });
+            const { userId, message } = await UserService.createUserService(userData);
+            res.status(200).send({ message: message });
         } catch (error) {
             res.status(400).send({ message: error.message });
         }
@@ -63,21 +63,34 @@ class UserController {
     static async login(req, res) {
         try {
             const userData = req.body;
-            const user = await UserService.login(userData);
+            const userIP = await getUserIP(req);
+            const userAgent = await getUserAgent(req);
+            const { user, message } = await UserService.login(userData, userIP, userAgent);
             req.session.user = { id: user.id, public_id: user.public_id, email: user.email, cart: { count: user.cart.count }, role: user.role };
-            res.json({ user: { id: user.id, public_id: user.public_id, email: user.email, cart: user.cart, role: user.role } });
+            res.json({ user: { id: user.id, public_id: user.public_id, email: user.email, cart: user.cart, role: user.role }, message: message });
         } catch (error) {
-            res.status(400).send({ message: error.message });
+            res.status(401).send({ message: error.message });
         }
     }
 
     static async logout(req, res) {
-        req.session.destroy((err) => {
-            if (err) {
-                return res.status(500).send('Erro ao deslogar');
-            }
-            res.send('Logout bem-sucedido!');
-        });
+        try {
+            const user = req.session.user;
+            console.log(user)
+            const userIP = await getUserIP(req);
+            const userAgent = await getUserAgent(req);
+            req.session.destroy((err) => {
+                if (err) {
+                    logAction(userIP, userAgent, 'user-loggout', { status: 'error', details: err.message }, user.id);
+                    throw Error('Erro ao deslogar: ', err.message);
+                }
+                const message = 'Logout bem-sucedido!'
+                logAction(userIP, userAgent, 'user-loggout', { status: 'success', details: message }, user.id);
+                res.status(200).send({ message: message });
+            });
+        } catch (error) {
+            res.status(500).send({ message: error.message });
+        }
     }
 
     static async getUserAccountPage(req, res) {

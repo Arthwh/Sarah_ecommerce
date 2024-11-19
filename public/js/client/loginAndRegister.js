@@ -51,9 +51,7 @@ async function login() {
     }
     // Capturar os dados do formulário
     const formData = new FormData(formLogin);
-    console.log(formData);
     const loginData = Object.fromEntries(formData.entries());
-    console.log(loginData.loginEmail)
     try {
         const response = await fetch(`/api/login`, {
             method: 'POST',
@@ -67,20 +65,18 @@ async function login() {
                 })
         });
         if (!response.ok) {
-            throw new Error(`Erro HTTP: ${response.status}`);
+            const errorData = await response.json().catch(() => ({ message: 'Erro desconhecido' }));
+            throw new Error(errorData.message || `Erro desconhecido: ${response.status}`);
         }
-        const data = await response.json();
-        console.log("Login bem-sucedido:", data);
         await showToast('Login bem-sucedido', 'success')
         location.reload()
     } catch (error) {
         console.error('Erro no login:', error);
-        showToast('Erro no login. Verifique suas credenciais.', 'error');
+        showToast(`Erro no login: ${error.message}`, 'error');
     }
 }
 
 async function logout() {
-    console.log("teste")
     try {
         const response = await fetch('/api/logout', {
             method: 'POST',
@@ -89,12 +85,13 @@ async function logout() {
             }
         });
         if (!response.ok) {
-            throw new Error(`Erro HTTP: ${response.status}`);
+            const errorData = await response.json().catch(() => ({ message: 'Erro desconhecido' }));
+            throw new Error(errorData.message || `Erro desconhecido: ${response.status}`);
         };
         window.location.href = '/';
     } catch (error) {
         console.error('Erro no logout:', error);
-        showToast('Ocorreu um erro ao deslogar da conta.', 'error');
+        showToast(`Ocorreu um erro ao deslogar da conta: ${error.message}`, 'error');
     }
 }
 

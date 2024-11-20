@@ -1,18 +1,47 @@
-import ProductRepository from '../repositories/productRepository.js'
-import ProductVariantRepository from '../repositories/productVariantRepository.js'
-import { getLandingPageComponentsAndData_Mock } from '../controllers/mockProductData.js' // Mocks dos dados enquanto nao esta pronto essa parte no backend
+import ProductRepository from '../repositories/productRepository.js';
+import ProductVariantRepository from '../repositories/productVariantRepository.js';
+import LandingPageRepository from '../repositories/landingPageRepository.js';
 import { Product } from '../models/productModel.js';
 import pool from '../db.js';
 
 class ProductService {
-    //mock
     static async getLandingPageData() {
         try {
-            // return await ProductRepository.getLandingPageDataRepository();
-            return await getLandingPageComponentsAndData_Mock();
+            const components = await LandingPageRepository.getActiveLandingPageComponents();
+            if (!components) {
+                return {};
+            };
+            for (const component of components) {
+                if (component.content_type === 'product') {
+                    var products = [];
+                    switch (component.section_product_type) {
+                        case 'newArrivals':
+                            products = await ProductRepository.getProductsByFilter_newArrivals(component.section_product_limit);
+                            break;
+                        case 'highestRated':
+                            products = await ProductRepository.getProductsByFilter_highestRated(component.section_product_limit);
+                            break;
+                        case 'bestSelling':
+                            console.log('bestSelling')
+                            break;
+                        case 'offers':
+                            console.log('offers')
+                            break;
+                    }
+                    component.section_content = products;
+                    // console.log(products)
+                }
+                else if (component.content_type === 'image' && component.section_model === 'banner') {
+                    const bannerData = await LandingPageRepository.getBannerComponentData(component.id);
+                    component.section_content = bannerData;
+                    console.log(bannerData)
+                }
+            }
+            console.log(components)
+            return components;
         } catch (error) {
-            console.error('Error getting LandingPage: ' + error.message);
-            throw error;
+            console.error('Error getting LandingPage: ' + error);
+            throw Error('Error getting LandingPage: ' + error.message);
         }
     }
 
@@ -37,9 +66,9 @@ class ProductService {
             var subcategoryCapitalized = '';
             subcategory ? subcategoryCapitalized = capitalizeWords(subcategory) : '';
             const categoryCapitalized = capitalizeWords(category);
-            products.forEach(product => {
-                product.product_description = product.product_description.replace(/\r?\n/g, '<br>');
-            });
+            for (const product of products) {
+                product.product_description = await replaceLineBreakCharacterInDescription(product.product_description);
+            };
             const data = {
                 products: products,
                 page: {
@@ -88,7 +117,7 @@ class ProductService {
                 productStock += product.variant_stock_quantity;
             });
             productData.total_stock_quantity = productStock;
-            productData.product_description = productData.product_description.replace(/\r?\n/g, '<br>');
+            productData.product_description = await replaceLineBreakCharacterInDescription(productData.product_description)
             const category = productData.subcategories[0].category_name;
             const subcategory = productData.subcategories[0].subcategory_name;
             const data = {
@@ -102,6 +131,7 @@ class ProductService {
                     ]
                 }
             }
+            console.log(data);
             return data;
         } catch (error) {
             console.error('Error getting product: ', error);
@@ -221,6 +251,10 @@ class ProductService {
 function capitalizeWords(word) {
     const wordCapitalized = word.charAt(0).toUpperCase() + word.slice(1);
     return wordCapitalized;
+}
+
+async function replaceLineBreakCharacterInDescription(product_description) {
+    return product_description.replace(/\r?\n/g, '<br>');
 }
 
 export default ProductService;

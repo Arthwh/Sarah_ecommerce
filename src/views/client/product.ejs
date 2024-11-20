@@ -16,6 +16,7 @@
   <link href="/public/css/client/categoryAsideMenu.css" rel="stylesheet">
   <link href="/public/css/client/loginRegisterModal.css" rel="stylesheet">
   <link href="/public/css/client/productPage.css" rel="stylesheet">
+  <link href="/public/css/client/reviewStars.css" rel="stylesheet">
 
   <script>
     // Obtem os dados enviados do backend e converte para JSON
@@ -124,108 +125,109 @@
                 <h1 id="productName" class="text-3xl font-bold text-black">
                   <%= `${data.product.product_name} ${data.product.variant_color_name}` %>
                 </h1>
-                <% if ( data.product.total_stock_quantity > 0) { %>
-                  <p id="productPrice"
-                    class="text-xl text-amber-400 mt-2 <%= data.product.variant_stock_quantity === 0 ? 'hidden' : '' %>">
-                    R$ <%= data.product.variant_unit_price %>
-                  </p>
-                  <% } %>
-                    <p id="ProductDescription" class="text-gray-700 mt-4">
-                      <%= data.product.product_description.split('<br>')[0] %>
+                <%- include('partials/productReviewStars/productReviewStars', { product: data.product }) %>
+                  <% if ( data.product.total_stock_quantity> 0) { %>
+                    <p id="productPrice"
+                      class="text-xl text-amber-400 mt-2 <%= data.product.variant_stock_quantity === 0 ? 'hidden' : '' %>">
+                      R$ <%= data.product.variant_unit_price %>
                     </p>
+                    <% } %>
+                      <p id="ProductDescription" class="text-gray-700 mt-4">
+                        <%= data.product.product_description.split('<br>')[0] %>
+                      </p>
 
-                    <% if ( data.product.total_stock_quantity===0) { %>
-                      <div id="unavaliableMessage" class="product-unavailable-message">
-                        <h2>Produto Indisponível</h2>
-                        <p>Infelizmente o produto <strong>
-                            <%= data.product.product_name %>
-                          </strong> está temporariamente fora de estoque.</p>
-                        <p>Por favor, verifique novamente mais tarde</p>
-                        <span>ou</span>
-                        <a href="<%= data.page.breadcrumbs[2].url %>">Ver produtos similares</a>
-                      </div>
-                      <% } else { %>
-                        <!-- Opções de cores -->
-                        <div class="mt-6">
-                          <h2 id="colorTitle" class="text-sm">Cor: <b>
-                              <%= data.product.variant_color_name%>
-                            </b>
-                          </h2>
-                          <div id="productColorVariants" class="flex space-x-4 mt-2">
-                            <% const displayedColors=new Set(); const colorsWithNoStock=new Map();
-                              data.product.variants.forEach(variant=>{
-                              if (!displayedColors.has(variant.variant_color_name)) {
-                              if (variant.variant_stock_quantity > 0) {
-                              displayedColors.add(variant.variant_color_name);
-                              colorsWithNoStock.delete(variant.variant_color_name);%>
-                              <div id="productColor_<%= variant.variant_public_id %>"
-                                data-productSku="<%= variant.variant_public_id %>"
-                                data-productStock="<%= variant.variant_stock_quantity %>"
-                                data-variantColor="<%= variant.variant_color_name %>" data-variantType="color"
-                                class="colorOption">
-                                <button onclick="loadVariantData(this)" class="w-8 h-8 p-2 rounded-full"
-                                  title="<%= variant.variant_color_name %>"
-                                  style="background-color: <%= variant.variant_color_code %>"></button>
-                              </div>
-                              <% } else { colorsWithNoStock.set(variant.variant_color_name, variant); } } });
-                                colorsWithNoStock.forEach((variant)=> {
-                                %>
+                      <% if ( data.product.total_stock_quantity===0) { %>
+                        <div id="unavaliableMessage" class="product-unavailable-message">
+                          <h2>Produto Indisponível</h2>
+                          <p>Infelizmente o produto <strong>
+                              <%= data.product.product_name %>
+                            </strong> está temporariamente fora de estoque.</p>
+                          <p>Por favor, verifique novamente mais tarde</p>
+                          <span>ou</span>
+                          <a href="<%= data.page.breadcrumbs[2].url %>">Ver produtos similares</a>
+                        </div>
+                        <% } else { %>
+                          <!-- Opções de cores -->
+                          <div class="mt-6">
+                            <h2 id="colorTitle" class="text-sm">Cor: <b>
+                                <%= data.product.variant_color_name%>
+                              </b>
+                            </h2>
+                            <div id="productColorVariants" class="flex space-x-4 mt-2">
+                              <% const displayedColors=new Set(); const colorsWithNoStock=new Map();
+                                data.product.variants.forEach(variant=>{
+                                if (!displayedColors.has(variant.variant_color_name)) {
+                                if (variant.variant_stock_quantity > 0) {
+                                displayedColors.add(variant.variant_color_name);
+                                colorsWithNoStock.delete(variant.variant_color_name);%>
                                 <div id="productColor_<%= variant.variant_public_id %>"
-                                  class="rounded-full border border-gray-300 w-10 h-10 bg-white flex justify-center items-center">
-                                  <button disabled class="w-8 h-8 rounded-full cursor-not-allowed"
-                                    title="<%= variant.variant_color_name %>"
+                                  data-productSku="<%= variant.variant_public_id %>"
+                                  data-productStock="<%= variant.variant_stock_quantity %>"
+                                  data-variantColor="<%= variant.variant_color_name %>" data-variantType="color"
+                                  class="colorOption">
+                                  <button onclick="loadVariantData(this)" title="<%= variant.variant_color_name %>"
                                     style="background-color: <%= variant.variant_color_code %>"></button>
                                 </div>
-                                <% }); %>
+                                <% } else { colorsWithNoStock.set(variant.variant_color_name, variant); } } });
+                                  colorsWithNoStock.forEach((variant)=> {
+                                  %>
+                                  <div id="productColor_<%= variant.variant_public_id %>"
+                                    class="rounded-full border border-gray-300 w-10 h-10 bg-white flex justify-center items-center">
+                                    <button disabled class="w-8 h-8 rounded-full cursor-not-allowed"
+                                      title="<%= variant.variant_color_name %>"
+                                      style="background-color: <%= variant.variant_color_code %>"></button>
+                                  </div>
+                                  <% }); %>
+                            </div>
                           </div>
-                        </div>
 
-                        <!-- Opções de tamanhos -->
-                        <div class="mt-6">
-                          <h2 id="sizeTitle" class="text-sm">Tamanho: <b>
-                              <%= data.product.variant_size %>
-                            </b>
-                          </h2>
-                          <div id="productSizesComponent" class="flex flex-wrap mt-2">
-                            <% data.product.variants.forEach(variant=> {
-                              if (variant.variant_color_name === data.product.variant_color_name) { %>
-                              <div id="productSize_<%= variant.variant_public_id %>"
-                                data-productSku="<%= variant.variant_public_id %>"
-                                data-productStock="<%= variant.variant_stock_quantity %>" data-variantType="size">
-                                <button <%=variant.variant_stock_quantity==0 ? ' disabled '
-                                  : ' onclick=loadVariantData(this) ' %> class="sizeOption">
-                                  <%= variant.variant_size %>
-                                </button>
-                              </div>
-                              <% } }) %>
+                          <!-- Opções de tamanhos -->
+                          <div class="mt-6">
+                            <h2 id="sizeTitle" class="text-sm">Tamanho: <b>
+                                <%= data.product.variant_size %>
+                              </b>
+                            </h2>
+                            <div id="productSizesComponent" class="flex flex-wrap mt-2">
+                              <% data.product.variants.forEach(variant=> {
+                                if (variant.variant_color_name === data.product.variant_color_name) { %>
+                                <div id="productSize_<%= variant.variant_public_id %>"
+                                  data-productSku="<%= variant.variant_public_id %>"
+                                  data-productStock="<%= variant.variant_stock_quantity %>" data-variantType="size">
+                                  <button <%=variant.variant_stock_quantity==0 ? ' disabled '
+                                    : ' onclick=loadVariantData(this) ' %> class="sizeOption">
+                                    <%= variant.variant_size %>
+                                  </button>
+                                </div>
+                                <% } }) %>
+                            </div>
                           </div>
-                        </div>
 
-                        <% if (data.product.variant_stock_quantity===0) { %>
-                          <div id="unavaliableMessage" class="product-unavailable-message">
-                            <h2>Produto Indisponível</h2>
-                            <p>Infelizmente o produto <strong>
-                                <%= `${data.product.product_name} ${data.product.variant_color_name}
-                                  ${data.product.variant_size} `%>
-                              </strong> está temporariamente fora de estoque.</p>
-                            <p>Por favor, verifique novamente mais tarde ou selecione outro produto</p>
-                          </div>
-                          <% } %>
-                            <!-- Botão de Comprar e Favorito -->
-                            <div id="favoriteAndShopContainer" <%=data.product.variant_stock_quantity===0
-                              ? 'class=disabled' : '' %>
-                              >
-                              <button id="wishlistButton" data-addedToWishlist onclick="addRemoveProductFromWishlist()"
-                                <%=data.product.variant_stock_quantity===0 ? ' disabled ' : '' %>>
-                                <img src="/public/images/icons/favorite_icon_border_black.svg" alt="...">
-                              </button>
-                              <button id="addToCartButton" class="bg-white w-full text-black border border-black px-6 py-3 font-semibold hover:bg-black
-                            hover:text-white" <%=data.product.variant_stock_quantity===0 ? ' disabled ' : ''
-                                %>>Adicionar
-                                ao
-                                Carrinho</button>
+                          <% if (data.product.variant_stock_quantity===0) { %>
+                            <div id="unavaliableMessage" class="product-unavailable-message">
+                              <h2>Produto Indisponível</h2>
+                              <p>Infelizmente o produto <strong>
+                                  <%= `${data.product.product_name} ${data.product.variant_color_name}
+                                    ${data.product.variant_size} `%>
+                                </strong> está temporariamente fora de estoque.</p>
+                              <p>Por favor, verifique novamente mais tarde ou selecione outro produto</p>
                             </div>
                             <% } %>
+                              <!-- Botão de Comprar e Favorito -->
+                              <div id="favoriteAndShopContainer" <%=data.product.variant_stock_quantity===0
+                                ? 'class=disabled' : '' %>
+                                >
+                                <button id="wishlistButton" data-addedToWishlist
+                                  onclick="addRemoveProductFromWishlist()" <%=data.product.variant_stock_quantity===0
+                                  ? ' disabled ' : '' %>>
+                                  <img src="/public/images/icons/favorite_icon_border_black.svg" alt="...">
+                                </button>
+                                <button id="addToCartButton" class="bg-white w-full text-black border border-black px-6 py-3 font-semibold hover:bg-black
+                            hover:text-white" <%=data.product.variant_stock_quantity===0 ? ' disabled ' : ''
+                                  %>>Adicionar
+                                  ao
+                                  Carrinho</button>
+                              </div>
+                              <% } %>
               </div>
             </div>
             <!-- Informações adicionais -->

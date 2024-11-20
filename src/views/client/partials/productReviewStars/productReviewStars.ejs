@@ -1,0 +1,17 @@
+<div class="product-review-stars-container">
+    <% for(var i=0; i < 5; i++){ %>
+        <div class="review-star">
+            <% if ((product.product_review_score - i)>
+                1){ %>
+                <img src="/public/images/icons/star_icon_fill_black.svg" alt="star">
+                <% } else if ((product.product_review_score - i) < 1 && (product.product_review_score - i)> 0) { %>
+                    <img src="/public/images/icons/star_half_icon_black.svg" alt="star">
+                    <% } else { %>
+                        <img src="/public/images/icons/star_empty_icon_black.svg" alt="star">
+                        <% } %>
+        </div>
+        <% } %>
+            <span class="product-review-count">
+                (<%= product.product_review_quantity %>)
+            </span>
+</div>

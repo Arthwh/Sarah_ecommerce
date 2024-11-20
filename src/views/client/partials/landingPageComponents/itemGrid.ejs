@@ -1,96 +1,33 @@
-<div id="gridSection_<%= component.id %>" class="grid-section <%= data.page.mode === 'edit' ? 'editable' : '' %>"
-    data-component-id="<%= component.id %>" data-component-content-type="<%= component.content_type %>"
-    data-component-section-model="<%= component.section_model %>"
-    data-component-section-position="<%= component.section_position %>" data-element="section"
-    data-title="<%= component.title %>" data-product-type="<%= component.product_type %>"
-    data-product-limit="<%= component.product_limit %>" data-end-date="<%= component.end_date %>">
-    <% if (data.page.mode==='edit' ) { %>
-        <div class="edit-buttons" data-component-id="gridSection_<%= component.id %>">
-            <button class="edit-btn" onclick="showEditComponentModal('gridSection_<%= component.id %>', 'grid')">
-                <img src="/public/images/icons/edit_pen_icon_white.svg" alt="editar">
-            </button>
-            <button class="move-btn" onclick="moveElement(this, 'section')">
-                <img src="/public/images/icons/move_icon_white.svg" alt="mover">
-            </button>
-            <button class="delete-btn" onclick="deleteElement(this)">
-                <img src="/public/images/icons/remove_icon_white.svg" alt="remover">
-            </button>
-        </div>
-        <% } %>
-            <div class="titleSection">
-                <h2 id="gridSection_<%= component.id %>_title">
-                    <%= component.title %>
-                </h2>
+<% if (component.section_content?.length> 0 ) { %>
+    <div id="gridSection_<%= component.id %>" class="grid-section <%= data.page.mode === 'edit' ? 'editable' : '' %>"
+        data-component-id="<%= component.id %>" data-component-content-type="<%= component.content_type %>"
+        data-component-section-model="<%= component.section_model %>"
+        data-component-section-position="<%= component.section_position %>" data-element="section"
+        data-title="<%= component.section_title %>" data-product-type="<%= component.section_product_type %>"
+        data-product-limit="<%= component.section_product_limit %>" data-end-date="<%= component.end_date %>">
+        <% if (data.page.mode==='edit' ) { %>
+            <div class="edit-buttons" data-component-id="gridSection_<%= component.id %>">
+                <button class="edit-btn" onclick="showEditComponentModal('gridSection_<%= component.id %>', 'grid')">
+                    <img src="/public/images/icons/edit_pen_icon_white.svg" alt="editar">
+                </button>
+                <button class="move-btn" onclick="moveElement(this, 'section')">
+                    <img src="/public/images/icons/move_icon_white.svg" alt="mover">
+                </button>
+                <button class="delete-btn" onclick="deleteElement(this)">
+                    <img src="/public/images/icons/remove_icon_white.svg" alt="remover">
+                </button>
             </div>
-            <div id="gridSectionContent_<%= component.id %>"
-                class="overflow-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
-                <% component.section_content.forEach(item=> { %>
-                    <% if (item.landing_page_component_id===component.id && item.is_active) { %>
-                        <div class="product-card <%= data.page.mode === 'edit' ? 'editable' : '' %>"
-                            data-element="item">
-
-                            <div class="product-image-wrapper">
-                                <!-- Link e imagens do produto -->
-                                <a href="<%= item.product.url %>" class="product-link">
-                                    <div class="product-images">
-                                        <!-- Primeira imagem (imagem padrão) -->
-                                        <img src="<%= item.product.images[0] %>" alt="<%= item.product.name %>"
-                                            class="product-image-default">
-                                        <!-- Segunda imagem (imagem ao hover) -->
-                                        <img src="<%= item.product.images[1] %>" alt="<%= item.product.name %>"
-                                            class="product-image-hover">
-                                    </div>
-                                </a>
-                                <% if (data.page.mode !=='edit' ) { %>
-                                    <!-- Botão de favoritos -->
-                                    <div class="wishlist-button-wrapper">
-                                        <button onclick="addItemToWishlist('<%= item.product.sku %>')"
-                                            class="favorite-btn">
-                                            <img src="/public/images/icons/favorite_icon_border_black.svg"
-                                                alt="Favoritar" class="favorite-icon">
-                                            <img src="/public/images/icons/favorite_icon_fill_black.svg"
-                                                alt="Favoritado" class="favorite-icon-hover">
-                                        </button>
-                                    </div>
-                                    <% } %>
-                            </div>
-                            <!-- Nome e Preço do Produto -->
-                            <a href="<%= item.product.url %>" class="product-info-link">
-                                <div class="product-info">
-                                    <h3 class="product-name">
-                                        <%= item.product.name %>
-                                    </h3>
-                                    <div class="product-price">
-                                        <% if (item.product.isOnSale) { %>
-                                            <span class="price-old">R$ <%= item.product.price %>
-                                            </span>
-                                            <span class="price-new">R$ <%= item.product.promoPrice %>
-                                            </span>
-                                            <% } else { %>
-                                                <span class="price-current">R$
-                                                    <%= item.product.price %>
-                                                </span>
-                                                <% } %>
-                                                    <span class="price-installments">
-                                                        <%= item.product.installments %>
-                                                            x de
-                                                            R$ <%= item.product.installment_value %>*
-                                                    </span>
-                                    </div>
-                                </div>
-                            </a>
-                            <!-- <% if (data.page.mode==='edit' ) { %>
-                                <div class="edit-buttons" data-component-id="bannerSection_<%= component.id %>">
-                                    <button class="move-btn" onclick="moveElement(this, 'item')">
-                                        <img src="/public/images/icons/move_icon_white.svg" alt="mover">
-                                    </button>
-                                    <button class="delete-btn" onclick="deleteElement(this)">
-                                        <img src="/public/images/icons/remove_icon_white.svg" alt="remover">
-                                    </button>
-                                </div>
-                                <% } %> -->
-                        </div>
-                        <% } %>
+            <% } %>
+                <div class="titleSection">
+                    <h2 id="gridSection_<%= component.id %>_title">
+                        <%= component.section_title %>
+                    </h2>
+                </div>
+                <div id="gridSectionContent_<%= component.id %>"
+                    class="grid-section-content overflow-hidden grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+                    <% component.section_content.forEach(item=> { %>
+                        <%- include('../../partials/productCard', { product: item, mode: data.page.mode }) %>
                             <% }); %>
-            </div>
-</div>
+                </div>
+    </div>
+    <% } %>

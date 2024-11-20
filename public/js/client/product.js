@@ -209,10 +209,9 @@ function updateVariantColors() {
                 colorDiv.dataset.productstock = variant.variant_stock_quantity;
                 colorDiv.dataset.variantcolor = variant.variant_color_name;
                 colorDiv.dataset.varianttype = 'color';
-                colorDiv.className = 'rounded-full border border-gray-300 w-10 h-10 bg-white flex justify-center items-center'
+                colorDiv.className = 'colorOption'
 
                 const button = document.createElement('button');
-                button.className = 'w-8 h-8 p-2 rounded-full';
                 button.title = variant.variant_color_name;
                 button.style.backgroundColor = variant.variant_color_code;
                 button.onclick = function () {

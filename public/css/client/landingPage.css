@@ -29,7 +29,6 @@
     }
 }
 
-/* Ocultar todos os banners inicialmente */
 .bannerDiv {
     display: none;
     position: absolute;
@@ -38,7 +37,6 @@
     width: 100%;
 }
 
-/* Mostrar apenas o banner ativo */
 .bannerDiv[data-active="true"] {
     display: block;
     position: relative;
@@ -83,7 +81,6 @@
     background-color: black;
 }
 
-/* Exibir a imagem grande para telas maiores */
 @media (min-width: 900px) {
     .banner_image_large {
         display: block;
@@ -104,10 +101,16 @@
     margin-inline: auto;
     object-fit: cover;
     background-color: #f1f3f5;
-    padding: 20px 0px;
+    padding-bottom: 20px;
+    /* margin-top: 20px; */
     margin-bottom: 40px;
     text-align: center;
     position: relative;
+    overflow: hidden;
+}
+
+.carousel-content-container{
+    padding: 0 15px;
 }
 
 .carousel-content{
@@ -133,23 +136,26 @@
 
 /* Grid Section */
 .grid-section {
+    background-color: #f1f3f5;
     min-height: 500px;
     position: relative;
     display: flex;
     flex-direction: column;
-    background-color: #f1f3f5;
     width: 90%;
     margin-inline: auto;
     max-height: fit-content;
     object-fit: cover;
-    padding: 20px;
     margin-bottom: 40px;
+    /* margin-top: 20px; */
     text-align: center;
 }
 
-.grid-section .product-card{
-    min-width: 200px;
-    max-width: 300px;
+.grid-section[data-component-section-position="1"], .carousel-section[data-component-section-position="1"]{
+    margin-top: 40px;
+}
+
+.grid-section-content{
+    padding: 15px;
 }
 
 .carousel-section h2, .grid-section h2 {
@@ -189,6 +195,28 @@
     }
 }
 
-.titleSection{
-    margin-bottom: 20px;
+.titleSection {
+    background-color: #2d2d2d;
+    color: #E9C495;
+    font-size: 2rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    text-align: center;
+    padding: 15px 20px;
+    position: relative;
+    margin-bottom: 30px;
+    letter-spacing: 2px;
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3);
+}
+
+.titleSection::after {
+    content: '';
+    position: absolute;
+    bottom: -6px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 4px;
+    background-color: #E9C495;
+    border-radius: 2px;
 }

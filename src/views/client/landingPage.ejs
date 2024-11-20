@@ -17,10 +17,12 @@
     <link href="/public/css/admin/landingPageEdit/sectionConfig.css" rel="stylesheet">
     <link href="/public/css/client/categoryAsideMenu.css" rel="stylesheet">
     <link href="/public/css/client/loginRegisterModal.css" rel="stylesheet">
+    <link href="/public/css/client/reviewStars.css" rel="stylesheet">
 
     <script>
         // Obtem os dados enviados do backend e converte para JSON
         const data = JSON.parse('<%- JSON.stringify(data) %>') || {};
+        console.log(data)
         if (!data) {
             console.error('Erro ao carregar a página: Dados incompletos.');
             window.location.href = "/";

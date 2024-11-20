@@ -15,6 +15,7 @@
     <link href="/public/css/client/filterAsideMenu.css" rel="stylesheet">
     <link href="/public/css/client/categoryAsideMenu.css" rel="stylesheet">
     <link href="/public/css/client/loginRegisterModal.css" rel="stylesheet">
+    <link href="/public/css/client/reviewStars.css" rel="stylesheet">
 
     <script>
         // Obtem os dados enviados do backend e converte para JSON
@@ -78,76 +79,8 @@
                                 <!-- Lista de Produtos -->
                                 <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
                                     <% data.products?.forEach(product=> { %>
-                                        <div class="product-card">
-                                            <div class="product-image-wrapper">
-                                                <!-- Link e imagens do produto -->
-                                                <a href="/p/<%= product.product_public_id %>?sku=<%= product.variant_public_id %>"
-                                                    class="product-link">
-                                                    <div class="product-images">
-                                                        <!-- Primeira imagem (imagem padrão) -->
-                                                        <img src="../<%= product.variant_images[0] %>"
-                                                            alt="<%= product.product_name %>"
-                                                            class="product-image product-image-default" loading="lazy">
-                                                        <!-- Segunda imagem (imagem ao hover) -->
-                                                        <img src="../<%= product.variant_images[1] %>"
-                                                            alt="<%= product.product_name %>"
-                                                            class="product-image product-image-hover">
-                                                    </div>
-                                                </a>
-
-                                                <!-- Botão de favoritos -->
-                                                <div class="wishlist-button-wrapper">
-                                                    <button
-                                                        onclick="addItemToWishlist('<%= product.product_public_id %>')"
-                                                        class="favorite-btn">
-                                                        <img src="/public/images/icons/favorite_icon_border_black.svg"
-                                                            alt="Favoritar" class="favorite-icon" loading="lazy">
-                                                        <img src="/public/images/icons/favorite_icon_fill_black.svg"
-                                                            alt="Favoritado" class="favorite-icon-hover">
-                                                    </button>
-                                                </div>
-                                            </div>
-
-                                            <!-- Nome e Preço do Produto -->
-                                            <a href="/p/<%= product.product_public_id %>?sku=<%= product.variant_public_id %>"
-                                                class="product-info-link">
-                                                <div class="product-info">
-                                                    <h3 class="product-name">
-                                                        <%= product.product_name %>
-                                                    </h3>
-                                                    <% if (product.variant_stock_quantity> 0) { %>
-                                                        <div class="product-price">
-                                                            <% if (product.variant_is_on_sale) { %>
-                                                                <span class="price-old">R$ <%=
-                                                                        product.variant_unit_price %>
-                                                                </span>
-                                                                <span class="price-new">R$ <%=
-                                                                        product.variant_offer_value %></span>
-                                                                <span class="price-installments">
-                                                                    <%= product.variant_offer_installments %>x de R$ <%=
-                                                                            ((parseInt(product.variant_offer_value))/product.variant_offer_installments).toFixed(2)
-                                                                            %>*
-                                                                </span>
-                                                                <% } else { %>
-                                                                    <span class="price-current">R$ <%=
-                                                                            product.variant_unit_price %>
-                                                                    </span>
-                                                                    <span class="price-installments">
-                                                                        <%= product.variant_installments %>x de R$ <%=
-                                                                                ((parseInt(product.variant_unit_price))/product.variant_installments).toFixed(2)
-                                                                                %>*
-                                                                    </span>
-                                                                    <% } %>
-                                                        </div>
-                                                        <% } else { %>
-                                                            <div class="out-of-stock-container">
-                                                                <p class="out-of-stock-message">Produto Indisponível</p>
-                                                            </div>
-                                                            <% } %>
-                                                </div>
-                                            </a>
-                                        </div>
-                                        <% }); %>
+                                        <%- include('partials/productCard', { product: product }) %>
+                                            <% }); %>
                                 </div>
 
                                 <!-- Paginação -->

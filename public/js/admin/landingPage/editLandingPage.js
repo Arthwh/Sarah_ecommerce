@@ -124,6 +124,8 @@ async function saveChanges() {
             });
         }
     }
+    console.log(formData)
+    // await sendLandingPageData(formData);
 }
 
 async function collectSections() {
@@ -170,7 +172,8 @@ async function sendLandingPageData(landingPageData) {
         if (!response.ok) {
             throw new Error(`Erro HTTP: ${response.status}`);
         }
-        showCentralModal('Salvar alterações da página inicial', 'Alterações salvas com sucesso!', reloadIframe);
+        showCentralModal('Salvar alterações da página inicial', 'Alterações salvas com sucesso!');
+        // showCentralModal('Salvar alterações da página inicial', 'Alterações salvas com sucesso!', reloadIframe);
     } catch (error) {
         showCentralModal('Salvar alterações da página inicial', 'Ocorreu um erro ao salvar as alterações');
     }

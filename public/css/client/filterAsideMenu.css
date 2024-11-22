@@ -54,23 +54,6 @@
     margin-right: 8px;
 }
 
-.apply-filters {
-    width: 100%;
-    padding: 10px;
-    font-size: 16px;
-    font-weight: 600;
-    background-color: black;
-    color: #fff;
-    border: 2px solid black;
-    cursor: pointer;
-}
-
-.apply-filters:hover {
-    background-color: white;
-    color: black;
-    transition: background-color 0.3s, transform 0.2s;
-}
-
 .title-close-menu{
     display: flex;
     margin-bottom: 20px;

@@ -12,6 +12,6 @@
         </div>
         <% } %>
             <span class="product-review-count">
-                (<%= product.product_review_quantity %>)
+                (<%= product.product_review_quantity || 0 %>)
             </span>
 </div>

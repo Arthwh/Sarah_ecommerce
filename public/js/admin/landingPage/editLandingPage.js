@@ -47,24 +47,17 @@ function selectItem(mainElement, elementType) {
     selectedElement = mainElement;
     selectedElement.classList.add("selected");
 
-    // Adiciona botões de seta
-    var button1orientation = 'button-left';
-    var button2orientation = 'button-right';
     const buttons = document.createElement("div");
     buttons.classList.add("move-buttons");
     var elementDatasetProperty = mainElement.dataset.element;
     if (!elementDatasetProperty || elementDatasetProperty != elementType) {
         elementDatasetProperty = mainElement.parentElement.dataset.element
     }
-    if (elementDatasetProperty === 'section') {
-        button1orientation = 'button-up';
-        button2orientation = 'button-down';
-    }
     buttons.innerHTML = `
-        <button onclick="moveUp()" class="${button1orientation}">
+        <button onclick="moveUp()" class="button-up">
             <img src="/public/images/icons/compare_arrows_icon_white.svg" alt="Trocar esquerda">
         </button>
-        <button onclick="moveDown()" class="${button2orientation}">
+        <button onclick="moveDown()" class="button-down">
             <img src="/public/images/icons/compare_arrows_icon_white.svg" alt="Trocar direita">
         </button>
     `;
@@ -73,14 +66,20 @@ function selectItem(mainElement, elementType) {
 
 function moveUp() {
     if (selectedElement && selectedElement.previousElementSibling) {
+        editSectionPositionData(selectedElement, selectedElement.previousElementSibling, -1);
         selectedElement.parentNode.insertBefore(selectedElement, selectedElement.previousElementSibling);
     }
 }
 
 function moveDown() {
     if (selectedElement && selectedElement.nextElementSibling) {
+        editSectionPositionData(selectedElement, selectedElement.nextElementSibling, 1);
         selectedElement.parentNode.insertBefore(selectedElement.nextElementSibling, selectedElement);
     }
+}
+function editSectionPositionData(selectedElement, nextElement, direction) {
+    selectedElement.dataset.componentSectionPosition = (parseInt(selectedElement.dataset.componentSectionPosition) + direction);
+    nextElement.dataset.componentSectionPosition = (parseInt(nextElement.dataset.componentSectionPosition) + (direction * -1));
 }
 
 async function deleteElement(element) {
@@ -98,8 +97,9 @@ async function deleteElement(element) {
     }
 }
 
-async function addComponent() {
-    alert("AddComponent")
+function toggleDropdown() {
+    const dropdownMenu = document.getElementById('dropdown-menu');
+    dropdownMenu.style.display = dropdownMenu.style.display === 'block' ? 'none' : 'block';
 }
 
 async function saveChanges() {
@@ -124,8 +124,7 @@ async function saveChanges() {
             });
         }
     }
-    console.log(formData)
-    // await sendLandingPageData(formData);
+    await sendLandingPageData(formData);
 }
 
 async function collectSections() {
@@ -136,7 +135,6 @@ async function collectSections() {
         const iframeSections = iframe.contentWindow.document.querySelectorAll('.carousel-section, .grid-section, .banner-section, .links-cards-section');
         sections.push(...iframeSections);
     }
-
     return sections;
 }
 
@@ -172,9 +170,18 @@ async function sendLandingPageData(landingPageData) {
         if (!response.ok) {
             throw new Error(`Erro HTTP: ${response.status}`);
         }
-        showCentralModal('Salvar alterações da página inicial', 'Alterações salvas com sucesso!');
-        // showCentralModal('Salvar alterações da página inicial', 'Alterações salvas com sucesso!', reloadIframe);
+        showCentralModal('Salvar alterações da página inicial', 'Alterações salvas com sucesso!', reloadIframe);
     } catch (error) {
         showCentralModal('Salvar alterações da página inicial', 'Ocorreu um erro ao salvar as alterações');
     }
+}
+
+async function addComponent(sectionType) {
+    const iframe = document.getElementById('landingPageIframe');
+    if (!iframe || !iframe.contentWindow || !iframe.contentWindow.addComponent) {
+        console.error('Erro ao chamar função para adicionar componente. ');
+        return;
+    }
+    iframe.contentWindow.addComponent(sectionType);
+    toggleDropdown();
 }

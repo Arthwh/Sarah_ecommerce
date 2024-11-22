@@ -33,24 +33,6 @@
     margin-top: 20px;
 }
 
-.suggestion-link {
-    display: inline-block;
-    background-color: black;
-    color: white;
-    padding: 10px 20px;
-    margin: 5px;
-    text-decoration: none;
-    font-size: 16px;
-    border: 2px solid black;
-}
-
-.suggestion-link:hover {
-    background-color: white;
-    color: black;
-    transform: scale(1.05);
-    transition: background-color 0.3s, transform 0.2s;
-}
-
 .out-of-stock-container {
     position: absolute;
     top: 0;

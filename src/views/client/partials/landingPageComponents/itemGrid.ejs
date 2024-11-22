@@ -1,33 +1,38 @@
 <% if (component.section_content?.length> 0 ) { %>
-    <div id="gridSection_<%= component.id %>" class="grid-section <%= data.page.mode === 'edit' ? 'editable' : '' %>"
+    <div id="gridSection_<%= component.id %>" class="grid-section <%= mode === 'edit' ? 'editable' : '' %>"
         data-component-id="<%= component.id %>" data-component-content-type="<%= component.content_type %>"
         data-component-section-model="<%= component.section_model %>"
+        data-product-type-category="<%= component.section_product_type_category_id %>"
+        data-product-type-subcategory="<%= component.section_product_type_subcategory_id %>"
         data-component-section-position="<%= component.section_position %>" data-element="section"
         data-title="<%= component.section_title %>" data-product-type="<%= component.section_product_type %>"
-        data-product-limit="<%= component.section_product_limit %>" data-end-date="<%= component.end_date %>">
-        <% if (data.page.mode==='edit' ) { %>
-            <div class="edit-buttons" data-component-id="gridSection_<%= component.id %>">
-                <button class="edit-btn" onclick="showEditComponentModal('gridSection_<%= component.id %>', 'grid')">
-                    <img src="/public/images/icons/edit_pen_icon_white.svg" alt="editar">
-                </button>
-                <button class="move-btn" onclick="moveElement(this, 'section')">
-                    <img src="/public/images/icons/move_icon_white.svg" alt="mover">
-                </button>
-                <button class="delete-btn" onclick="deleteElement(this)">
-                    <img src="/public/images/icons/remove_icon_white.svg" alt="remover">
-                </button>
-            </div>
-            <% } %>
-                <div class="titleSection">
-                    <h2 id="gridSection_<%= component.id %>_title">
-                        <%= component.section_title %>
-                    </h2>
-                </div>
-                <div id="gridSectionContent_<%= component.id %>"
-                    class="grid-section-content overflow-hidden grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
-                    <% component.section_content.forEach(item=> { %>
-                        <%- include('../../partials/productCard', { product: item, mode: data.page.mode }) %>
-                            <% }); %>
-                </div>
+        data-product-limit="<%= component.section_product_limit %>" data-end-date="<%= component.end_date %>" <% if
+        (mode==='edit' ) { %>
+        data-new-component="<%= component.newComponent || false%>"
+            <% } %>>
+                <% if (mode==='edit' ) { %>
+                    <div class="edit-buttons" data-component-id="gridSection_<%= component.id %>">
+                        <button class="edit-btn" onclick="editComponent('gridSection_<%= component.id %>', 'grid')">
+                            <img src="/public/images/icons/edit_pen_icon_white.svg" alt="editar">
+                        </button>
+                        <button class="move-btn" onclick="moveElement(this, 'section')">
+                            <img src="/public/images/icons/move_icon_white.svg" alt="mover">
+                        </button>
+                        <button class="delete-btn" onclick="deleteElement(this)">
+                            <img src="/public/images/icons/remove_icon_white.svg" alt="remover">
+                        </button>
+                    </div>
+                    <% } %>
+                        <div class="titleSection">
+                            <h2 id="gridSection_<%= component.id %>_title">
+                                <%= component.section_title %>
+                            </h2>
+                        </div>
+                        <div id="gridSectionContent_<%= component.id %>"
+                            class="grid-section-content overflow-hidden grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+                            <% component.section_content.forEach(item=> { %>
+                                <%- include('../../partials/productCard', { product: item }) %>
+                                    <% }); %>
+                        </div>
     </div>
     <% } %>

@@ -30,8 +30,8 @@ async function addBannerElement(buttonElement, mainComponentId) {
                 <input type="date" id="endDate" disabled />
             </div>
             <div class="modal-add-banner-buttons">
-                <button onclick="saveBannerConfig(${mainComponentId})">Salvar</button>
-                <button onclick="closeModal()">Cancelar</button>
+                <button class="action-btn-contrast" onclick="saveBannerConfig(${mainComponentId})">Salvar</button>
+                <button class="action-btn-contrast" onclick="closeModal()">Cancelar</button>
             </div>
         </div>
     `;

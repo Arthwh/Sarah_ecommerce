@@ -15,9 +15,9 @@ class ProductRepository {
                         pv.is_on_sale AS variant_is_on_sale,
                         pv.stock_quantity AS variant_stock_quantity,
                         array_agg(DISTINCT pvi.image_url) AS variant_images,
-                        variant_offers.offer_type AS variant_offer_type,
-                        variant_offers.offer_value AS variant_offer_value,
-                        variant_offers.offer_installments AS variant_offer_installments,
+                        vod.offer_type AS variant_offer_type,
+                        vod.offer_value AS variant_offer_value,
+                        vod.offer_installments AS variant_offer_installments,
                         COALESCE(AVG(pr.rating), 0) AS product_review_score,
 	                    COUNT(DISTINCT pr.*) AS product_review_quantity
                     FROM
@@ -32,7 +32,7 @@ class ProductRepository {
                             INNER JOIN product_variant_offers pvo ON pv.id = pvo.product_variant_id
                             WHERE pvo.is_active = true
                             ORDER BY pvo.product_variant_id DESC
-                        ) variant_offers ON variant_offers.product_variant_id = pv.id
+                        ) AS vod ON vod.product_variant_id = pv.id
                         -- Aplica DISTINCT ON para pegar a primeira linha por produto e cor
                         LEFT JOIN (
                             SELECT DISTINCT ON (p.id, pv.color) p.id AS product_id, pv.color, pv.id AS variant_id
@@ -46,9 +46,9 @@ class ProductRepository {
                     GROUP BY
                         p.id,
                         pv.id,
-                        variant_offers.offer_type,
-                        variant_offers.offer_value,
-                        variant_offers.offer_installments
+                        vod.offer_type,
+                        vod.offer_value,
+                        vod.offer_installments
                     ORDER BY p.created_at DESC
                     LIMIT $1
             `, [limit]);
@@ -93,8 +93,8 @@ class ProductRepository {
                         variant_offers_data.offer_type AS variant_offer_type,
                         variant_offers_data.offer_value AS variant_offer_value,
                         variant_offers_data.offer_installments AS variant_offer_installments,
-                        product_reviews_data.review_score AS product_review_score,
-                        product_reviews_data.review_count AS product_review_quantity
+                        COALESCE(product_reviews_data.review_score, 0) AS product_review_score,
+                        COALESCE(product_reviews_data.review_count, 0) AS product_review_quantity
                     FROM
                         products p
                     INNER JOIN product_variant pv ON p.id = pv.products_id
@@ -119,7 +119,7 @@ class ProductRepository {
                         variant_offers_data.offer_installments,
                         product_reviews_data.review_score,
                         product_reviews_data.review_count
-                    ORDER BY product_reviews_data.review_score DESC
+                    ORDER BY COALESCE(product_reviews_data.review_score, 0) DESC
                     LIMIT $1;
             `, [limit]);
             return rows;
@@ -130,14 +130,13 @@ class ProductRepository {
     }
 
     //FUNCIONANDO CERTO
-    static async listProductsBySubcategoryRepository(category, subcategory, limit, offset) {
+    static async listProductsBySubcategoryRepository(filterCategorySubcategoryBy, category, subcategory, limit, offset) {
         try {
             var parameters = [category];
             const selectAndJoinsQuery = `
                     SELECT
                         p.public_id AS product_public_id,
                         p.name AS product_name,
-                        p.description AS product_description,
                         p.total_stock_quantity AS product_total_stock_quantity,
                         pv.public_id AS variant_public_id,
                         pv.color AS variant_color_name,
@@ -200,7 +199,8 @@ class ProductRepository {
             `;
             if (subcategory) parameters.push(subcategory);
             const whereQuery = `
-                WHERE unique_colors.variant_id = pv.id ${subcategory ? 'AND product_subcategories.subcategory_name ILIKE $2' : ''} AND product_subcategories.category_name ILIKE $1
+                WHERE unique_colors.variant_id = pv.id ${subcategory ? (filterCategorySubcategoryBy === 'id' ? 'AND product_subcategories.subcategory_id = $2' : 'AND product_subcategories.subcategory_name ILIKE $2') : ''} 
+                ${filterCategorySubcategoryBy === 'id' ? 'AND product_subcategories.category_id = $1' : 'AND product_subcategories.category_name ILIKE $1'}
             `;
             const groupByQuery = `
                     GROUP BY

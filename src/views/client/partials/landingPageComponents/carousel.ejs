@@ -1,46 +1,50 @@
 <% if (component.section_content?.length> 0 ) { %>
-    <div id="carouselSection_<%= component.id %>"
-        class="carousel-section <%= data.page.mode === 'edit' ? 'editable' : '' %>"
+    <div id="carouselSection_<%= component.id %>" class="carousel-section <%= mode === 'edit' ? 'editable' : '' %>"
         data-component-id="<%= component.id %>" data-component-content-type="<%= component.content_type %>"
+        data-product-type-category="<%= component.section_product_type_category_id %>"
+        data-product-type-subcategory="<%= component.section_product_type_subcategory_id %>"
         data-component-section-model="<%= component.section_model %>"
         data-component-section-position="<%= component.section_position %>" data-element="section"
         data-title="<%= component.section_title %>" data-product-type="<%= component.section_product_type %>"
-        data-product-limit="<%= component.section_product_limit %>" data-end-date="<%= component.end_date %>">
-        <% if (data.page.mode==='edit' ) { %>
-            <div class="edit-buttons" data-component-id="bannerSection_<%= component.id %>">
-                <button class="edit-btn"
-                    onclick="showEditComponentModal('carouselSection_<%= component.id %>', 'carousel')">
-                    <img src="/public/images/icons/edit_pen_icon_white.svg" alt="editar">
-                </button>
-                <button class="move-btn" onclick="moveElement(this, 'section')">
-                    <img src="/public/images/icons/move_icon_white.svg" alt="mover">
-                </button>
-                <button class="delete-btn" onclick="deleteElement(this)">
-                    <img src="/public/images/icons/remove_icon_white.svg" alt="remover">
-                </button>
-            </div>
-            <% } %>
-
-                <div class="titleSection">
-                    <h2 id="carouselSection_<%= component.id %>_title">
-                        <%= component.section_title %>
-                    </h2>
-                </div>
-                <div class="carousel-content-container">
-                    <div id="carousel-content_<%= component.id %>" class="carousel-content">
-                        <% component.section_content.forEach(item=> { %>
-                            <%- include('../../partials/productCard', { product: item, mode: data.page.mode }) %>
-                                <% }); %>
+        data-product-limit="<%= component.section_product_limit %>" data-end-date="<%= component.end_date %>" <% if
+        (mode==='edit' ) { %>
+        data-new-component="<%= component.newComponent || false%>"
+            <% } %>>
+                <% if (mode==='edit' ) { %>
+                    <div class="edit-buttons" data-component-id="bannerSection_<%= component.id %>">
+                        <button class="edit-btn"
+                            onclick="editComponent('carouselSection_<%= component.id %>', 'carousel')">
+                            <img src="/public/images/icons/edit_pen_icon_white.svg" alt="editar">
+                        </button>
+                        <button class="move-btn" onclick="moveElement(this, 'section')">
+                            <img src="/public/images/icons/move_icon_white.svg" alt="mover">
+                        </button>
+                        <button class="delete-btn" onclick="deleteElement(this)">
+                            <img src="/public/images/icons/remove_icon_white.svg" alt="remover">
+                        </button>
                     </div>
-                </div>
-                <!-- Botões de controle do carrossel -->
-                <button class="carousel-control prev" onclick="movecarousel(-1, '<%= component.id %>')">
-                    <img class="prevBlack" src="/public/images/icons/arrow_prev_icon_black.svg" alt="previous">
-                    <img class="prevWhite" src="/public/images/icons/arrow_prev_icon_white.svg" alt="previous">
-                </button>
-                <button class="carousel-control next" onclick="movecarousel(1, '<%= component.id %>')">
-                    <img class="forwBlack" src="/public/images/icons/arrow_forward_icon_black.svg" alt="next">
-                    <img class="forwWhite" src="/public/images/icons/arrow_forward_icon_white.svg" alt="next">
-                </button>
+                    <% } %>
+
+                        <div class="titleSection">
+                            <h2 id="carouselSection_<%= component.id %>_title">
+                                <%= component.section_title %>
+                            </h2>
+                        </div>
+                        <div class="carousel-content-container">
+                            <div id="carousel-content_<%= component.id %>" class="carousel-content">
+                                <% component.section_content.forEach(item=> { %>
+                                    <%- include('../../partials/productCard', { product: item }) %>
+                                        <% }); %>
+                            </div>
+                        </div>
+                        <!-- Botões de controle do carrossel -->
+                        <button class="carousel-control prev" onclick="movecarousel(-1, '<%= component.id %>')">
+                            <img class="prevBlack" src="/public/images/icons/arrow_prev_icon_black.svg" alt="previous">
+                            <img class="prevWhite" src="/public/images/icons/arrow_prev_icon_white.svg" alt="previous">
+                        </button>
+                        <button class="carousel-control next" onclick="movecarousel(1, '<%= component.id %>')">
+                            <img class="forwBlack" src="/public/images/icons/arrow_forward_icon_black.svg" alt="next">
+                            <img class="forwWhite" src="/public/images/icons/arrow_forward_icon_white.svg" alt="next">
+                        </button>
     </div>
     <% } %>

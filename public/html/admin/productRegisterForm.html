@@ -79,8 +79,7 @@
                 </tbody>
             </table>
         </div>
-        <button type="submit"
-            class="w-full bg-black text-white py-2 mt-3 hover:bg-gray-800 transition-colors items-end">Cadastrar
+        <button type="submit" class="action-btn-contrast">Cadastrar
             Produto</button>
     </form>
     <div id="variantModal" class="hidden fixed flex inset-0 z-50 justify-center items-center max-h-4/5 overflow-auto">
@@ -172,10 +171,9 @@
                     </div>
                 </div>
                 <!-- Botões -->
-                <div class="flex justify-between p-6">
-                    <button type="button" onclick="saveVariant()" class="bg-black text-white px-4 py-2">Salvar</button>
-                    <button type="button" onclick="toggleVariantModal()"
-                        class="bg-white text-black border border-black px-4 py-2">Cancelar</button>
+                <div class="flex justify-evenly p-6 gap-6">
+                    <button type="button" onclick="saveVariant()" class="action-btn-contrast">Salvar</button>
+                    <button type="button" onclick="toggleVariantModal()" class="action-btn-contrast">Cancelar</button>
                 </div>
             </div>
         </div>

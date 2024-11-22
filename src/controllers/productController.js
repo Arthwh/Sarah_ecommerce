@@ -3,11 +3,8 @@ import ProductService from '../services/productService.js';
 class ProductController {
     static async getLandingPage(req, res) {
         try {
-            console.log('teste')
             const user = req.session.user;
             const components = await ProductService.getLandingPageData();
-            console.log(components)
-            // res.json({ components: components });
             const categories = await ProductService.getAllProductCategoriesAndSubcategories();
             res.render('client/landingPage', { data: { user: user, components: components, page: { mode: 'main', categories: categories, displayRegisterModal: true } } });
         } catch (error) {
@@ -49,9 +46,9 @@ class ProductController {
     static async getProductColors(req, res) {
         try {
             const data = await ProductService.getAllActiveProductColors();
-            res.status(200).json(data);
+            return res.status(200).json(data);
         } catch (error) {
-            res.status(500).json({ error: 'Erro ao buscar cores: ', error });
+            return res.status(500).json({ error: 'Erro ao buscar cores', message: error.message });
         }
     }
 

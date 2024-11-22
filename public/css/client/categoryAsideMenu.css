@@ -46,9 +46,10 @@
     margin-bottom: 5px;
 }
 
-#menuContainer button {
+#menuContainer button img {
     text-align: right;
-    width: fit-content;
+    width: 24px;
+    height: 24px;
 }
 
 #menuContainer ul {
@@ -96,9 +97,10 @@
     display: block;
 }
 
-#submenuContainer button {
+#submenuContainer button img {
     text-align: left;
-    width: 100%;
+    width: 24px;
+    height: 24px;
     padding-left: 0.5rem;
 }
 

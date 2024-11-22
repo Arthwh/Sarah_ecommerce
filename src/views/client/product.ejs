@@ -221,9 +221,8 @@
                                   ? ' disabled ' : '' %>>
                                   <img src="/public/images/icons/favorite_icon_border_black.svg" alt="...">
                                 </button>
-                                <button id="addToCartButton" class="bg-white w-full text-black border border-black px-6 py-3 font-semibold hover:bg-black
-                            hover:text-white" <%=data.product.variant_stock_quantity===0 ? ' disabled ' : ''
-                                  %>>Adicionar
+                                <button id="addToCartButton" class="action-btn-contrast"
+                                  <%=data.product.variant_stock_quantity===0 ? ' disabled ' : '' %>>Adicionar
                                   ao
                                   Carrinho</button>
                               </div>

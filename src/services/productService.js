@@ -5,6 +5,38 @@ import { Product } from '../models/productModel.js';
 import pool from '../db.js';
 
 class ProductService {
+    static async getSectionData({ sectionModel, contentType, sectionProductType, sectionTitle, sectionProductLimit, sectionProductTypeCategoryId, sectionProductTypeSubcategoryId, endDate, sectionPosition }) {
+        try {
+            if (sectionModel === 'carousel' || sectionModel === 'grid') {
+                var products = [];
+                switch (sectionProductType) {
+                    case 'newArrivals':
+                        products = await ProductRepository.getProductsByFilter_newArrivals(component.section_product_limit);
+                        break;
+                    case 'highestRated':
+                        products = await ProductRepository.getProductsByFilter_highestRated(component.section_product_limit);
+                        break;
+                    case 'bestSelling':
+                        console.log('bestSelling')
+                        break;
+                    case 'offers':
+                        console.log('offers')
+                        break;
+                    case 'category':
+                    case 'subcategory':
+                        console.log('category or subcategory');
+                        products = await ProductRepository.listProductsBySubcategoryRepository('id', sectionProductTypeCategoryId, sectionProductTypeSubcategoryId, sectionProductLimit, 0);
+                        break;
+                }
+                return { products: products, view: sectionModel === 'carousel' ? 'carousel' : 'itemGrid' };
+            }
+        } catch (error) {
+            console.error(`Error getting section data: ${error}`);
+            throw Error(`Error getting section data: ${error.message}`)
+        }
+    }
+
+    //FUNCIONANDO CERTO (Precisa terminar os tipos de produtos e de sections)
     static async getLandingPageData() {
         try {
             const components = await LandingPageRepository.getActiveLandingPageComponents();
@@ -27,17 +59,19 @@ class ProductService {
                         case 'offers':
                             console.log('offers')
                             break;
+                        case 'category':
+                        case 'subcategory':
+                            console.log('category or subcategory');
+                            products = await ProductRepository.listProductsBySubcategoryRepository('id', component.section_product_type_category_id, component.section_product_type_subcategory_id, component.section_product_limit, 0);
+                            break;
                     }
                     component.section_content = products;
-                    // console.log(products)
                 }
                 else if (component.content_type === 'image' && component.section_model === 'banner') {
                     const bannerData = await LandingPageRepository.getBannerComponentData(component.id);
                     component.section_content = bannerData;
-                    console.log(bannerData)
                 }
             }
-            console.log(components)
             return components;
         } catch (error) {
             console.error('Error getting LandingPage: ' + error);
@@ -61,7 +95,7 @@ class ProductService {
             const page = parseInt(pageParam, 10) || 1;
             const offset = limit * (page - 1);
 
-            const products = await ProductRepository.listProductsBySubcategoryRepository(category, subcategory, limit, offset);
+            const products = await ProductRepository.listProductsBySubcategoryRepository('name', category, subcategory, limit, offset);
             const results = products.length;
             var subcategoryCapitalized = '';
             subcategory ? subcategoryCapitalized = capitalizeWords(subcategory) : '';
@@ -131,7 +165,6 @@ class ProductService {
                     ]
                 }
             }
-            console.log(data);
             return data;
         } catch (error) {
             console.error('Error getting product: ', error);

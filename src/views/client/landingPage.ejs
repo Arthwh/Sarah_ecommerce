@@ -43,15 +43,15 @@
                     <% data.components.sort((a, b)=> a.section_position - b.section_position)
                         .forEach(component => { %>
                         <% if (component.section_model==='banner' && component.is_active) { %>
-                            <%- include('partials/landingPageComponents/bannerCarousel', { component: component }) %>
+                            <%- include('partials/landingPageComponents/bannerCarousel', { component: component, mode: data.page.mode }) %>
                                 <% } %>
                                     <% if (component.section_model==='carousel' && component.is_active) { %>
-                                        <%- include('partials/landingPageComponents/carousel', { component: component})
+                                        <%- include('partials/landingPageComponents/carousel', { component: component, mode: data.page.mode})
                                             %>
                                             <% } %>
                                                 <% if (component.section_model==='grid' && component.is_active) { %>
                                                     <%- include('partials/landingPageComponents/itemGrid', { component:
-                                                        component }) %>
+                                                        component, mode: data.page.mode }) %>
                                                         <% } %>
                                                             <% }); %>
                 </main>

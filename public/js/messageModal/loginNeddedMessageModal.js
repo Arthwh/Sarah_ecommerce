@@ -12,8 +12,10 @@ function showLoginNeddedModal() {
         <div class="modal-content">
             <h2 class="modal-title">Usuário não logado</h2>
             <p class="modal-message">Você precisa estar logado para acessar esse recurso.</p>
-            <button class="modal-login">Fazer Login</button>
-            <button class="modal-close">Fechar</button>
+            <div class="modal-buttons">
+                <button class="modal-login action-btn-contrast">Fazer Login</button>
+                <button class="modal-close action-btn-contrast">Fechar</button>
+            </div>
         </div>
     `;
 

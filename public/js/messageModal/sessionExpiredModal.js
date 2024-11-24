@@ -13,21 +13,21 @@ function showSessionExpiredModal() {
     modalContent.classList.add('session-expired-modal-content');
 
     const message = document.createElement('p');
-    message.textContent = 'Sua sessão expirou. Por favor, faça login novamente.';
+    message.innerHTML = 'Sua sessão expirou.<br> Por favor, faça login novamente.';
     modalContent.appendChild(message);
 
     const buttonsContainer = document.createElement('div');
-    buttonsContainer.classList.add('session-expired-modal-buttons');
+    buttonsContainer.classList.add('modal-buttons');
 
     const loginButton = document.createElement('button');
     loginButton.id = 'loginButton';
-    loginButton.classList.add('session-expired-modal-btn');
+    loginButton.classList.add('action-btn-contrast');
     loginButton.textContent = 'Fazer Login';
     buttonsContainer.appendChild(loginButton);
 
     const homeButton = document.createElement('button');
     homeButton.id = 'homeButton';
-    homeButton.classList.add('session-expired-modal-btn');
+    homeButton.classList.add('action-btn-contrast');
     homeButton.textContent = 'Voltar para a Página Inicial';
     buttonsContainer.appendChild(homeButton);
 

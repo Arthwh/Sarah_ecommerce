@@ -12,7 +12,9 @@ function showCentralModal(title, message, callback = null) {
         <div class="modal-content">
             <h2 class="modal-title">${title}</h2>
             <p class="modal-message">${message}</p>
-            <button class="modal-close">Fechar</button>
+            <div class="modal-buttons">
+                <button class="modal-close action-btn-contrast">Fechar</button>
+            </div>
         </div>
     `;
 

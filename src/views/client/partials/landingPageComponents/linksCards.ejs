@@ -1,10 +1,10 @@
 <div id="linksCardsSection_<%= component.id %>"
-    class="links-cards-section <%= data.page.mode === 'edit' ? 'editable' : '' %>"
+    class="links-cards-section <%= mode === 'edit' ? 'editable' : '' %>"
     id="links-cards-section_<%= component.id %>" data-component-id="<%= component.id %>"
     data-component-content-type="<%= component.content_type %>"
     data-component-section-model="<%= component.section_model %>"
     data-component-section-position="<%= component.section_position %>" data-element="section">
-    <% if (data.page.mode==='edit' ) { %>
+    <% if (mode==='edit' ) { %>
         <div class="edit-buttons" data-component-id="bannerSection_<%= component.id %>">
             <button class="add-btn" onclick="addElement">
                 <img src="/public/images/icons/add_icon_white.svg" alt="Adicionar titulo">

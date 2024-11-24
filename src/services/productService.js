@@ -1,84 +1,8 @@
 import ProductRepository from '../repositories/productRepository.js';
 import ProductVariantRepository from '../repositories/productVariantRepository.js';
-import LandingPageRepository from '../repositories/landingPageRepository.js';
-import { Product } from '../models/productModel.js';
 import pool from '../db.js';
 
 class ProductService {
-    static async getSectionData({ sectionModel, contentType, sectionProductType, sectionTitle, sectionProductLimit, sectionProductTypeCategoryId, sectionProductTypeSubcategoryId, endDate, sectionPosition }) {
-        try {
-            if (sectionModel === 'carousel' || sectionModel === 'grid') {
-                var products = [];
-                switch (sectionProductType) {
-                    case 'newArrivals':
-                        products = await ProductRepository.getProductsByFilter_newArrivals(component.section_product_limit);
-                        break;
-                    case 'highestRated':
-                        products = await ProductRepository.getProductsByFilter_highestRated(component.section_product_limit);
-                        break;
-                    case 'bestSelling':
-                        console.log('bestSelling')
-                        break;
-                    case 'offers':
-                        console.log('offers')
-                        break;
-                    case 'category':
-                    case 'subcategory':
-                        console.log('category or subcategory');
-                        products = await ProductRepository.listProductsBySubcategoryRepository('id', sectionProductTypeCategoryId, sectionProductTypeSubcategoryId, sectionProductLimit, 0);
-                        break;
-                }
-                return { products: products, view: sectionModel === 'carousel' ? 'carousel' : 'itemGrid' };
-            }
-        } catch (error) {
-            console.error(`Error getting section data: ${error}`);
-            throw Error(`Error getting section data: ${error.message}`)
-        }
-    }
-
-    //FUNCIONANDO CERTO (Precisa terminar os tipos de produtos e de sections)
-    static async getLandingPageData() {
-        try {
-            const components = await LandingPageRepository.getActiveLandingPageComponents();
-            if (!components) {
-                return {};
-            };
-            for (const component of components) {
-                if (component.content_type === 'product') {
-                    var products = [];
-                    switch (component.section_product_type) {
-                        case 'newArrivals':
-                            products = await ProductRepository.getProductsByFilter_newArrivals(component.section_product_limit);
-                            break;
-                        case 'highestRated':
-                            products = await ProductRepository.getProductsByFilter_highestRated(component.section_product_limit);
-                            break;
-                        case 'bestSelling':
-                            console.log('bestSelling')
-                            break;
-                        case 'offers':
-                            console.log('offers')
-                            break;
-                        case 'category':
-                        case 'subcategory':
-                            console.log('category or subcategory');
-                            products = await ProductRepository.listProductsBySubcategoryRepository('id', component.section_product_type_category_id, component.section_product_type_subcategory_id, component.section_product_limit, 0);
-                            break;
-                    }
-                    component.section_content = products;
-                }
-                else if (component.content_type === 'image' && component.section_model === 'banner') {
-                    const bannerData = await LandingPageRepository.getBannerComponentData(component.id);
-                    component.section_content = bannerData;
-                }
-            }
-            return components;
-        } catch (error) {
-            console.error('Error getting LandingPage: ' + error);
-            throw Error('Error getting LandingPage: ' + error.message);
-        }
-    }
-
     //FUNCIONANDO CERTO
     static async listProductsByCategoryOrSubcategoryService(category, subcategory, limitParam, pageParam) {
         try {
@@ -100,9 +24,6 @@ class ProductService {
             var subcategoryCapitalized = '';
             subcategory ? subcategoryCapitalized = capitalizeWords(subcategory) : '';
             const categoryCapitalized = capitalizeWords(category);
-            for (const product of products) {
-                product.product_description = await replaceLineBreakCharacterInDescription(product.product_description);
-            };
             const data = {
                 products: products,
                 page: {
@@ -179,7 +100,7 @@ class ProductService {
                 throw new Error('Product SKU missing.');
             }
             const variantData = await ProductVariantRepository.getVariantDataBySku(sku);
-            variantData['product_description'] = variantData.product_description.replace(/\r?\n/g, '<br>');
+            variantData['product_description'] = replaceLineBreakCharacterInDescription(variantData.product_description);
             return variantData;
         } catch (error) {
             console.error('Error getting product variant data: ', error);
@@ -217,12 +138,6 @@ class ProductService {
         finally {
             client.release();
         }
-    }
-
-    static async updateProduct(id, productData) {
-    }
-
-    static async deleteProduct(id) {
     }
 
     //FUNCIONANDO CERTO

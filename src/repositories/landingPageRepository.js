@@ -47,7 +47,18 @@ class LandingPageRepository {
         }
     }
 
-    static async saveLandingPageComponent(client, { componentId = 0, componentContentType, componentSectionModel, componentSectionPosition, endDate, productType = null, productTypeCategory, productTypeSubcategory, productLimit = null, title = null }) {
+    static async setBannerComponentData(client, componentId, { }) {
+        try {
+            const query = `
+                INSERT INTO landing_page_images (component_id, element_order, image_url_banner_large, image_url_banner_small, image_banner_link_name, 
+                image_url_link, start_date, end_date) VALUES ($1, $2, $3, $4, $5, $6, NOW(), $7)
+            `;
+        } catch (error) {
+
+        }
+    }
+
+    static async saveLandingPageComponent(client, { componentId = 0, componentContentType, componentSectionModel, componentSectionPosition, endDate = null, productType = null, productTypeCategory = null, productTypeSubcategory = null, productLimit = null, title = null }) {
         try {
             const parameters = [componentSectionModel, componentContentType, componentSectionPosition, title, productType, productTypeCategory, productTypeSubcategory, productLimit, endDate];
             const updateQuery = `

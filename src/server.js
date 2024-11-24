@@ -1,20 +1,23 @@
-import path from 'path'
+import path from 'path';
 import { fileURLToPath } from 'url';
 import express from 'express';
 import dotenv from 'dotenv';
 import session from 'express-session';
 
-import userRoutes from "./routes/userRoutes.js"
-import productRoutes from './routes/productRoutes.js'
-import adminRoutes from './routes/adminRoutes.js'
+import userRoutes from "./routes/userRoutes.js";
+import productRoutes from './routes/productRoutes.js';
+import adminRoutes from './routes/adminRoutes.js';
+import authRoutes from './routes/authRoutes.js';
+import landingPageRoutes from './routes/landingPageRoutes.js'
 
 dotenv.config();
 
 const app = express();
 const port = process.env.SERVER_PORT || 3000;
 
-const __filename = fileURLToPath(import.meta.url); // Obtém o caminho completo do arquivo atual
-const __dirname = path.dirname(__filename); // Obtém o diretório atual a partir do caminho
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 app.set('views', path.join(__dirname, './views'));
 app.set('view engine', 'ejs');
 app.use('/public', express.static(path.join(__dirname, '../public')));
@@ -31,7 +34,9 @@ app.use(session({
 }));
 
 //Configura os arquivos de rotas
-app.use(userRoutes)
+app.use(userRoutes);
+app.use(authRoutes);
+app.use(landingPageRoutes);
 app.use(adminRoutes);
 app.use(productRoutes);
 

@@ -27,7 +27,7 @@ async function renderAlterLandingPage() {
                 </div>
             </div>
         </div>
-        <iframe id="landingPageIframe" src="/landing-page/edit" frameborder="0" class="w-full h-full"></iframe>
+        <iframe id="landingPageIframe" src="/landing-page/edit?mode=edit" frameborder="0" class="w-full h-full"></iframe>
     `;
     disableAllLinks();
 }

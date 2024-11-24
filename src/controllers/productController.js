@@ -1,28 +1,6 @@
 import ProductService from '../services/productService.js';
 
 class ProductController {
-    static async getLandingPage(req, res) {
-        try {
-            const user = req.session.user;
-            const components = await ProductService.getLandingPageData();
-            const categories = await ProductService.getAllProductCategoriesAndSubcategories();
-            res.render('client/landingPage', { data: { user: user, components: components, page: { mode: 'main', categories: categories, displayRegisterModal: true } } });
-        } catch (error) {
-            res.status(500).json({ error: 'Erro ao carregar a página inicial' });
-        }
-    }
-
-    static async getLandingPageForEdit(req, res) {
-        try {
-            const user = req.session.user
-            const components = await ProductService.getLandingPageData();
-            const categories = await ProductService.getAllProductCategoriesAndSubcategories();
-            res.render('client/landingPage', { data: { user: user, components: components, page: { mode: 'edit', categories: categories, displayRegisterModal: true } } });
-        } catch (error) {
-            res.status(500).json({ error: 'Erro ao carregar a página inicial' });
-        }
-    }
-
     //FUNCIONANDO CERTO
     static async getCategoriesAndSubcategories(req, res) {
         try {

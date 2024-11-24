@@ -1,71 +1,14 @@
 import UserService from '../services/userService.js';
 import ProductService from '../services/productService.js';
-import { getUserAgent, getUserIP, logAction } from '../services/logsService.js'
+import { getUserAgent, getUserIP, logAction } from '../services/logsService.js';
 
 class UserController {
-    static async getAllUsers(req, res) {
-        try {
-            res.status(200).send(await UserService.getAllUsersService());
-        } catch (error) {
-            res.status(400).send({ message: error.message });
-        }
-    }
-
-    static async getUserById(req, res) {
-        try {
-            res.status(200).send(await UserService.getUserbyIdService(req.params.id));
-        } catch (error) {
-            res.status(400).send({ message: error.message });
-        }
-    }
-
-    static async getUserByEmail(req, res) {
-        try {
-            res.status(200).send(await UserService.getUserbyEmailService(req.params.email));
-        } catch (error) {
-            res.status(400).send({ message: error.message });
-        }
-    }
-
-    static async createUser(req, res) {
-        try {
-            const userData = req.body;
-            if (!userData) {
-                res.status(400).send({ message: 'Please provide user data' });
-            }
-            const { userId, message } = await UserService.createUserService(userData);
-            res.status(200).send({ message: message });
-        } catch (error) {
-            res.status(400).send({ message: error.message });
-        }
-    }
-
-    static async updateUser(req, res) {
-        try {
-            const id = req.params.id;
-            const userData = req.body;
-            await UserService.updateUserService(id, userData);
-            res.status(200).send({ message: 'User updated successfully' });
-        } catch (error) {
-            res.status(400).send({ message: error.message });
-        }
-    }
-
-    static async deleteUser(req, res) {
-        try {
-            await UserService.deleteUserService(req.params.id);
-            res.status(200).send({ message: 'User deleted successfully' });
-        } catch (error) {
-            res.status(400).send({ message: error.message });
-        }
-    }
-
     static async login(req, res) {
         try {
             const userData = req.body;
             const userIP = await getUserIP(req);
             const userAgent = await getUserAgent(req);
-            const { user, message } = await UserService.login(userData, userIP, userAgent);
+            const { user, message } = await UserService.login(userIP, userAgent, userData);
             req.session.user = { id: user.id, public_id: user.public_id, email: user.email, cart: { count: user.cart.count }, role: user.role };
             res.json({ user: { id: user.id, public_id: user.public_id, email: user.email, cart: user.cart, role: user.role }, message: message });
         } catch (error) {
@@ -76,7 +19,6 @@ class UserController {
     static async logout(req, res) {
         try {
             const user = req.session.user;
-            console.log(user)
             const userIP = await getUserIP(req);
             const userAgent = await getUserAgent(req);
             req.session.destroy((err) => {
@@ -96,9 +38,6 @@ class UserController {
     static async getUserAccountPage(req, res) {
         try {
             const user = req.session.user;
-            if (!user) {
-                return res.status(401).send({ message: 'Você precisa estar logado para acessar essa página' });
-            }
             const categories = await ProductService.getAllProductCategoriesAndSubcategories();
             res.render('client/userConfig', {
                 data: {
@@ -117,6 +56,70 @@ class UserController {
                 return res.send({ message: 'Usuário não logado', user: undefined });
             }
             res.send({ message: "Usuário Logado", user: user });
+        } catch (error) {
+            res.status(400).send({ message: error.message });
+        }
+    }
+
+    static async createUser(req, res) {
+        try {
+            const userData = req.body;
+            const userIP = await getUserIP(req);
+            const userAgent = await getUserAgent(req);
+            if (!userData) {
+                res.status(400).send({ message: 'Please provide user data' });
+            }
+            const { userId, message } = await UserService.createUserService(userIP, userAgent, userData);
+            res.status(200).send({ message: message });
+        } catch (error) {
+            res.status(400).send({ message: error.message });
+        }
+    }
+
+    //AINDA NAO É USADO
+    static async getAllUsers(req, res) {
+        try {
+            res.status(200).send(await UserService.getAllUsersService());
+        } catch (error) {
+            res.status(400).send({ message: error.message });
+        }
+    }
+
+    //AINDA NAO É USADO
+    static async getUserById(req, res) {
+        try {
+            res.status(200).send(await UserService.getUserbyIdService(req.params.id));
+        } catch (error) {
+            res.status(400).send({ message: error.message });
+        }
+    }
+
+    //AINDA NAO É USADO
+    static async getUserByEmail(req, res) {
+        try {
+            res.status(200).send(await UserService.getUserbyEmailService(req.params.email));
+        } catch (error) {
+            res.status(400).send({ message: error.message });
+        }
+    }
+
+    //AINDA NAO É USADO
+    static async updateUser(req, res) {
+        try {
+            const id = req.params.id;
+            const userData = req.body;
+            await UserService.updateUserService(id, userData);
+            res.status(200).send({ message: 'User updated successfully' });
+        } catch (error) {
+            res.status(400).send({ message: error.message });
+        }
+    }
+
+    //AINDA NAO É USADO
+    static async deleteUser(req, res) {
+        try {
+            await UserService.deleteUserService(req.params.id);
+            res.status(200).send({ message: 'User deleted successfully' });
         } catch (error) {
             res.status(400).send({ message: error.message });
         }

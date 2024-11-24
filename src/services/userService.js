@@ -1,8 +1,56 @@
 import argon2 from 'argon2';
 import UserRepository from '../repositories/userRepository.js';
-import { logAction } from './logsService.js'
+import { logAction } from './logsService.js';
 
 class UserService {
+    static async login(userIP, userAgent, userData) {
+        try {
+            const { email, password } = userData;
+            const user = await UserRepository.getUserByEmailRepository(email);
+            if (!user) {
+                logAction(userIP, userAgent, 'user-login', { status: 'error', details: 'User email not found' }, user.id);
+                throw Error('User email not found.');
+            }
+            const isPasswordValid = await argon2.verify(user.password, password);
+            if (!isPasswordValid) {
+                logAction(userIP, userAgent, 'user-login', { status: 'error', details: 'Password incorrect' }, user.id);
+                throw Error('Password incorrect.');
+            }
+            const cartCount = await UserRepository.getUserCartCountRepository(user.id);
+            const message = 'User logged successfully';
+            logAction(userIP, userAgent, 'user-login', { status: 'success', details: message }, user.id);
+            return { user: { ...user, cart: { count: cartCount } }, message: message };
+        } catch (error) {
+            console.error('Error loggin in user: ' + error);
+            if (error.message !== 'Password incorrect.' && error.message !== 'User email not found') {
+                logAction(userIP, userAgent, 'user-login', { status: 'error', details: error.message });
+            }
+            throw Error('Error loggin in user: ' + error.message);
+        }
+    }
+
+    static async createUserService(userIP, userAgent, userData) {
+        try {
+            userData.password = await argon2.hash(userData.password);
+            if (!userData.role) {
+                userData.role = 1;
+            }
+            if (UserRepository.checkIfEmailExists(userData.email)) {
+                const error = new Error('E-mail already exists');
+                console.error(error.message);
+                throw error;
+            }
+            const userId = await UserRepository.createUserRepository(userData);
+            const message = "User created successfully";
+            logAction(userIP, userAgent, 'user-creation', { status: 'success', details: message }, userId);
+            return { message: message };
+        } catch (error) {
+            console.error('Error creating user: ' + error.message);
+            logAction(userIP, userAgent, 'user-creation', { status: 'error', details: error.message });
+            throw error;
+        }
+    }
+
     static async getAllUsersService() {
         try {
             return await UserRepository.getAllUsersRepository();
@@ -30,35 +78,12 @@ class UserService {
         }
     }
 
-    static async createUserService(userData) {
-        try {
-            userData.password = await argon2.hash(userData.password);
-            if (!userData.role) {
-                userData.role = 1;
-            }
-            if (UserRepository.checkIfEmailExists(userData.email)) {
-                const error = new Error('E-mail already exists');
-                console.error(error.message);
-                throw error;
-            }
-            const userId = await UserRepository.createUserRepository(userData);
-            const message = "User created successfully";
-            logAction(req, 'user-creation', { status: 'success', details: message }, userId);
-            return { message: message };
-        } catch (error) {
-            console.error('Error creating user: ' + error.message);
-            logAction(req, 'user-creation', { status: 'error', details: error.message });
-            throw error;
-        }
-    }
-
     static async updateUserService(id, userData) {
         try {
             userData.password = await argon2.hash(userData.password);
             if (!userData.role) {
                 userData.role = 1;
             }
-
             await UserRepository.updateUserRepository(id, userData);
             return { message: "User updated successfully" };
         } catch (error) {
@@ -76,29 +101,6 @@ class UserService {
             throw error;
         }
     }
-
-    static async login(userData, userIP, userAgent) {
-        try {
-            const { email, password } = userData;
-            const user = await UserRepository.getUserByEmailRepository(email);
-            const isPasswordValid = await argon2.verify(user.password, password);
-            if (!isPasswordValid) {
-                logAction(userIP, userAgent, 'user-login', { status: 'error', details: 'Password incorrect.' }, user.id);
-                throw Error('Password incorrect.');
-            }
-            const cartCount = await UserRepository.getUserCartCountRepository(user.id);
-            const message = 'User logged successfully';
-            logAction(userIP, userAgent, 'user-login', { status: 'success', details: message }, user.id);
-            return { user: { ...user, cart: { count: cartCount } }, message: message };
-        } catch (error) {
-            console.error('Error loggin in user: ' + error);
-            if (error.message !== 'Password incorrect.') {
-                logAction(req, 'user-login', { status: 'error', details: error.message });
-            }
-            throw error;
-        }
-    }
-
 }
 
 export default UserService;

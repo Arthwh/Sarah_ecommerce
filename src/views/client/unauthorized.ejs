@@ -32,44 +32,45 @@
 <body>
     <!-- Header -->
     <%- include('partials/_header') %>
-    <%- include('partials/_categoryAsideMenu') %>
-        <%- include('partials/_loginRegisterModal') %>
-        <main class="w-full h-full flex-grow flex flex-col">
-            <div>
-                <h1 id="errorTitle">
-                    <%= data.title %>
-                </h1>
-            </div>
-            <div>
-                <p id="errorMessage">
-                    <%= data.message%>
-                </p>
-            </div>
-            <div>
-                <% if(data.buttonText && data.buttonAction){ %>
-                    <button id="action-button-error-page" onclick="'<%= data.buttonAction %>'()">
-                        <%= data.buttonText %>
-                    </button>
-                    <% } %>
-                        <% if(data.link && data.linkText){ %>
-                            <a id="link-error-page" href="<%= data.link %>">
-                                <%= data.linkText %>
-                            </a>
+        <%- include('partials/_categoryAsideMenu') %>
+            <%- include('partials/_loginRegisterModal') %>
+                <main class="w-full h-full flex-grow flex flex-col">
+                    <div>
+                        <h1 id="errorTitle">
+                            <%= data.title %>
+                        </h1>
+                    </div>
+                    <div>
+                        <p id="errorMessage">
+                            <%= data.message%>
+                        </p>
+                    </div>
+                    <div class="w-fit mx-auto">
+                        <% if(data.buttonText && data.buttonAction){ %>
+                            <button id="action-button-error-page" class="action-btn-contrast"
+                                onclick="'<%= data.buttonAction %>'()">
+                                <%= data.buttonText %>
+                            </button>
                             <% } %>
-            </div>
-        </main>
+                                <% if(data.link && data.linkText){ %>
+                                    <a id="link-error-page" href="<%= data.link %>">
+                                        <%= data.linkText %>
+                                    </a>
+                                    <% } %>
+                    </div>
+                </main>
 
-        <!-- Footer -->
-        <%- include('partials/_footer') %>
-            <script src="/public/js/messageModal/toastMessageModal.js"></script>
-            <script src="/public/js/messageModal/centralMessageModal.js"></script>
-            <script src="/public/js/messageModal/sessionExpiredModal.js"></script>
-            <script src="/public/js/messageModal/loginNeddedMessageModal.js"></script>
-            <script src="/public/js/statusHandler/statusHandler.js"></script>
-            <script src="/public/js/client/categoryAsideMenu.js"></script>
-            <script src="/public/js/client/header.js"></script>
-            <script src="/public/js/client/loginAndRegister.js"></script>
-            <script src="/public/js/client/wishlist.js"></script>
+                <!-- Footer -->
+                <%- include('partials/_footer') %>
+                    <script src="/public/js/messageModal/toastMessageModal.js"></script>
+                    <script src="/public/js/messageModal/centralMessageModal.js"></script>
+                    <script src="/public/js/messageModal/sessionExpiredModal.js"></script>
+                    <script src="/public/js/messageModal/loginNeddedMessageModal.js"></script>
+                    <script src="/public/js/statusHandler/statusHandler.js"></script>
+                    <script src="/public/js/client/categoryAsideMenu.js"></script>
+                    <script src="/public/js/client/header.js"></script>
+                    <script src="/public/js/client/loginAndRegister.js"></script>
+                    <script src="/public/js/client/wishlist.js"></script>
 </body>
 
 </html>

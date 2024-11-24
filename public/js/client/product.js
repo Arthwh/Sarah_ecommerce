@@ -109,7 +109,7 @@ function loadVariantData(button) {
     const variantId = parentElement?.dataset.productsku
     const variantType = parentElement?.dataset.varianttype
 
-    fetch(`/api/products/updateProductVariant/${variantId}?type=${variantType}`)
+    fetch(`/api/products/variant/${variantId}?type=${variantType}`)
         .then(response => response.json())
         .then(data => {
             // Atualiza as informações da página com os novos dados da variante

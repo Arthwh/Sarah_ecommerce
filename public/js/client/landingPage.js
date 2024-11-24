@@ -1,17 +1,18 @@
-let currentIndex = 0;
-
 function moveBannerCarousel(direction, componentId) {
     const carouselContent = document.getElementById(`bannerSection_${componentId}`);
     const banners = carouselContent.querySelectorAll('.bannerDiv');
     const totalBanners = banners.length;
     if (banners) {
+        let currentIndex = parseInt(carouselContent.dataset.currentIndex);
         if (!banners[currentIndex]) {
-            currentIndex = (currentIndex + direction + totalBanners) % totalBanners;
+            let newCurrentIndex = (currentIndex + direction + totalBanners) % totalBanners;
+            currentIndex = newCurrentIndex
         }
         // Atualiza o data-active do banner atual para false
         banners[currentIndex].setAttribute('data-active', 'false');
         // Calcula o próximo banner
         currentIndex = (currentIndex + direction + totalBanners) % totalBanners;
+        carouselContent.dataset.currentIndex = currentIndex;
         // Atualiza o data-active do próximo banner para true
         banners[currentIndex].setAttribute('data-active', 'true');
     }

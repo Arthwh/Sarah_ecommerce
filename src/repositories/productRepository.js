@@ -97,19 +97,19 @@ class ProductRepository {
                         COALESCE(product_reviews_data.review_count, 0) AS product_review_quantity
                     FROM
                         products p
-                    INNER JOIN product_variant pv ON p.id = pv.products_id
-                    INNER JOIN product_variant_images_assignments pvia ON pv.id = pvia.product_variant_id
-                    INNER JOIN product_variant_images pvi ON pvia.product_variant_images_id = pvi.id
-                    LEFT JOIN variant_offers_data ON variant_offers_data.product_variant_id = pv.id
-                    LEFT JOIN product_reviews_data ON product_reviews_data.product_id = p.id
-                    -- Aplica DISTINCT ON para pegar a primeira linha por produto e cor
-                                            LEFT JOIN (
-                                                SELECT DISTINCT ON (p.id, pv.color) p.id AS product_id, pv.color, pv.id AS variant_id
-                                                FROM products p
-                                                INNER JOIN product_variant pv ON p.id = pv.products_id
-                                                WHERE pv.stock_quantity > 0
-                                                ORDER BY p.id, pv.color, pv.stock_quantity DESC
-                                            ) unique_colors ON unique_colors.product_id = p.id AND unique_colors.color = pv.color
+                        INNER JOIN product_variant pv ON p.id = pv.products_id
+                        INNER JOIN product_variant_images_assignments pvia ON pv.id = pvia.product_variant_id
+                        INNER JOIN product_variant_images pvi ON pvia.product_variant_images_id = pvi.id
+                        LEFT JOIN variant_offers_data ON variant_offers_data.product_variant_id = pv.id
+                        LEFT JOIN product_reviews_data ON product_reviews_data.product_id = p.id
+                        -- Aplica DISTINCT ON para pegar a primeira linha por produto e cor
+                        LEFT JOIN (
+                            SELECT DISTINCT ON (p.id, pv.color) p.id AS product_id, pv.color, pv.id AS variant_id
+                            FROM products p
+                            INNER JOIN product_variant pv ON p.id = pv.products_id
+                            WHERE pv.stock_quantity > 0
+                            ORDER BY p.id, pv.color, pv.stock_quantity DESC
+                        ) unique_colors ON unique_colors.product_id = p.id AND unique_colors.color = pv.color
                     WHERE pv.stock_quantity > 0 AND unique_colors.variant_id = pv.id
                     GROUP BY
                         p.id,
@@ -126,6 +126,127 @@ class ProductRepository {
         } catch (error) {
             console.error(`Error while getting products by filter "newArrivals": ${error}`);
             throw Error(`Error while getting products by filter "newArrivals": ${error.message}`)
+        }
+    }
+
+    static async getProductsByFilter_bestSelling(limit = 10) {
+        try {
+            const { rows } = await pool.query(`
+                WITH product_highest_selled AS (
+                    SELECT oi.product_id, COUNT(oi.quantity) AS product_sells_quantity
+                    FROM order_items oi
+                    GROUP BY oi.product_id
+                    ORDER BY product_sells_quantity
+                )
+                SELECT
+                    p.public_id AS product_public_id,
+                    p.name AS product_name,
+                    p.total_stock_quantity AS product_total_stock_quantity,
+                    pv.public_id AS variant_public_id,
+                    pv.unit_price AS variant_unit_price,
+                    pv.installments AS variant_installments,
+                    pv.is_on_sale AS variant_is_on_sale,
+                    pv.stock_quantity AS variant_stock_quantity,
+                    array_agg(DISTINCT pvi.image_url) AS variant_images,
+                    vod.offer_type AS variant_offer_type,
+                    vod.offer_value AS variant_offer_value,
+                    vod.offer_installments AS variant_offer_installments,
+                    COALESCE(AVG(pr.rating), 0) AS product_review_score,
+                    COUNT(DISTINCT pr.*) AS product_review_quantity,
+                    COALESCE(phs.product_sells_quantity, 0) AS product_sells_quantity
+                FROM
+                    products p
+                    INNER JOIN product_variant pv ON p.id = pv.products_id
+                    INNER JOIN product_variant_images_assignments pvia ON pv.id = pvia.product_variant_id
+                    INNER JOIN product_variant_images pvi ON pvia.product_variant_images_id = pvi.id
+                    -- Aplica DISTINCT ON para pegar a primeira linha da tabela de ofertas por variante
+                    LEFT JOIN (
+                        SELECT DISTINCT ON (pvo.product_variant_id) pvo.offer_type, pvo.offer_value, pvo.offer_installments, pvo.product_variant_id
+                        FROM product_variant pv
+                        INNER JOIN product_variant_offers pvo ON pv.id = pvo.product_variant_id
+                        WHERE pvo.is_active = true
+                        ORDER BY pvo.product_variant_id DESC
+                    ) AS vod ON vod.product_variant_id = pv.id
+                    -- Aplica DISTINCT ON para pegar a primeira linha por produto e cor
+                    LEFT JOIN (
+                        SELECT DISTINCT ON (p.id, pv.color) p.id AS product_id, pv.color, pv.id AS variant_id
+                        FROM products p
+                        INNER JOIN product_variant pv ON p.id = pv.products_id
+                        WHERE pv.stock_quantity > 0
+                        ORDER BY p.id, pv.color, pv.stock_quantity DESC
+                    ) unique_colors ON unique_colors.product_id = p.id AND unique_colors.color = pv.color
+                    LEFT JOIN product_reviews pr ON p.id = pr.product_id
+                    INNER JOIN product_highest_selled AS phs ON phs.product_id = p.id
+                WHERE unique_colors.variant_id = pv.id
+                GROUP BY
+                    p.id,
+                    pv.id,
+                    vod.offer_type,
+                    vod.offer_value,
+                    vod.offer_installments,
+                    phs.product_sells_quantity
+                ORDER BY phs.product_sells_quantity DESC
+                LIMIT $1
+    `, [limit]);
+            return rows;
+        } catch (error) {
+            console.error(`Error while getting products by filter "newArrivals": ${error}`);
+            throw Error(`Error while getting products by filter "newArrivals": ${error.message}`)
+        }
+    }
+
+
+    static async getProductsByFilter_offers(limit = 10) {
+        try {
+            const { rows } = await pool.query(`
+                    SELECT
+                        p.public_id AS product_public_id,
+                        p.name AS product_name,
+                        p.total_stock_quantity AS product_total_stock_quantity,
+                        pv.public_id AS variant_public_id,
+                        pv.unit_price AS variant_unit_price,
+                        pv.installments AS variant_installments,
+                        pv.is_on_sale AS variant_is_on_sale,
+                        pv.stock_quantity AS variant_stock_quantity,
+                        array_agg(DISTINCT pvi.image_url) AS variant_images,
+                        vod.offer_type AS variant_offer_type,
+                        vod.offer_value AS variant_offer_value,
+                        vod.offer_installments AS variant_offer_installments,
+                        COALESCE(AVG(pr.rating), 0) AS product_review_score,
+	                    COUNT(DISTINCT pr.*) AS product_review_quantity
+                    FROM
+                        products p
+                        INNER JOIN product_variant pv ON p.id = pv.products_id
+                        INNER JOIN product_variant_images_assignments pvia ON pv.id = pvia.product_variant_id
+                        INNER JOIN product_variant_images pvi ON pvia.product_variant_images_id = pvi.id
+                        -- Aplica DISTINCT ON para pegar a primeira linha da tabela de ofertas por variante
+                        LEFT JOIN (
+                            SELECT DISTINCT ON (pvo.product_variant_id) pvo.offer_type, pvo.offer_value, pvo.offer_installments, pvo.product_variant_id
+                            FROM product_variant pv
+                            INNER JOIN product_variant_offers pvo ON pv.id = pvo.product_variant_id
+                            WHERE pvo.is_active = true
+                            ORDER BY pvo.product_variant_id DESC
+                        ) AS vod ON vod.product_variant_id = pv.id
+                        -- Aplica DISTINCT ON para pegar a primeira linha por produto e cor
+                        LEFT JOIN (
+                            SELECT DISTINCT ON (p.id, pv.color) p.id AS product_id, pv.color, pv.id AS variant_id
+                            FROM products p
+                            INNER JOIN product_variant pv ON p.id = pv.products_id
+                            WHERE pv.stock_quantity > 0
+                            ORDER BY p.id, pv.color, pv.stock_quantity DESC
+                        ) unique_colors ON unique_colors.product_id = p.id AND unique_colors.color = pv.color
+                        LEFT JOIN product_reviews pr ON p.id = pr.product_id
+                    WHERE unique_colors.variant_id = pv.id AND pv.is_on_sale = true
+                    GROUP BY
+                        p.id,
+                        pv.id,
+                        vod.offer_type,
+                        vod.offer_value,
+                        vod.offer_installments
+                    LIMIT $1
+                `, [limit])
+        } catch (error) {
+
         }
     }
 

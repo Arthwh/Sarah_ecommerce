@@ -1,7 +1,7 @@
 <% if (component.section_content?.length> 0 || component.newComponent ) { %>
     <div id="bannerSection_<%= component.id %>" class="banner-section <%= mode === 'edit' ? 'editable' : '' %>"
         data-component-id="<%= component.id %>" data-component-content-type="<%= component.content_type %>"
-        data-component-section-model="<%= component.section_model %>"
+        data-component-section-model="<%= component.section_model %>" data-current-index="0"
         data-component-section-position="<%= component.section_position %>" data-element="section"
         data-end-date="<%= component.end_date %>" <% if (mode==='edit' ) { %>
         data-new-component="<%= component.newComponent || false%>"

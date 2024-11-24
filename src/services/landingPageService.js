@@ -15,14 +15,13 @@ class LandingPageService {
                     products = await ProductRepository.getProductsByFilter_highestRated(sectionProductLimit);
                     break;
                 case 'bestSelling':
-                    console.log('bestSelling')
+                    products = await ProductRepository.getProductsByFilter_bestSelling(sectionProductLimit);
                     break;
                 case 'offers':
-                    console.log('offers')
+                    products = await ProductRepository.getProductsByFilter_offers(sectionProductLimit);
                     break;
                 case 'category':
                 case 'subcategory':
-                    console.log('category or subcategory');
                     products = await ProductRepository.listProductsBySubcategoryRepository('id', sectionProductTypeCategoryId, sectionProductTypeSubcategoryId, sectionProductLimit, 0);
                     break;
             }

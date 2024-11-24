@@ -64,12 +64,9 @@ class LandingPageService {
                     const products = await this.getProductsBySectionProductType(component.section_product_type, component.section_product_limit, component.section_product_type_category_id, component.section_product_type_subcategory_id);
                     component.section_content = products;
                 }
-                else if (component.section_model === 'banner') {
-                    const bannerData = await LandingPageRepository.getBannerComponentData(component.id);
-                    component.section_content = bannerData;
-                }
-                else if (component.section_model === 'cards') {
-
+                else if (component.section_model === 'banner' || component.section_model === 'cards') {
+                    const images = await LandingPageRepository.getActiveLandingPageImages(component.id);
+                    component.section_content = images;
                 }
             }
             return components;
@@ -80,28 +77,20 @@ class LandingPageService {
     }
 
     //FUNCIONAL MAS NAO ESTA PRONTA
-    static async saveLandingPageEdits(user, userIP, userAgent, landingPageData, bannerImages) {
+    static async saveLandingPageEdits(user, userIP, userAgent, landingPageData, images) {
         const client = await pool.connect();
         try {
             if (!landingPageData) {
                 throw Error('Landing page data is required.');
             }
+            const imagesMap = await createImageMap(images);
+            const { componentsToDeactivate, componentsToUpdate, componentsToAdd } = await this.compareLandingPageComponentsChanges(landingPageData.sectionsData);
             await client.query('BEGIN');
-            for (const section of landingPageData.sectionsData) {
-                console.log(section)
-                let sectionValidated = validateSectionData(section);
-                await LandingPageRepository.saveLandingPageComponent(client, sectionValidated);
-                if (section.componentSectionModel === 'banner') {
-                    const banners = section.banners;
-                    console.log(bannerImages)
-                    console.log(banners);
-                    // await LandingPageRepository.setBannerComponentData(client, section.componentId, banners);
-                }
-            }
-            // const oldLandingPageData = await LandingPageRepository.getActiveLandingPageComponents();
-            // const newLandingPageData = { ...oldLandingPageData, ...landingPageData }
-            // console.log(landingPageData);
-            // console.log(bannerImages);
+            await Promise.all([
+                this.addLandingPageComponents(client, componentsToAdd, imagesMap),
+                this.updateLandingPageCompoenents(client, componentsToUpdate, imagesMap),
+                this.deactivateLandingPageComponents(client, componentsToDeactivate)
+            ]);
             let message = 'Página inicial salva com sucesso!';
             logAction(userIP, userAgent, 'landingPage-edit', { status: 'success', details: message }, user.id);
             await client.query('COMMIT');
@@ -113,12 +102,145 @@ class LandingPageService {
             throw new Error('Error while saving landing page: ' + error.message)
         }
     }
+
+    static async compareLandingPageComponentsChanges(newLandingPageComponentsData) {
+        const oldLandingPageComponentsData = await LandingPageRepository.getActiveLandingPageComponents();
+
+        const componentsToDeactivate = [];
+        const componentsToUpdate = [];
+        const componentsToAdd = [];
+        const newLandingPageComponentsMap = new Map(newLandingPageComponentsData.map(item => [parseInt(item.componentId), item]));
+        const oldLandingPageComponentsMap = new Map(oldLandingPageComponentsData.map(item => [parseInt(item.id), item]));
+
+        oldLandingPageComponentsData.forEach(oldComponent => {
+            if (!newLandingPageComponentsMap.has(oldComponent.id)) {
+                componentsToDeactivate.push(oldComponent);
+            }
+            else {
+                componentsToUpdate.push(newLandingPageComponentsMap.get(oldComponent.id));
+            }
+        });
+
+        newLandingPageComponentsData.forEach(newComponent => {
+            if (!oldLandingPageComponentsMap.has(parseInt(newComponent.componentId))) {
+                componentsToAdd.push(newComponent);
+            }
+        });
+
+        return {
+            componentsToDeactivate,
+            componentsToUpdate,
+            componentsToAdd
+        };
+    }
+
+    static async compareLandingPageImagesChanges(componentId, newLandingPageImagesData) {
+        const oldLandingPageImagesData = await LandingPageRepository.getActiveLandingPageImages(componentId);
+
+        const imagesToDeactivate = [];
+        const imagesToAdd = [];
+        const newLandingPageImagesMap = new Map(newLandingPageImagesData.map(item => [parseInt(item.id), item]));
+        const oldLandingPageImagesMap = new Map(oldLandingPageImagesData.map(item => [parseInt(item.id), item]));
+
+        oldLandingPageImagesData.forEach(oldImage => {
+            if (!newLandingPageImagesMap.has(oldImage.id)) {
+                imagesToDeactivate.push(oldImage);
+            }
+        });
+
+        newLandingPageImagesData.forEach(newImage => {
+            if (!oldLandingPageImagesMap.has(parseInt(newImage.id))) {
+                imagesToAdd.push(newImage);
+            }
+        });
+
+        return {
+            imagesToAdd,
+            imagesToDeactivate
+        };
+    }
+
+    static async addLandingPageComponents(client, components, images) {
+        try {
+            for (const component of components) {
+                const componentValidatedData = await validateSectionData(component);
+                await LandingPageRepository.addLandingPageComponent(client, componentValidatedData);
+                if (component.componentSectionModel === 'banner' || component.componentSectionModel === 'cards') {
+                    const updatedImagesToAdd = component.banners.map((item) => ({
+                        ...item,
+                        imageLargePath: images[item.imageLargeId],
+                        imageSmallPath: images[item.imageSmallId],
+                    }));
+                    for (const image of updatedImagesToAdd) {
+                        if (image.endDate === '') image.endDate = null;
+                        await LandingPageRepository.setLandingPageImages(client, component.componentId, image);
+                    }
+                }
+            }
+        } catch (error) {
+            console.error('Error adding components: ', error);
+            throw Error('Error adding components: ', error.message);
+        }
+    }
+
+    static async updateLandingPageCompoenents(client, components, images) {
+        try {
+            for (const component of components) {
+                const componentValidatedData = await validateSectionData(component);
+                await LandingPageRepository.updateLandingPageComponent(client, componentValidatedData);
+                if (component.componentSectionModel === 'banner' || component.componentSectionModel === 'cards') {
+                    const { imagesToAdd, imagesToDeactivate } = await this.compareLandingPageImagesChanges(component.componentId, component.banners);
+                    if (imagesToAdd) {
+                        const updatedImagesToAdd = imagesToAdd.map((item) => ({
+                            ...item,
+                            imageLargePath: images[item.imageLargeId],
+                            imageSmallPath: images[item.imageSmallId],
+                        }));
+                        for (const image of updatedImagesToAdd) {
+                            if (image.endDate === '') image.endDate = null;
+                            await LandingPageRepository.setLandingPageImages(client, component.componentId, image);
+                        }
+                    }
+                    if (imagesToDeactivate) {
+                        for (const image of imagesToDeactivate) {
+                            await LandingPageRepository.deactivateLandingPageImagesById(client, image.id);
+                        };
+                    }
+                }
+            }
+        } catch (error) {
+            console.error('Error updating components: ', error);
+            throw Error('Error updating components: ', error.message);
+        }
+    }
+
+    static async deactivateLandingPageComponents(client, components) {
+        try {
+            for (const component of components) {
+                await LandingPageRepository.deactivateLandingPageComponent(client, component.id);
+                if (component.section_model === 'banner' || component.section_model === 'cards') {
+                    await LandingPageRepository.deactivateLandingPageImagesByLandingPageComponentId(client, component.id)
+                }
+            }
+        } catch (error) {
+            console.error('Error deactivating components: ', error);
+            throw Error('Error deactivating components: ', error.message);
+        }
+    }
+}
+
+async function createImageMap(images) {
+    return images.reduce((map, img) => {
+        const id = img.fieldname.match(/\[(\d+)\]/)?.[1];
+        if (id) {
+            map[id] = `../public/images/banners/${img.originalname}`;
+        }
+        return map;
+    }, {});
 }
 
 function validateSectionData(section) {
-    console.log(section)
     if (section.endDate === '') {
-        console.log("teste")
         section.endDate = null
     }
     if (section.productTypeCategory === '') {

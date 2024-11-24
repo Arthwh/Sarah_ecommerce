@@ -57,7 +57,7 @@ async function saveBannerConfig(mainComponentId) {
     const bannerLink = document.getElementById("bannerLink").value;
     const buttonText = document.getElementById("buttonText").value;
     const dateIsEnable = enableEndDateCheckbox.checked;
-    const endDate = dateIsEnable ? document.getElementById("endDate").value : null;
+    const endDate = dateIsEnable ? document.getElementById("endDate").value : '';
 
     if (!bannerImageLarge || !bannerImageSmall || !bannerLink || !buttonText || (dateIsEnable === true && !endDate)) {
         showCentralModal('Erro ao adicionar novo banner', 'Preencha todos os campos!');
@@ -75,6 +75,7 @@ async function saveBannerConfig(mainComponentId) {
         const bannerElement = await createBannerElement(bannerData);
         await loadBannerImages(bannerImageLarge, 'banner_image_large', bannerElement);
         await loadBannerImages(bannerImageSmall, 'banner_image_small', bannerElement);
+        showToast('Imagens adicionadas com sucesso!', 'success');
         closeModal();
     } catch (error) {
         console.error(error);
@@ -96,6 +97,7 @@ async function createBannerElement(bannerData) {
     element.dataset.link = bannerData.bannerLink;
     element.dataset.linkName = bannerData.buttonText;
     element.dataset.newBanner = true;
+    element.dataset.endDate = bannerData.endDate;
 
     const imagesId = await saveFilesIntoVariable(bannerData.bannerImageLarge, bannerData.bannerImageSmall)
     element.dataset.imageLargeId = imagesId.largeImageId;
@@ -127,8 +129,10 @@ async function createBannerElement(bannerData) {
     if (!bannerCarousel) {
         throw Error('Banner carousel not found!')
     }
-    const buttonPrev = document.querySelector('.carousel-control');
-    bannerCarousel.lastElementChild.insertBefore(element, buttonPrev);
+    console.log(bannerCarousel);
+    console.log(element)
+    const buttonPrev = bannerCarousel.querySelector('.carousel-control');
+    bannerCarousel.insertBefore(element, buttonPrev);
     return element;
 }
 

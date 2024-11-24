@@ -24,7 +24,7 @@
                             if(content.image_url_banner_large && content.image_url_banner_small &&
                             content.image_banner_link &&
                             content.image_banner_link_name){ %>
-                            <div class="bannerDiv <%= mode === 'edit' ? 'editable' : '' %>"
+                            <div class="bannerDiv <%= mode === 'edit' ? 'editable' : '' %>" data-id="<%= content.id %>"
                                 data-index="<%= bannerCount %>" data-active="<%= activeFirst %>" data-element="item"
                                 data-link="<%= content.image_banner_link %>"
                                 data-link-name="<%= content.image_banner_link_name %>">

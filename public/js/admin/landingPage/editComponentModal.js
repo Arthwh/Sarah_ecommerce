@@ -15,13 +15,21 @@ async function fetchCategoriesAndSubcategories() {
     }
 }
 
-function addOptionsToCategorySelect(selectElement) {
+function addOptionsToCategorySelect(selectElement, categorySelected = null, subcategorySelected = null) {
     if (selectElement) {
         categoriesAndSubcategories.forEach(category => {
             const option = document.createElement('option');
             option.value = category.id;
             option.textContent = `${category.name} (${category.id})`;
             selectElement.appendChild(option);
+            if (categorySelected == category.id) {
+                option.selected = true;
+                let subcategory = category.subcategories.find(subcat => subcat.id == subcategorySelected);
+                console.log(subcategory)
+                if (subcategory) {
+                    renderSubcategoryByCategorySelected(category.id, selectElement, subcategory.id);
+                }
+            }
         });
         selectElement.onchange = (e) => {
             renderSubcategoryByCategorySelected(e.target.value, selectElement);
@@ -29,7 +37,7 @@ function addOptionsToCategorySelect(selectElement) {
     }
 }
 
-function renderSubcategoryByCategorySelected(categoryId, element) {
+function renderSubcategoryByCategorySelected(categoryId, element, subcategorySelected) {
     const subcategorySelect = element.nextElementSibling;
     if (categoryId == '') {
         if (subcategorySelect) {
@@ -50,6 +58,9 @@ function renderSubcategoryByCategorySelected(categoryId, element) {
             option.value = subcategorie.id;
             option.textContent = `${subcategorie.name} (${subcategorie.id})`;
             subcategorySelect.appendChild(option);
+            if (subcategorySelected == subcategorie.id) {
+                option.selected = true;
+            }
         })
     }
     subcategorySelect.style.display = 'block';
@@ -138,8 +149,18 @@ async function editComponent(mainElementId, sectionType) {
     const productEndDate = mainComponent.dataset.endDate;
     const sectionTitle = mainComponent.dataset.title;
     const productEndDateFormated = productEndDate.split("T")[0];
+    const categorySelectedId = mainComponent.dataset.productTypeCategory;
+    const subcategorySelectedId = mainComponent.dataset.productTypeSubcategory;
+
+    console.log("category: ", categorySelectedId);
+    console.log("subcategory: ", subcategorySelectedId);
 
     await showEditAddSectionModal('edit', { productType, productLimit, productEndDate, sectionTitle, sectionType, mainElementId });
+    const productTypeSelect = document.getElementById('product-type');
+    checkProductTypeSelected(productTypeSelect);
+    await fetchCategoriesAndSubcategories();
+    const categorySelect = document.getElementById('product-type-category');
+    addOptionsToCategorySelect(categorySelect, categorySelectedId, subcategorySelectedId);
 
     if (productEndDate) {
         document.getElementById('endDate').value = productEndDateFormated;
@@ -181,7 +202,9 @@ async function saveSectionConfig(sectionId, mainElementId, mode, sectionType) {
     try {
         const productType = document.getElementById('product-type').value;
         const productTypeCategory = document.getElementById('product-type-category').value;
+        console.log("category: ", productTypeCategory);
         const productTypeSubcategory = document.getElementById('product-type-subcategory').value;
+        console.log("subcategory: ", productTypeSubcategory);
         const productLimit = document.getElementById('productLimit').value;
         const productEndDate = document.getElementById('endDate');
         const enableEndDate = document.getElementById('enableEndDate').checked;
@@ -221,10 +244,15 @@ async function saveSectionConfig(sectionId, mainElementId, mode, sectionType) {
             mainComponent.dataset.productLimit = productLimit;
             mainComponent.dataset.endDate = endDate;
             mainComponent.dataset.title = sectionTitle;
+            productTypeCategory ? mainComponent.dataset.productTypeCategory = productTypeCategory : '';
+            productTypeSubcategory ? mainComponent.dataset.productTypeSubcategory = productTypeSubcategory : '';
             setTitleIntoElement(mainElementId, sectionTitle);
         }
-
-        showToast('Sessão editada com sucesso!', 'success');
+        let message = 'Sessão editada com sucesso!';
+        if (mode === 'edit') {
+            message = 'Sessão editada com sucesso!<br><b>OBS: As mudanças de tipo de produto em exibição serão aplicadas ao salvar as alterações.</b>';
+        }
+        showToast(message, 'success');
         closeSectionModal();
     } catch (error) {
         console.error(error);

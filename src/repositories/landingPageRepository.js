@@ -119,10 +119,11 @@ class LandingPageRepository {
 
     static async addLandingPageComponent(client, { componentContentType, componentSectionModel, componentSectionPosition, endDate = null, productType = null, productTypeCategory = null, productTypeSubcategory = null, productLimit = null, title = null }) {
         try {
-            await client.query(`
+            const { rows } = await client.query(`
             INSERT INTO landing_page_components (section_model, content_type, section_position, section_title, section_product_type, section_product_type_category_id, section_product_type_subcategory_id, section_product_limit, start_date, end_date, is_active) 
-            VALUES ($1, $2, $3, $4, $5, $6, $7, $8, NOW(), $9, 'true')`,
+            VALUES ($1, $2, $3, $4, $5, $6, $7, $8, NOW(), $9, 'true') RETURNING id`,
                 [componentSectionModel, componentContentType, componentSectionPosition, title, productType, productTypeCategory, productTypeSubcategory, productLimit, endDate]);
+            return rows[0].id;
         } catch (error) {
             console.error('Error while adding landing page component: ', error);
             throw Error('Error while adding landing page component: ', error.message);

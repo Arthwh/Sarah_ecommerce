@@ -52,7 +52,7 @@ class LandingPageService {
         }
     }
 
-    //FUNCIONANDO CERTO (Precisa terminar os tipos de produtos e de sections)
+    //FUNCIONANDO CERTO
     static async getLandingPageData() {
         try {
             const components = await LandingPageRepository.getActiveLandingPageComponents();
@@ -164,7 +164,7 @@ class LandingPageService {
         try {
             for (const component of components) {
                 const componentValidatedData = await validateSectionData(component);
-                await LandingPageRepository.addLandingPageComponent(client, componentValidatedData);
+                const id = await LandingPageRepository.addLandingPageComponent(client, componentValidatedData);
                 if (component.componentSectionModel === 'banner' || component.componentSectionModel === 'cards') {
                     const updatedImagesToAdd = component.banners.map((item) => ({
                         ...item,
@@ -173,7 +173,7 @@ class LandingPageService {
                     }));
                     for (const image of updatedImagesToAdd) {
                         if (image.endDate === '') image.endDate = null;
-                        await LandingPageRepository.setLandingPageImages(client, component.componentId, image);
+                        await LandingPageRepository.setLandingPageImages(client, id, image);
                     }
                 }
             }

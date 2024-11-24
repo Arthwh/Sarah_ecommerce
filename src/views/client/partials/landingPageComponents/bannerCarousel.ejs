@@ -50,13 +50,15 @@
                             </div>
                             <% bannerCount++; activeFirst=false; } }) %>
                                 <!-- Botões de controle do carrossel -->
-                                <button class="carousel-control prev" onclick="moveBannerCarousel(-1)">
+                                <button class="carousel-control prev"
+                                    onclick="moveBannerCarousel(-1, '<%= component.id %>')">
                                     <img class="prevBlack" src="/public/images/icons/arrow_prev_icon_black.svg"
                                         alt="previous">
                                     <img class="prevWhite" src="/public/images/icons/arrow_prev_icon_white.svg"
                                         alt="previous">
                                 </button>
-                                <button class="carousel-control next" onclick="moveBannerCarousel(1)">
+                                <button class="carousel-control next"
+                                    onclick="moveBannerCarousel(1, '<%= component.id %>')">
                                     <img class="forwBlack" src="/public/images/icons/arrow_forward_icon_black.svg"
                                         alt="next">
                                     <img class="forwWhite" src="/public/images/icons/arrow_forward_icon_white.svg"

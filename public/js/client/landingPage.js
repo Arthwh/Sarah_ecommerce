@@ -1,7 +1,8 @@
 let currentIndex = 0;
 
-function moveBannerCarousel(direction) {
-    const banners = document.querySelectorAll('.bannerDiv');
+function moveBannerCarousel(direction, componentId) {
+    const carouselContent = document.getElementById(`bannerSection_${componentId}`);
+    const banners = carouselContent.querySelectorAll('.bannerDiv');
     const totalBanners = banners.length;
     if (banners) {
         if (!banners[currentIndex]) {
@@ -16,11 +17,13 @@ function moveBannerCarousel(direction) {
     }
 };
 
-if (document.querySelector('.bannerDiv')) {
-    // Carrossel automático
-    setInterval(() => {
-        moveBannerCarousel(1);
-    }, 5000);
+if (document.querySelector('.banner-section')) {
+    const banners = document.querySelectorAll('.banner-section');
+    banners.forEach(section => {
+        setInterval(() => {
+            moveBannerCarousel(1, section.dataset.componentId);
+        }, 5000);
+    });
 }
 
 function movecarousel(direction, componentId) {

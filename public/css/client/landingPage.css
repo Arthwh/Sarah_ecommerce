@@ -2,7 +2,7 @@
 .banner-section {
     position: relative;
     width: 100%;
-    /* min-height: 400px; */
+    min-height: 400px;
     max-height: 650px;
     background-color: #e9ecef;
     margin-bottom: 40px;

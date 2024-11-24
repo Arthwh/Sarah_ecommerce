@@ -37,7 +37,7 @@ function addOptionsToCategorySelect(selectElement, categorySelected = null, subc
     }
 }
 
-function renderSubcategoryByCategorySelected(categoryId, element, subcategorySelected) {
+function renderSubcategoryByCategorySelected(categoryId, element, subcategorySelected = null) {
     const subcategorySelect = element.nextElementSibling;
     if (categoryId == '') {
         if (subcategorySelect) {
@@ -67,7 +67,6 @@ function renderSubcategoryByCategorySelected(categoryId, element, subcategorySel
 }
 
 async function showEditAddSectionModal(mode, { productType = null, productLimit = 10, productEndDate = null, sectionTitle = '', sectionType, mainElementId, sectionId }) {
-    console.log(mode)
     const modal = document.createElement('div');
     modal.classList.add('modal-edit-sections-overlay');
     modal.innerHTML = `
@@ -152,9 +151,6 @@ async function editComponent(mainElementId, sectionType) {
     const categorySelectedId = mainComponent.dataset.productTypeCategory;
     const subcategorySelectedId = mainComponent.dataset.productTypeSubcategory;
 
-    console.log("category: ", categorySelectedId);
-    console.log("subcategory: ", subcategorySelectedId);
-
     await showEditAddSectionModal('edit', { productType, productLimit, productEndDate, sectionTitle, sectionType, mainElementId });
     const productTypeSelect = document.getElementById('product-type');
     checkProductTypeSelected(productTypeSelect);
@@ -171,8 +167,14 @@ async function addComponent(sectionType) {
     try {
         await checkSessionExpired();
         if (sectionType === 'banner') {
-            console.log('banner');
-            alert('Funcionalidade em implementação')
+            const sectionId = Date.now();
+            const mainElement = document.querySelector('main');
+            const sectionPosition = mainElement.querySelectorAll('[data-element="section"]').length + 1;
+            const sectionHTML = await getNewSectionElement(sectionId, sectionType, 'image', null, null, null, null, null, null, sectionPosition);
+            console.log(sectionHTML)
+            mainElement.insertAdjacentHTML('beforeend', sectionHTML);
+            // console.log('banner');
+            // alert('Funcionalidade em implementação')
         }
         else if (sectionType === 'carousel' || sectionType === 'grid') {
             const sectionId = Date.now();
@@ -202,9 +204,7 @@ async function saveSectionConfig(sectionId, mainElementId, mode, sectionType) {
     try {
         const productType = document.getElementById('product-type').value;
         const productTypeCategory = document.getElementById('product-type-category').value;
-        console.log("category: ", productTypeCategory);
         const productTypeSubcategory = document.getElementById('product-type-subcategory').value;
-        console.log("subcategory: ", productTypeSubcategory);
         const productLimit = document.getElementById('productLimit').value;
         const productEndDate = document.getElementById('endDate');
         const enableEndDate = document.getElementById('enableEndDate').checked;

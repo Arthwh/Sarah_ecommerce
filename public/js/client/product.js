@@ -18,9 +18,9 @@ document.addEventListener('DOMContentLoaded', () => {
     updateMainImageSmallScreen(currentIndex);
     smallScreenImagemCarousel.classList.remove('hidden');
 
-    clearColorsSelected();
-    clearSizesSelected();
     if (!product.total_stock_quantity == 0) {
+        clearColorsSelected();
+        clearSizesSelected();
         markColorSelected(product.variant_public_id);
         if (!product.variant_stock_quantity == 0) {
             markSizeSelected(product.variant_public_id);
@@ -112,7 +112,6 @@ function loadVariantData(button) {
     fetch(`/api/products/variant/${variantId}?type=${variantType}`)
         .then(response => response.json())
         .then(data => {
-            // Atualiza as informações da página com os novos dados da variante
             updateProductInfo(data, variantType, variantId);
         })
         .catch(error => console.error('Erro ao carregar variante:', error));

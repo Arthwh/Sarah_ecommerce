@@ -100,7 +100,7 @@ class ProductService {
                 throw new Error('Product SKU missing.');
             }
             const variantData = await ProductVariantRepository.getVariantDataBySku(sku);
-            variantData['product_description'] = replaceLineBreakCharacterInDescription(variantData.product_description);
+            variantData['product_description'] = await replaceLineBreakCharacterInDescription(variantData.product_description);
             return variantData;
         } catch (error) {
             console.error('Error getting product variant data: ', error);

@@ -47,7 +47,6 @@
             <span id="categoriesAndSubcategoriesError" class="text-sm hidden" style="color: red;"></span>
         </div>
 
-
         <!-- Marca -->
         <div class="mb-4">
             <h3 class="text-lg font-semibold mb-2">Marca</h3>
@@ -55,9 +54,6 @@
                 class="ring-black/20 w-full px-4 py-2 border border-gray-300 focus:outline-none focus:ring focus:border-black">
                 <!-- Opções de marcas carregadas do banco -->
                 <option value="" disabled selected>Selecione uma marca...</option>
-                <option value="1">Marca 1</option>
-                <option value="2">Marca 2</option>
-                <option value="3">Marca 3</option>
             </select>
             <span id="productBrandError" class="text-sm hidden" style="color: red;"></span>
         </div>
@@ -83,8 +79,7 @@
                 </tbody>
             </table>
         </div>
-        <button type="submit"
-            class="w-full bg-black text-white py-2 mt-3 hover:bg-gray-800 transition-colors items-end">Cadastrar
+        <button type="submit" class="action-btn-contrast">Cadastrar
             Produto</button>
     </form>
     <div id="variantModal" class="hidden fixed flex inset-0 z-50 justify-center items-center max-h-4/5 overflow-auto">
@@ -101,18 +96,36 @@
             </h2>
             <div class="flex flex-col space-y-4 p-6 mb-6 overflow-auto">
                 <!-- Preço -->
-                <div>
-                    <label for="variantPrice" class="block font-semibold">Preço</label>
-                    <input type="text" placeholder="R$ 0,00" oninput="formatPriceForInputField(this)" id="variantPrice"
-                        name="variantPrice" class="w-full p-2 border border-gray-300 rounded-md">
-                    <span id="variantPriceError" class="text-sm hidden" style="color: red;"></span>
+                <div class="grid grid-cols-2 space-x-2">
+                    <div>
+                        <label for="variantPrice" class="block font-semibold">Preço</label>
+                        <input type="text" placeholder="R$ 0,00" oninput="formatPriceForInputField(this)"
+                            id="variantPrice" name="variantPrice" class="w-full p-2 border border-gray-300 rounded-md">
+                        <span id="variantPriceError" class="text-sm hidden" style="color: red;"></span>
+                    </div>
+                    <div>
+                        <label for="variantInstallments" class="block font-semibold">Parcelas</label>
+                        <input type="number" placeholder="Máximo de parcelas permitidas"
+                            onfocusout="calculateInstallmentsValues()" id="variantInstallments"
+                            name="variantInstallments" class="w-full p-2 border border-gray-300 rounded-md">
+                        <span id="variantInstallmentsError" class="text-sm hidden" style="color: red"></span>
+                        <span id="showVariantInstallmentsValue" class="p-2 w-full"></span>
+                        <input type="text" hidden id="variantInstallmentsValue" name="variantInstallmentsValue">
+                    </div>
                 </div>
                 <!-- Cor -->
                 <div>
                     <label for="variantColor" class="block font-semibold">Cor</label>
                     <input type="text" id="variantColor" name="variantColor"
-                        class="w-full p-2 border border-gray-300 rounded-md">
+                        class="w-full border border-gray-300 rounded-md">
                     <span id="variantColorError" class="text-sm hidden" style="color: red;"></span>
+                </div>
+                <!-- Codigo da cor -->
+                <div>
+                    <label for="variantColorCode" class="block font-semibold">Selecione a cor</label>
+                    <input type="color" id="variantColorCode" name="variantColorCode"
+                        class="w-full border border-gray-300 rounded-md">
+                    <span id="variantColorCodeError" class="text-sm hidden" style="color: red;"></span>
                 </div>
                 <!-- Tamanho -->
                 <div>
@@ -127,6 +140,13 @@
                         <option value="XG">XG</option>
                     </select>
                     <span id="variantSizeError" class="text-sm hidden" style="color: red;"></span>
+                </div>
+                <!-- Estoque inicial -->
+                <div>
+                    <label for="variantInitialStock" class="block font-semibold">Estoque incial</label>
+                    <input type="number" name="variantInitialStock" id="variantInitialStock"
+                        class="w-full p-2 border border-gray-300 rounded-md">
+                    <span id="variantInitialStockError" class="text-sm hidden" style="color: red;"></span>
                 </div>
                 <!-- Checkbox para herdar imagem -->
                 <div class="items-center">
@@ -151,10 +171,9 @@
                     </div>
                 </div>
                 <!-- Botões -->
-                <div class="flex justify-between p-6">
-                    <button type="button" onclick="saveVariant()" class="bg-black text-white px-4 py-2">Salvar</button>
-                    <button type="button" onclick="toggleVariantModal()"
-                        class="bg-white text-black border border-black px-4 py-2">Cancelar</button>
+                <div class="flex justify-evenly p-6 gap-6">
+                    <button type="button" onclick="saveVariant()" class="action-btn-contrast">Salvar</button>
+                    <button type="button" onclick="toggleVariantModal()" class="action-btn-contrast">Cancelar</button>
                 </div>
             </div>
         </div>

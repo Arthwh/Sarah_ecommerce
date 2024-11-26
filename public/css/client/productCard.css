@@ -19,30 +19,34 @@
 .product-image-wrapper {
     position: relative;
     width: 100%;
+    padding-top: 120%; /* Aspect ratio 3/4 */
+    overflow: hidden;
+    z-index: 0;
+    /* background-color: #e6e6e6; */
 }
 
-.product-images {
+.product-image {
+    position: absolute;
+    top: 0;
+    left: 0;
     width: 100%;
-}
-
-.product-image-default,
-.product-image-hover {
-    width: 100%;
-    height: auto;
+    height: 100%;
     object-fit: cover;
-    transition: opacity 0.5s ease-in-out;
+    transition: opacity 0.2s ease-in-out;
+}
+
+.product-image-default {
+    opacity: 1;
+    z-index: 1;
 }
 
 .product-image-hover {
-    display: none;
-}
-
-.product-image-wrapper:hover .product-image-default {
-    display: none;
+    opacity: 0;
+    z-index: 2;
 }
 
 .product-image-wrapper:hover .product-image-hover {
-    display: block;
+    opacity: 1;
 }
 
 /* Botão de adicionar ao carrinho */
@@ -70,41 +74,6 @@
     color: #fff;
 }
 
-/* Botão de favoritos */
-.wishlist-button-wrapper {
-    display: block;
-    position: absolute;
-    top: 0;
-    left: 0;
-    z-index: 10;
-    padding: 0.5rem;
-}
-
-.favorite-icon {
-    width: 32px;
-    height: 32px;
-}
-
-.favorite-icon-hover {
-    width: 32px;
-    height: 32px;
-    display: none;
-}
-
-.favorite-btn:hover .favorite-icon {
-    display: none;
-}
-
-.favorite-btn:hover .favorite-icon-hover {
-    display: block;
-}
-
-/* Exibir os botões ao passar o mouse sobre o card */
-.product-image-wrapper:hover .cart-button-wrapper,
-.product-image-wrapper:hover .wishlist-button-wrapper {
-    display: block;
-}
-
 /* Estilos para as informações do produto */
 .product-info-link {
     display: flex;
@@ -128,6 +97,7 @@
     color: #333;
     min-height: 48px;
     margin-bottom: 0.5rem;
+    flex-grow: 1;
 }
 
 .product-price {

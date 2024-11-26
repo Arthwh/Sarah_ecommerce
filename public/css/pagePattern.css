@@ -18,7 +18,7 @@ body{
     background-color: #F7F7F7;
 }
 
-.menuItem:hover{
+.menuItem:hover, .categoryMenuItemGetAll:hover{
     color: #E9C495; 
     border-bottom-color: #E9C495;
 }
@@ -26,8 +26,8 @@ body{
     padding-bottom: 1px;
     margin-bottom: 2px;
     box-sizing: border-box;
-    border-bottom: 1px solid transparent; /* Espaço reservado para o border */
-    transition: border-color 0.3s, color 0.3s; /* Suaviza a transição */
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.3s, color 0.3s;
 }
 
 .textColorYellow{
@@ -35,8 +35,8 @@ body{
 }
 
 .error-message {
-    color: red; /* Cor do texto de erro */
-    font-size: 0.875rem; /* Tamanho menor para não se destacar demais */
+    color: red;
+    font-size: 0.875rem;
 }
 
 input:focus{
@@ -52,15 +52,19 @@ input:focus{
     display: none;
 }
 
-.sizeSelected{
+.action-btn-contrast{
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    font-weight: 600;
     background-color: black;
-    color: white;
+    color: #fff;
+    border: 2px solid black;
+    cursor: pointer;
 }
 
-/* Efeito de troca da imagem do botao de favorito na listagem de produtos */
-.favorite-btn:hover .favorite-icon {
-    display: none;
-}
-.favorite-btn:hover .favorite-icon-hover {
-    display: block;
+.action-btn-contrast:hover{
+    background-color: white;
+    color: black;
+    transition: background-color 0.3s, transform 0.2s;
 }

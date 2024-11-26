@@ -1,7 +1,58 @@
 import argon2 from 'argon2';
 import UserRepository from '../repositories/userRepository.js';
+import WishlistRepository from '../repositories/wishlistRepository.js';
+import { logAction } from './logsService.js';
 
 class UserService {
+    static async login(userIP, userAgent, userData) {
+        try {
+            const { email, password } = userData;
+            const user = await UserRepository.getUserByEmailRepository(email);
+            if (!user) {
+                logAction(userIP, userAgent, 'user-login', { status: 'error', details: 'User email not found' }, user.id);
+                throw Error('User email not found.');
+            }
+            const isPasswordValid = await argon2.verify(user.password, password);
+            if (!isPasswordValid) {
+                logAction(userIP, userAgent, 'user-login', { status: 'error', details: 'Password incorrect' }, user.id);
+                throw Error('Password incorrect.');
+            }
+            const cartCount = await UserRepository.getUserCartCountRepository(user.id);
+            const message = 'User logged successfully';
+            logAction(userIP, userAgent, 'user-login', { status: 'success', details: message }, user.id);
+            return { user: { ...user, cart: { count: cartCount } }, message: message };
+        } catch (error) {
+            console.error('Error loggin in user: ' + error);
+            if (error.message !== 'Password incorrect.' && error.message !== 'User email not found') {
+                logAction(userIP, userAgent, 'user-login', { status: 'error', details: error.message });
+            }
+            throw Error('Error loggin in user: ' + error.message);
+        }
+    }
+
+    static async createUserService(userIP, userAgent, userData) {
+        try {
+            userData.password = await argon2.hash(userData.password);
+            if (!userData.role) {
+                userData.role = 1;
+            }
+            if (UserRepository.checkIfEmailExists(userData.email)) {
+                const error = new Error('E-mail already exists');
+                console.error(error.message);
+                throw error;
+            }
+            const userId = await UserRepository.createUserRepository(userData);
+            await WishlistRepository.createNewWishlist(userId);
+            const message = "User created successfully";
+            logAction(userIP, userAgent, 'user-creation', { status: 'success', details: message }, userId);
+            return { message: message };
+        } catch (error) {
+            console.error('Error creating user: ' + error.message);
+            logAction(userIP, userAgent, 'user-creation', { status: 'error', details: error.message });
+            throw error;
+        }
+    }
+
     static async getAllUsersService() {
         try {
             return await UserRepository.getAllUsersRepository();
@@ -29,32 +80,12 @@ class UserService {
         }
     }
 
-    static async createUserService(userData) {
-        try {
-            userData.password = await argon2.hash(userData.password);
-            if (!userData.role) {
-                userData.role = 1;
-            }
-            if (UserRepository.checkIfEmailExists(userData.email)) {
-                const error = new Error('Error creating user: E-mail already exists');
-                console.error(error.message);
-                throw error;
-            }
-            await UserRepository.createUserRepository(userData);
-            return { message: "User created successfully" };
-        } catch (error) {
-            console.error('Error creating user: ' + error.message);
-            throw error;
-        }
-    }
-
     static async updateUserService(id, userData) {
         try {
             userData.password = await argon2.hash(userData.password);
             if (!userData.role) {
                 userData.role = 1;
             }
-
             await UserRepository.updateUserRepository(id, userData);
             return { message: "User updated successfully" };
         } catch (error) {
@@ -68,69 +99,10 @@ class UserService {
             await UserRepository.deleteUserRepository(id);
             return { message: "User deleted successfully" };
         } catch (error) {
-            console.error('Error deleting user: ' + error.message);
+            console.error('Error deleting user: ' + error);
             throw error;
         }
     }
-
-    static async login(userData) {
-        try {
-            const { email, password } = userData;
-            const user = await UserRepository.getUserByEmailRepository(email);
-            const isPasswordValid = await argon2.verify(user.password, password);
-            if (!isPasswordValid)
-                return { message: "Bad password" };
-            const cartCount = await UserRepository.getUserCartCountRepository(user.id);
-            return { ...user, cart: { count: cartCount } };
-        } catch (error) {
-            console.error('Error loggin in user: ' + error.message);
-            throw error;
-        }
-    }
-
 }
 
 export default UserService;
-
-// import UserModel from '../models/userModel.js';
-// import bcrypt from 'bcrypt';
-
-// class UserService {
-//     static async listUsers() {
-//         return await UserModel.getAllUsers();
-//     }
-
-//     static async getUser(id) {
-//         return await UserModel.getUserById(id);
-//     }
-
-//     static async getUserByEmail(email) {
-//         return await UserModel.getUserByEmail(email);
-//     }
-
-//     static async createUser(userData) {
-//         return await UserModel.createUser(userData);
-//     }
-
-//     static async updateUser(id, userData) {
-//         return await UserModel.updateUser(id, userData);
-//     }
-
-//     static async deleteUser(id) {
-//         return await UserModel.deleteUser(id);
-//     }
-
-//     static async login(email, password) {
-//         const user = await UserModel.getUserByEmail(email);
-//         if (!user) return null;
-
-//         const match = await bcrypt.compare(password, user.password);
-//         if (!match) return null;
-
-//         const cartCount = await UserModel.getUserCartCount(user.id);
-
-//         return { ...user, cart: { count: cartCount } };
-//     }
-// }
-
-// export default UserService;

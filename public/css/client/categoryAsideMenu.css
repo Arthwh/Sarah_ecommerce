@@ -1,0 +1,133 @@
+/* Overlay for the categories menu */
+#categoriesOverlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.2);
+    z-index: 997;
+}
+
+/* Sidebar menu styles */
+#category-aside-menu {
+    display: flex;
+    position: fixed;
+    top: 0;
+    left: 0;
+    inset: 0;
+    width: 280px;
+    height: 100vh;
+    background-color: black;
+    color: white;
+    overflow-y: auto;
+    transition: transform 0.3s ease-in-out;
+    transform: translateX(-100%);
+    z-index: 998;
+}
+
+#category-aside-menu.active{
+    transform: translateX(0);
+}
+
+#categoriesOverlay.active{ 
+    display: block;
+}
+
+/* Menu container styles */
+#menuContainer {
+    position: fixed;
+    top: 0;
+    left: 0;
+    padding: 1.5rem;
+    width: 100%;
+}
+
+#menuContainer li{
+    display: flex;
+    margin-bottom: 5px;
+}
+
+#menuContainer button img {
+    text-align: right;
+    width: 24px;
+    height: 24px;
+}
+
+#menuContainer ul {
+    margin-top: 2.5rem;
+    line-height: 2rem;
+    width: 100%;
+}
+
+#menuContainer .only-small-screen-item{
+    display: none;
+}
+
+@media(max-width: 639px){
+    #menuContainer .only-small-screen-item{
+        display: block;
+    }
+}
+
+@media(max-width: 425px){
+    #category-aside-menu{
+        width: 100%;
+    }
+}
+
+.arrow {
+    height: 1.5rem;
+    width: 1.5rem;
+    margin-left: auto;
+}
+
+/* Submenu container styles */
+#submenuContainer {
+    display: none;
+    background-color: black;
+    padding: 1.5rem;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 999;
+}
+
+#submenuContainer.active {
+    display: block;
+}
+
+#submenuContainer button img {
+    text-align: left;
+    width: 24px;
+    height: 24px;
+    padding-left: 0.5rem;
+}
+
+#submenuContainer ul {
+    margin-top: 2.5rem;
+    line-height: 2rem;
+    width: 100%;
+}
+
+#submenuContainer li {
+    display: flex;
+    margin-bottom: 5px;
+}
+
+.categoryMenuItemGetAll{
+    margin-bottom: 20px;
+    font-weight: bold;
+    font-size: 1.4rem;
+    box-sizing: border-box;
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.3s, color 0.3s;
+}
+
+.submenu{
+    display: none;
+}
+
+.submenu.active{
+    display: block;
+}

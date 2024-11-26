@@ -1,66 +1,73 @@
 import ProductService from '../services/productService.js';
 
 class ProductController {
-    static async getLandingPage(req, res) {
+    //FUNCIONANDO CERTO
+    static async getCategoriesAndSubcategories(req, res) {
         try {
-            const user = req.session.user
-            console.log("User: " + JSON.stringify(user))
-            const components = await ProductService.getLandingPageData();
-            res.render('client/landingPage', { data: { user: user, components: components, page: { mode: 'main' } } });
-        } catch (error) {
-            res.status(500).json({ error: 'Erro ao carregar a página inicial' });
-        }
-    }
-
-    static async getLandingPageForEdit(req, res) {
-        try {
-            const user = req.session.user
-            console.log("User: " + JSON.stringify(user))
-            const components = await ProductService.getLandingPageData();
-            res.render('client/landingPage', { data: { user: user, components: components, page: { mode: 'edit' } } });
-        } catch (error) {
-            res.status(500).json({ error: 'Erro ao carregar a página inicial' });
-        }
-    }
-
-    static async getCategories(req, res) {
-        try {
-            const data = await ProductService.getAllProductCategories();
+            const data = await ProductService.getAllProductCategoriesAndSubcategories();
             res.status(200).json(data);
         } catch (error) {
-            res.status(500).json({ error: 'Erro ao buscar categorias' });
+            res.status(500).json({ error: 'Erro ao buscar categorias: ', error });
         }
     }
 
-    static async listProducts(req, res) {
+    //FUNCIONANDO CERTO
+    static async getBrands(req, res) {
         try {
-            const user = req.session.user
-            console.log("User: " + JSON.stringify(user))
-            const data = await ProductService.listProducts();
-            res.render('client/productsList', { data: { user: user, page: data.page, pagination: data.pagination, products: data.products } });
+            const data = await ProductService.getAllBrands();
+            res.status(200).json(data);
         } catch (error) {
-            res.status(500).json({ error: 'Erro ao listar produtos' });
+            res.status(500).json({ error: 'Erro ao buscar marcas: ', error });
         }
     }
 
+    static async getProductColors(req, res) {
+        try {
+            const data = await ProductService.getAllActiveProductColors();
+            return res.status(200).json(data);
+        } catch (error) {
+            return res.status(500).json({ error: 'Erro ao buscar cores', message: error.message });
+        }
+    }
+
+    //FUNCIONANDO CERTO
+    static async listProductsByCategoryOrSubcategory(req, res) {
+        try {
+            const { category, subcategory } = req.params;
+            const { limit, page } = req.query;
+            const user = req.session.user;
+            const categories = await ProductService.getAllProductCategoriesAndSubcategories();
+            const data = await ProductService.listProductsByCategoryOrSubcategoryService(user, category, subcategory, limit, page);
+            if (!data) {
+                return res.status(404).json({ error: 'Dados não encontrados' });
+            }
+            res.render('client/productsList', { data: { user: user, page: { categories: categories, displayRegisterModal: true, title: data.page.title, quantResults: data.page.quantResults, breadcrumbs: data.page.breadcrumbs }, pagination: data.pagination, products: data.products } });
+        } catch (error) {
+            res.status(500).json({ error: 'Erro ao buscar produtos', error });
+        }
+    }
+
+    //FUNCIONANDO CERTO
     static async getSpecificProduct(req, res) {
         try {
-            const user = req.session.user
-            console.log("User: " + JSON.stringify(user))
-            const id = req.params.id;
-            if (!id) {
-                res.status(404).json({ error: 'Código do produto não informado ou incorreto' })
+            const user = req.session.user;
+            const { id } = req.params;
+            const { sku } = req.query || undefined;
+            const categories = await ProductService.getAllProductCategoriesAndSubcategories();
+            const data = await ProductService.getSpecificProduct(id, sku);
+            if (!data) {
+                return res.status(404).json({ error: 'Dados não encontrados' });
             }
-            const data = await ProductService.getSpecificProduct(id);
-            res.render('client/product', { data: { user: user, page: data.page, product: data.product } });
+            res.render('client/product', { data: { user: user, page: { categories: categories, displayRegisterModal: true, breadcrumbs: data.page.breadcrumbs }, product: data.product } });
         } catch (error) {
             res.status(500).json({ error: 'Erro ao buscar produto' });
         }
     }
 
+    //FUNCIONANDO CERTO
     static async getProductVariantData(req, res) {
         try {
-            const sku = req.params.id;
+            const { sku } = req.params;
             const data = await ProductService.getProductVariantData(sku);
             if (!data) {
                 res.status(404).json({ error: 'Produto não encontrado' });
@@ -71,22 +78,15 @@ class ProductController {
         }
     }
 
+    //FUNCIONANDO CERTO
     static async createProduct(req, res) {
         try {
             const productData = req.body;
-            const files = req.files; // Todos os arquivos carregados
-            console.log('Dados do produto:', productData);
-            console.log("files: ", files)
-            // Processar os arquivos
-            if (files && files.length > 0) {
-                files.forEach(file => {
-                    console.log(`Arquivo recebido: ${file.originalname}`);
-                });
-            }
+            const files = req.files;
             const newProduct = await ProductService.createProductService(productData, files);
             res.status(201).json(newProduct);
         } catch (error) {
-            res.status(500).json({ error: 'Erro ao criar produto' });
+            res.status(500).json({ error: 'Erro ao criar produto: ' + error });
         }
     }
 

@@ -5,160 +5,154 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Listagem de Produtos - SARAH</title>
+    <link rel="shortcut icon" href="/public/images/logo/logo_dourado_preto_icon.ico" type="image/x-icon">
     <link href="/public/css/pagePattern.css" rel="stylesheet">
     <link href="/public/css/tailwind/style.css" rel="stylesheet">
     <link href="/public/css/messageModal/modal.css" rel="stylesheet">
     <link href="/public/css/client/productCard.css" rel="stylesheet">
     <link href="/public/css/client/footer.css" rel="stylesheet">
+    <link href="/public/css/client/productsList.css" rel="stylesheet">
+    <link href="/public/css/client/filterAsideMenu.css" rel="stylesheet">
+    <link href="/public/css/client/categoryAsideMenu.css" rel="stylesheet">
+    <link href="/public/css/client/loginRegisterModal.css" rel="stylesheet">
+    <link href="/public/css/client/reviewStars.css" rel="stylesheet">
+    <link href="/public/css/client/wishlist.css" rel="stylesheet">
 
+    <script>
+        // Obtem os dados enviados do backend e converte para JSON
+        const data = JSON.parse('<%- JSON.stringify(data) %>');
+        console.log(data)
+        if (!data) {
+            const redirect = () => {
+                window.location.href = '/';
+            }
+            showCentralModal("Listagem de produtos", "Dados incompletos.", redirect)
+            console.error('Dados incompletos.');
+        }
+        // Separa os dados em variáveis
+        const user = data.user;
+        const cart = user?.cart || {};
+        const wishlist = user?.wishlist || {};
+        const products = data.products;
+        const page = data.page;
+        const pagination = data.pagination;
+    </script>
 </head>
 
 <body>
     <%- include('partials/_header') %>
+        <%- include('partials/_filterAsideMenu') %>
+            <%- include('partials/_categoryAsideMenu') %>
+                <%- include('partials/_loginRegisterModal') %>
 
-        <main class="container mx-auto py-10 w-full px-5 xl:px-0 xl:w-full min-h-full items-center flex-grow z-0">
-            <!-- Breadcrumbs -->
-            <%- include('partials/_breadcrumbs') %>
-                <!-- titulo e botao de filtro -->
-                <div class="flex flex-col md:flex-row w-full mb-10 mx-auto justify-between items-center">
-                    <!-- Titulo e quantidade de resultados -->
-                    <div class="flex flex-col md:flex-row items-center space-x-4">
-                        <!-- Titulo -->
-                        <div class="text-xl flex text-center">
-                            <span>
-                                <%= data.page?.title %>
-                            </span>
-                        </div>
-                        <!-- Quantidade de resultados (produtos) -->
-                        <div class="text-sm">
-                            <p>
-                                <%= data.page?.quantResults %> produtos
-                            </p>
-                        </div>
-                    </div>
-                    <!-- Botão Filtrar e Ordenar -->
-                    <button
-                        class="bg-white w-full mt-4 md:w-auto md:mt-0 text-black border border-black hover:bg-black hover:text-white font-bold p-2">
-                        Filtrar e Ordenar
-                    </button>
-                </div>
-                <!-- Filtros -->
-
-                <!-- Lista de Produtos -->
-                <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
-                    <% data.products?.forEach(product=> { %>
-                        <div class="product-card">
-                            <div class="product-image-wrapper">
-                                <!-- Link e imagens do produto -->
-                                <a href="<%= product.url %>" class="product-link">
-                                    <div class="product-images">
-                                        <!-- Primeira imagem (imagem padrão) -->
-                                        <img src="<%= product.images[0] %>" alt="<%= product.name %>"
-                                            class="product-image-default">
-                                        <!-- Segunda imagem (imagem ao hover) -->
-                                        <img src="<%= product.images[1] %>" alt="<%= product.name %>"
-                                            class="product-image-hover">
+                    <main
+                        class="container mx-auto py-10 w-full px-5 xl:px-0 xl:w-full min-h-full items-center flex-grow z-0">
+                        <% if (data.products.length> 0) { %>
+                            <!-- Breadcrumbs -->
+                            <%- include('partials/_breadcrumbs') %>
+                                <div
+                                    class="flex flex-col md:flex-row w-full mb-10 mx-auto justify-between items-center">
+                                    <!-- Titulo e quantidade de resultados -->
+                                    <div class="flex flex-col md:flex-row items-center space-x-4">
+                                        <!-- Titulo -->
+                                        <div class="text-2xl flex text-center">
+                                            <span>
+                                                <%= data.page?.title %>
+                                            </span>
+                                        </div>
+                                        <!-- Quantidade de resultados (produtos) -->
+                                        <div class="text-sm">
+                                            <span>
+                                                <% if (data.page?.quantResults> 1) { %>
+                                                    <%= data.page?.quantResults %> produtos
+                                                        <% } else { %>
+                                                            <%= data.page.quantResults %> produto
+                                                                <% } %>
+                                            </span>
+                                        </div>
                                     </div>
-                                </a>
-
-                                <!-- Botão de favoritos -->
-                                <div class="wishlist-button-wrapper">
-                                    <button onclick="addItemToWishlist('<%= product.sku %>')" class="favorite-btn">
-                                        <img src="/public/images/icons/favorite_icon_border_black.svg" alt="Favoritar"
-                                            class="favorite-icon">
-                                        <img src="/public/images/icons/favorite_icon_fill_black.svg" alt="Favoritado"
-                                            class="favorite-icon-hover">
-                                    </button>
-                                </div>
-                            </div>
-
-                            <!-- Nome e Preço do Produto -->
-                            <a href="<%= product.url %>" class="product-info-link">
-                                <div class="product-info">
-                                    <h3 class="product-name">
-                                        <%= product.name %>
-                                    </h3>
-                                    <div class="product-price">
-                                        <% if (product.isOnSale) { %>
-                                            <span class="price-old">R$ <%= product.price %></span>
-                                            <span class="price-new">R$ <%= product.promoPrice %></span>
-                                            <% } else { %>
-                                                <span class="price-current">R$ <%= product.price %></span>
-                                                <% } %>
-                                                    <span class="price-installments">3x de R$ <%=
-                                                            ((parseInt(product.promoPrice ||
-                                                            product.price))/3).toFixed(2) %>*</span>
+                                    <!-- Botão Filtrar e Ordenar -->
+                                    <div class="w-fit">
+                                        <button id="toggleFilterMenuButton" class="action-btn-contrast">
+                                            Filtrar e Ordenar
+                                        </button>
                                     </div>
                                 </div>
-                            </a>
-                        </div>
-                        <% }); %>
-                </div>
+                                <!-- Lista de Produtos -->
+                                <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+                                    <% data.products?.forEach(product=> { %>
+                                        <%- include('partials/productCard', { product: product }) %>
+                                            <% }); %>
+                                </div>
 
-                <!-- Paginação -->
-                <div class="flex flex-col mt-10">
-                    <div class="flex justify-center items-center p-2">
-                        <p class="text-sm">VOCÊ ESTÁ NA PÁGINA</p>
-                    </div>
-                    <div class="flex justify-center items-center space-x-2">
-                        <button <% if( data.pagination?.currentPage) { %>
-                            class="bg-white text-black border border-black px-4 py-2" disabled
-                            <% } else{ %>
-                                class="bg-white text-black border border-black px-4 py-2 hover:bg-black hover:text-white
-                                font-bold"
-                                <% } %>>
-                                    Anterior
-                        </button>
+                                <!-- Paginação -->
+                                <div class="flex flex-col mt-10">
+                                    <div class="flex justify-center items-center p-2">
+                                        <p class="text-sm">VOCÊ ESTÁ NA PÁGINA</p>
+                                    </div>
+                                    <div class="flex justify-center items-center space-x-2">
+                                        <button id="prevPageButton" <% if( data.pagination?.currentPage==1) { %>
+                                            class="bg-white text-black border border-black px-4 py-2" disabled
+                                            <% } else{ %>
+                                                class="bg-white text-black border border-black px-4 py-2 hover:bg-black
+                                                hover:text-white
+                                                font-bold"
+                                                <% } %>>
+                                                    Anterior
+                                        </button>
 
-                        <div class="text-xl">
-                            <span class="font-bold">
-                                <%= data.pagination.currentPage %>
-                            </span> | <span>
-                                <%= data.pagination.totalPages %>
-                            </span>
-                        </div>
+                                        <div class="text-xl">
+                                            <span class="font-bold">
+                                                <%= data.pagination?.currentPage %>
+                                            </span> | <span>
+                                                <%= data.pagination?.totalPages %>
+                                            </span>
+                                        </div>
 
-                        <button <% if( data.pagination.currentPage===data.pagination.totalPages) { %>
+                                        <button id="nextPageButton" <% if(
+                                            data.pagination?.currentPage===data.pagination?.totalPages) { %>
+                                            class="bg-white text-black border border-black px-4 py-2" disabled
+                                            <% } else{ %>
+                                                class="bg-white text-black border border-black px-4 py-2 hover:bg-black
+                                                hover:text-white
+                                                font-bold"
+                                                <% } %>>
+                                                    Próxima
+                                        </button>
+                                    </div>
+                                </div>
+                                <% } else { %>
+                                    <div class="no-products-message">
+                                        <div class="message-content">
+                                            <h2>Ops, não encontramos nenhum produto!</h2>
+                                            <p>Não se preocupe, isso pode acontecer. Talvez o que você procura tenha se
+                                                esgotado
+                                                ou
+                                                ainda não foi adicionado à nossa loja.</p>
+                                            <p>Que tal tentar outra categoria ou realizar uma nova busca? Estamos sempre
+                                                atualizando
+                                                nossos produtos para trazer o melhor para você!</p>
+                                            <div class="suggestions">
+                                                <a href="/" class="action-btn-contrast">Voltar para a página inicial</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <% } %>
+                    </main>
+                    <!-- Footer -->
+                    <%- include('partials/_footer') %>
 
-                            class="bg-white text-black border border-black px-4 py-2" disabled
-                            <% } else{ %>
-                                class="bg-white text-black border border-black px-4 py-2 hover:bg-black hover:text-white
-                                font-bold"
-                                <% } %>>
-                                    Próxima
-                        </button>
-                    </div>
-                </div>
-
-        </main>
-        <!-- Footer -->
-        <%- include('partials/_footer') %>
-
-            <script src="/public/js/messageModal/toastMessageModal.js"></script>
-            <script src="/public/js/messageModal/centralMessageModal.js"></script>
-            <script>
-                // Obtem os dados enviados do backend e converte para JSON
-                const data = JSON.parse('<%- JSON.stringify(data) %>');
-                console.log(data)
-                if (!data) {
-                    const redirect = () => {
-                        window.location.href = '/';
-                    }
-                    showCentralModal("Listagem de produtos", "Dados incompletos.", redirect)
-                    console.error('Dados incompletos.');
-                }
-                // Separa os dados em variáveis
-                const user = data.user;
-                const cart = user?.cart || {};
-                const wishlist = user?.wishlist || {};
-                const products = data.products;
-                const page = data.page
-            </script>
-            <script src="/public/js/client/categoryAsideMenu.js"></script>
-            <script src="/public/js/client/header.js"></script>
-            <script src="/public/js/client/loginAndRegister.js"></script>
-            <script src="/public/js/client/wishlist.js"></script>
-
+                        <script src="/public/js/messageModal/toastMessageModal.js"></script>
+                        <script src="/public/js/messageModal/centralMessageModal.js"></script>
+                        <script src="/public/js/messageModal/sessionExpiredModal.js"></script>
+                        <script src="/public/js/messageModal/loginNeddedMessageModal.js"></script>
+                        <script src="/public/js/statusHandler/statusHandler.js"></script>
+                        <script src="/public/js/client/productsList.js"></script>
+                        <script src="/public/js/client/filterAsideMenu.js"></script>
+                        <script src="/public/js/client/categoryAsideMenu.js"></script>
+                        <script src="/public/js/client/header.js"></script>
+                        <script src="/public/js/client/loginAndRegister.js"></script>
+                        <script src="/public/js/client/wishlist.js"></script>
 </body>
 
 </html>

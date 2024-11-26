@@ -1,53 +1,69 @@
-<div id="bannerSection_<%= component.id %>" class="banner-section <%= data.page.mode === 'edit' ? 'editable' : '' %>"
-    data-component-id="<%= component.id %>" data-component-content-type="<%= component.content_type %>"
-    data-component-section-model="<%= component.section_model %>"
-    data-component-section-position="<%= component.section_position %>" data-element="section">
-    <% if (data.page.mode==='edit' ) { %>
-        <div class="edit-buttons" data-component-id="bannerSection_<%= component.id %>">
-            <button class="add-btn" onclick="addBannerElement(this, '<%= component.id %>')">
-                <img src="/public/images/icons/add_icon_white.svg" alt="Adicionar titulo">
-            </button>
-            <button class="move-btn" onclick="moveElement(this, 'section')">
-                <img src="/public/images/icons/move_icon_white.svg" alt="mover">
-            </button>
-            <button class="delete-btn" onclick="deleteElement(this)">
-                <img src="/public/images/icons/remove_icon_white.svg" alt="remover">
-            </button>
-        </div>
-        <div id="bannerCarousel_<%= component.id %>"
-            class="banner-carousel <%= data.page.mode === 'edit' ? 'editable' : '' %>">
-            <% } let bannerCount=0; let activeFirst=true; component.section_content.forEach(content=> {
-                if(content.image_large && content.image_small && content.link && content.link_name){ %>
-                <div class="bannerDiv <%= data.page.mode === 'edit' ? 'editable' : '' %>"
-                    data-index="<%= bannerCount %>" data-active="<%= activeFirst %>" data-element="item"
-                    data-link="<%= content.link%>" data-link-name="<%= content.link_name%>">
-                    <% if (data.page.mode==='edit' ) { %>
-                        <div class="edit-buttons" data-component-id="bannerSection_<%= component.id %>">
-                            <button class="move-btn" onclick="moveElement(this, 'item')">
-                                <img src="/public/images/icons/move_icon_white.svg" alt="mover">
-                            </button>
-                            <button class="delete-btn" onclick="deleteElement(this)">
-                                <img src="/public/images/icons/remove_icon_white.svg" alt="remover">
-                            </button>
-                        </div>
-                        <% } %>
-                            <a href="<%= content.link%>">
-                                <img class="banner_image_large" src="<%= content.image_large %>" alt="bannerImage">
-                                <img class="banner_image_small" src="<%= content.image_small %>" alt="bannerImage">
-                                <a href="<%= content.link%>" class="banner_button">
-                                    <%= content.link_name%>
-                                </a>
-                            </a>
-                </div>
-                <% bannerCount++; activeFirst=false; } }) %>
-                    <!-- Botões de controle do carrossel -->
-                    <button class="carousel-control prev" onclick="moveBannerCarousel(-1)">
-                        <img class="prevBlack" src="/public/images/icons/arrow_prev_icon_black.svg" alt="previous">
-                        <img class="prevWhite" src="/public/images/icons/arrow_prev_icon_white.svg" alt="previous">
-                    </button>
-                    <button class="carousel-control next" onclick="moveBannerCarousel(1)">
-                        <img class="forwBlack" src="/public/images/icons/arrow_forward_icon_black.svg" alt="next">
-                        <img class="forwWhite" src="/public/images/icons/arrow_forward_icon_white.svg" alt="next">
-                    </button>
-        </div>
-</div>
+<% if (component.section_content?.length> 0 || component.newComponent ) { %>
+    <div id="bannerSection_<%= component.id %>" class="banner-section <%= mode === 'edit' ? 'editable' : '' %>"
+        data-component-id="<%= component.id %>" data-component-content-type="<%= component.content_type %>"
+        data-component-section-model="<%= component.section_model %>" data-current-index="0"
+        data-component-section-position="<%= component.section_position %>" data-element="section"
+        data-end-date="<%= component.end_date %>" <% if (mode==='edit' ) { %>
+        data-new-component="<%= component.newComponent || false%>"
+            <% } %>>
+                <% if (mode==='edit' ) { %>
+                    <div class="edit-buttons" data-component-id="bannerSection_<%= component.id %>">
+                        <button class="add-btn" onclick="addBannerElement(this, '<%= component.id %>')">
+                            <img src="/public/images/icons/add_icon_white.svg" alt="Adicionar titulo">
+                        </button>
+                        <button class="move-btn" onclick="moveElement(this, 'section')">
+                            <img src="/public/images/icons/move_icon_white.svg" alt="mover">
+                        </button>
+                        <button class="delete-btn" onclick="deleteElement(this)">
+                            <img src="/public/images/icons/remove_icon_white.svg" alt="remover">
+                        </button>
+                    </div>
+                    <div id="bannerCarousel_<%= component.id %>"
+                        class="banner-carousel <%= mode === 'edit' ? 'editable' : '' %>">
+                        <% } let bannerCount=0; let activeFirst=true; component.section_content.forEach(content=> {
+                            if(content.image_url_banner_large && content.image_url_banner_small &&
+                            content.image_banner_link &&
+                            content.image_banner_link_name){ %>
+                            <div class="bannerDiv <%= mode === 'edit' ? 'editable' : '' %>" data-id="<%= content.id %>"
+                                data-index="<%= bannerCount %>" data-active="<%= activeFirst %>" data-element="item"
+                                data-link="<%= content.image_banner_link %>"
+                                data-link-name="<%= content.image_banner_link_name %>">
+                                <% if (mode==='edit' ) { %>
+                                    <div class="edit-buttons" data-component-id="bannerSection_<%= component.id %>">
+                                        <button class="move-btn" onclick="moveElement(this, 'item')">
+                                            <img src="/public/images/icons/move_icon_white.svg" alt="mover">
+                                        </button>
+                                        <button class="delete-btn" onclick="deleteElement(this)">
+                                            <img src="/public/images/icons/remove_icon_white.svg" alt="remover">
+                                        </button>
+                                    </div>
+                                    <% } %>
+                                        <a href="<%= content.image_banner_link %>">
+                                            <img class="banner_image_large" src="<%= content.image_url_banner_large %>"
+                                                alt="bannerImage">
+                                            <img class="banner_image_small" src="<%= content.image_url_banner_small %>"
+                                                alt="bannerImage">
+                                            <a href="<%= content.image_banner_link %>" class="banner_button">
+                                                <%= content.image_banner_link_name%>
+                                            </a>
+                                        </a>
+                            </div>
+                            <% bannerCount++; activeFirst=false; } }) %>
+                                <!-- Botões de controle do carrossel -->
+                                <button class="carousel-control prev"
+                                    onclick="moveBannerCarousel(-1, '<%= component.id %>')">
+                                    <img class="prevBlack" src="/public/images/icons/arrow_prev_icon_black.svg"
+                                        alt="previous">
+                                    <img class="prevWhite" src="/public/images/icons/arrow_prev_icon_white.svg"
+                                        alt="previous">
+                                </button>
+                                <button class="carousel-control next"
+                                    onclick="moveBannerCarousel(1, '<%= component.id %>')">
+                                    <img class="forwBlack" src="/public/images/icons/arrow_forward_icon_black.svg"
+                                        alt="next">
+                                    <img class="forwWhite" src="/public/images/icons/arrow_forward_icon_white.svg"
+                                        alt="next">
+                                </button>
+                    </div>
+    </div>
+    <% } %>

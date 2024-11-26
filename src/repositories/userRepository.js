@@ -38,7 +38,7 @@ class UserRepository {
                 "INSERT INTO users (name, email, password, role, phone_number, birthdate, gender, cpf) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *",
                 [name, email, password, role, phone_number, birthdate, gender, cpf]
             );
-            return rows[0];
+            return rows[0].id;
         } catch (error) {
             console.error('Error creating user:', error);
             throw error;
@@ -75,7 +75,8 @@ class UserRepository {
                 FROM shopping_cart_items sci
                 JOIN shopping_carts sc ON sc.id = sci.shopping_cart_id
                 WHERE sc.user_id = $1`, [userId]);
-            return parseInt(rows[0].count, 10);
+
+            return parseInt(rows[0].count);
         } catch (error) {
             console.error('Error getting cart count:', error);
             throw error;
@@ -85,14 +86,11 @@ class UserRepository {
     static async checkIfEmailExists(email) {
         try {
             const { rows } = await pool.query(`
-                SELECT COUNT(1)
+                SELECT COUNT(1) AS email_count
                 FROM users
                 WHERE email = $1`, [email]);
-            if ((parseInt(rows[0].count, 10)) == 0) {
-                return false
-            } else {
-                return true
-            }
+
+            return parseInt(rows[0].email_count) > 0
         } catch (error) {
             console.error('Error checking if email exists:', error);
             throw error;

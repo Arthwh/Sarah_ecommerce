@@ -69,15 +69,6 @@
     gap: 10px;
 }
 
-.modal-add-banner-buttons button, .modal-edit-sections-buttons button {
-    padding: 8px 12px;
-    cursor: pointer;
-    background-color: black;
-    border: 2px solid black;
-    color: white;
-}
-
-.modal-add-banner-buttons button:hover, .modal-edit-sections-buttons button:hover{
-    background-color: white;
-    color: black;
+#product-type-category, #product-type-subcategory{
+    display: none;
 }

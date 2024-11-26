@@ -71,16 +71,3 @@ footer{
     border-bottom-width: 2px;
     box-shadow: black 3px;
 }
-
-.newsletterButton{
-    background-color: black;
-    color: white;
-    padding: 9px 15px;
-    border: 2px solid black;
-    box-sizing: border-box;
-}
-
-.newsletterButton:hover{
-    background-color: white;
-    color: black;
-}

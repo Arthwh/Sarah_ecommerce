@@ -4,15 +4,26 @@ const registerModal = document.getElementById('registerModal');
 const formLogin = document.getElementById('formLogin');
 const formRegister = document.getElementById('formRegister');
 
-function toggleLoginModal() {
+function toggleLoginModal(enableClosing = true) {
     clearErrors();
     clearInputs();
+    const loginRegisterModalOverlay = document.getElementById('loginRegisterModalOverlay');
+    const loginRegisterModalCloseBtn = document.getElementById('loginRegisterModalCloseBtn');
+    if (enableClosing) {
+        loginRegisterModalOverlay.onclick = toggleLoginModal;
+        loginRegisterModalCloseBtn.onclick = toggleLoginModal;
+        loginRegisterModalCloseBtn.classList.remove('hidden');
+    } else {
+        loginRegisterModalOverlay.onclick = null;
+        loginRegisterModalCloseBtn.onclick = null;
+        loginRegisterModalCloseBtn.classList.add('hidden');
+    }
     if (mainModal.classList.contains("hidden")) {
         mainModal.classList.remove("hidden");
-        registerModal.classList.add("hidden");
+        registerModal?.classList.add("hidden");
     } else {
         mainModal.classList.add("hidden");
-        registerModal.classList.add('hidden');
+        registerModal?.classList.add('hidden');
         if (loginModal.classList.contains('hidden')) {
             loginModal.classList.remove('hidden');
         }
@@ -40,9 +51,7 @@ async function login() {
     }
     // Capturar os dados do formulário
     const formData = new FormData(formLogin);
-    console.log(formData);
     const loginData = Object.fromEntries(formData.entries());
-    console.log(loginData.loginEmail)
     try {
         const response = await fetch(`/api/login`, {
             method: 'POST',
@@ -56,20 +65,18 @@ async function login() {
                 })
         });
         if (!response.ok) {
-            throw new Error(`Erro HTTP: ${response.status}`);
+            const errorData = await response.json().catch(() => ({ message: 'Erro desconhecido' }));
+            throw new Error(errorData.message || `Erro desconhecido: ${response.status}`);
         }
-        const data = await response.json();
-        console.log("Login bem-sucedido:", data);
         await showToast('Login bem-sucedido', 'success')
         location.reload()
     } catch (error) {
         console.error('Erro no login:', error);
-        showToast('Erro no login. Verifique suas credenciais.', 'error');
+        showToast(`Erro no login: ${error.message}`, 'error');
     }
 }
 
 async function logout() {
-    console.log("teste")
     try {
         const response = await fetch('/api/logout', {
             method: 'POST',
@@ -78,11 +85,13 @@ async function logout() {
             }
         });
         if (!response.ok) {
-            throw new Error(`Erro HTTP: ${response.status}`);
+            const errorData = await response.json().catch(() => ({ message: 'Erro desconhecido' }));
+            throw new Error(errorData.message || `Erro desconhecido: ${response.status}`);
         };
         window.location.href = '/';
     } catch (error) {
-
+        console.error('Erro no logout:', error);
+        showToast(`Ocorreu um erro ao deslogar da conta: ${error.message}`, 'error');
     }
 }
 

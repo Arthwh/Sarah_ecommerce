@@ -1,44 +1,67 @@
 var categoriesAndSubcategories = [];
+var allBrands = [];
 var variantsWithImages = [];
 const formData = new FormData();
 
 // Função de renderização do cadastro de produtos
-function renderProductRegister() {
-    const optionVisualizationContainer = document.getElementById('optionVisualizationContainer');
-    if (!optionVisualizationContainer) {
-        showCentralModal("Cadastro de produto", "Container para renderização não encontrado.<br>Tente novamente mais tarde.")
-        console.error('Container para renderização não encontrado.');
-        return;
+async function renderProductRegister() {
+    try {
+        await checkSessionExpired();
+
+        const optionVisualizationContainer = document.getElementById('optionVisualizationContainer');
+        if (!optionVisualizationContainer) {
+            throw new Error("Container para renderização não encontrado")
+        }
+
+        const [form, categories, brands] = await Promise.all([
+            fetch('/public/html/admin/productRegisterForm.html').then(response => {
+                if (!response.ok) {
+                    throw new Error('Falha ao carregar o formulário');
+                }
+                return response.text();
+            }),
+            fetch('/api/products/categories/subcategories').then(response => {
+                if (!response.ok) {
+                    throw new Error('Falha ao carregar categorias');
+                }
+                return response.json();
+            }),
+            fetch('/api/products/brands').then(response => {
+                if (!response.ok) {
+                    throw new Error('Falha ao carregar marcas');
+                }
+                return response.json();
+            })
+        ]);
+
+        optionVisualizationContainer.innerHTML = form;
+        categoriesAndSubcategories = categories;
+        const categoriesDiv = document.getElementById('categoriesAndSubcategoriesContent');
+        addOptionsToCategorySelect(categoriesDiv.querySelector('select'));
+        allBrands = brands;
+        addBrandsIntoSelect(brands)
+    } catch (error) {
+        showCentralModal("Cadastro de produto", error.message + ".<br>Tente novamente mais tarde.");
+        console.error(error);
     }
+}
 
-    const requestFormRegister = fetch('/public/html/admin/productRegisterForm.html')
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Falha ao carregar o formulário');
-            }
-            return response.text();
+async function addBrandsIntoSelect(brands) {
+    try {
+        const brandSelect = document.getElementById('brand');
+        if (brands.length === 0) {
+            throw new Error('Nenhuma marca encontrada.')
+        }
+        brands.forEach(brand => {
+            const option = document.createElement('option');
+            option.value = brand.id;
+            option.textContent = brand.name;
+            brandSelect.appendChild(option);
         });
-
-    const productCategories = fetch('/api/admin/products/categories')
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Falha ao carregar categorias');
-            }
-            return response.json();
-        });
-
-    Promise.all([requestFormRegister, productCategories])
-        .then(([form, categories]) => {
-            optionVisualizationContainer.innerHTML = form;
-            categoriesAndSubcategories = categories;
-            const categoriesDiv = document.getElementById('categoriesAndSubcategoriesContent');
-            addOptionsToCategorySelect(categoriesDiv.querySelector('select'));
-        })
-        .catch(error => {
-            showCentralModal("Cadastro de produto", error + ".<br>Tente novamente mais tarde.")
-            console.error(error);
-        });
-};
+    } catch (error) {
+        throw Error(error);
+    }
+}
 
 function addOptionsToCategorySelect(selectElement) {
     if (selectElement) {
@@ -123,12 +146,12 @@ function toggleVariantModal() {
     }
     else {
         variantModal.classList.add('hidden');
-        clearInputsVariantModal();
+        clearDataVariantModal();
         document.getElementById('previewImagesContainer').innerHTML = '';
     }
 }
 
-function clearInputsVariantModal() {
+function clearDataVariantModal() {
     const variantModalContent = document.getElementById('variantModalContent');
     const inputs = variantModalContent.querySelectorAll('input');
     inputs.forEach(input => {
@@ -143,6 +166,11 @@ function clearInputsVariantModal() {
     selects.forEach(select => {
         select.selectedIndex = 0; // Define o valor para o primeiro <option>
     });
+
+    const spans = variantModalContent.querySelectorAll('span');
+    spans.forEach(span => {
+        span.innerHTML = '';
+    })
 }
 
 function formatPriceForInputField(input) {
@@ -157,6 +185,21 @@ function formatPriceForFormData(price) {
     let value = price.replace('R$ ', '').replace('.', '').replace(',', '.'); // Remove
     value = parseInt(value);
     return value;
+}
+
+function calculateInstallmentsValues() {
+    const price = document.getElementById('variantPrice').value;
+    const installments = document.getElementById('variantInstallments').value;
+    const installmentsValue = document.getElementById('variantInstallmentsValue');
+    const showVariantInstallmentsValue = document.getElementById('showVariantInstallmentsValue');
+
+    if (price && installments) {
+        const priceFormated = parseFloat(price.replace('R$', '').replace(/\./g, '').replace(',', '.'));
+        const value = (priceFormated / installments)
+        const valueFormated = value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+        installmentsValue.value = value.toFixed(2);
+        showVariantInstallmentsValue.innerHTML = installments + "x de " + valueFormated;
+    }
 }
 
 function checkIfThereAreImagesToInherit() {
@@ -206,8 +249,11 @@ function addImagesPreview(inputElement) {
 
 function verifyVariantData() {
     const variantPrice = document.getElementById('variantPrice');
+    const variantInstallments = document.getElementById('variantInstallments');
     const variantColor = document.getElementById('variantColor');
+    const variantColorCode = document.getElementById('variantColorCode');
     const variantSize = document.getElementById('variantSize');
+    const variantInitialStock = document.getElementById('variantInitialStock');
     const inheritImage = document.getElementById('inheritImage');
     const inheritImageSelect = document.getElementById('inheritImageSelect');
     const variantImages = document.getElementById('variantImages');
@@ -215,8 +261,11 @@ function verifyVariantData() {
     var ok = true;
 
     const variantPriceError = document.getElementById('variantPriceError');
+    const variantInstallmentsError = document.getElementById('variantInstallmentsError');
     const variantColorError = document.getElementById('variantColorError');
+    const variantColorCodeError = document.getElementById('variantColorCodeError');
     const variantSizeError = document.getElementById('variantSizeError');
+    const variantInitialStockError = document.getElementById('variantInitialStockError');
     const inheritImageSelectError = document.getElementById('inheritImageSelectError');
     const variantImagesError = document.getElementById('variantImagesError');
 
@@ -230,9 +279,19 @@ function verifyVariantData() {
         variantPriceError.classList.remove('hidden');
         ok = false;
     }
+    if (!variantInstallments.value) {
+        variantInstallmentsError.innerHTML = 'O número de parcelas é um campo obrigatório.';
+        variantInstallmentsError.classList.remove('hidden');
+        ok = false;
+    }
     if (!variantColor.value) {
         variantColorError.innerHTML = 'A cor do item é um campo obrigatório.';
         variantColorError.classList.remove('hidden');
+        ok = false;
+    }
+    if (!variantColorCode.value) {
+        variantColorCodeError.innerHTML = 'O código da cor é um campo obrigatório.';
+        variantColorCodeError.classList.remove('hidden');
         ok = false;
     }
     if (!variantSize.value) {
@@ -240,6 +299,11 @@ function verifyVariantData() {
         variantSizeError.classList.remove('hidden');
         ok = false;
     }
+    if (!variantInitialStock.value) {
+        variantInitialStockError.innerHTML = 'O estoque inicial é um campo obrigatório.';
+        variantInitialStockError.classList.remove('hidden');
+        ok = false;
+    };
     if (!inheritImage.checked && variantImages.files.length === 0) {
         variantImagesError.innerHTML = 'Pelo menos uma imagem é necessária.';
         variantImagesError.classList.remove('hidden');
@@ -296,9 +360,9 @@ function updateInheritImageSelect() {
 function convertInputsToVariantObject(variantData, variantId) {
     let variantObject = {};
     let images = [];
-    let idVariantImages = variantId;
 
     variantObject["variantId"] = variantId;
+    variantObject["variantImage"] = variantId;
 
     variantData.forEach(input => {
         if (input.type === 'checkbox') {
@@ -320,7 +384,9 @@ function convertInputsToVariantObject(variantData, variantId) {
         }
     });
 
-    variantObject["variantImage"] = `${idVariantImages}`;
+    if (variantObject.inheritImage) {
+        variantObject.variantImage = +variantObject.inheritImageSelect;
+    }
 
     return { variantObject, images };
 }
@@ -468,7 +534,8 @@ async function createProduct(event) {
             body: mergedFormData
         });
         if (response.ok) {
-            showToast("Produto criado com sucesso!", "success")
+            showToast("Produto criado com sucesso!", "success");
+            renderProductRegister();
         } else {
             const errorText = await response.message;
             showToast(`Erro no processamento: ${errorText || "Desconhecido"} (Status: ${response.status})`, "error")
@@ -490,4 +557,8 @@ function mergeFormData(formData1, formData2) {
     }
 
     return mergedFormData;
+}
+
+function clearFormsData() {
+
 }

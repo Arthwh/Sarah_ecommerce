@@ -1,5 +1,6 @@
 import argon2 from 'argon2';
 import UserRepository from '../repositories/userRepository.js';
+import WishlistRepository from '../repositories/wishlistRepository.js';
 import { logAction } from './logsService.js';
 
 class UserService {
@@ -41,6 +42,7 @@ class UserService {
                 throw error;
             }
             const userId = await UserRepository.createUserRepository(userData);
+            await WishlistRepository.createNewWishlist(userId);
             const message = "User created successfully";
             logAction(userIP, userAgent, 'user-creation', { status: 'success', details: message }, userId);
             return { message: message };

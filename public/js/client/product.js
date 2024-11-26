@@ -261,7 +261,3 @@ function removeUnavaliableMessage() {
         unavaliableMessage.remove();
     }
 }
-
-async function addRemoveProductFromWishlist() {
-    await addItemToWishlist();
-}

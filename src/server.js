@@ -8,7 +8,8 @@ import userRoutes from "./routes/userRoutes.js";
 import productRoutes from './routes/productRoutes.js';
 import adminRoutes from './routes/adminRoutes.js';
 import authRoutes from './routes/authRoutes.js';
-import landingPageRoutes from './routes/landingPageRoutes.js'
+import landingPageRoutes from './routes/landingPageRoutes.js';
+import wishlistRoutes from './routes/wishlistRoutes.js';
 
 dotenv.config();
 
@@ -39,6 +40,7 @@ app.use(authRoutes);
 app.use(landingPageRoutes);
 app.use(adminRoutes);
 app.use(productRoutes);
+app.use(wishlistRoutes);
 
 app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`);

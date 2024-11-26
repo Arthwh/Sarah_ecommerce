@@ -412,6 +412,7 @@ class ProductRepository {
                         variant_offers.offer_type AS variant_offer_type,
                         variant_offers.offer_value AS variant_offer_value,
                         variant_offers.offer_installments AS variant_offer_installments,
+                        IF(COUNT(fi.*)>0, TRUE, FALSE) AS product_in_wishlist,
                         COALESCE(
                             array_agg(DISTINCT jsonb_build_object(
                                 'subcategory_id', product_subcategories.subcategory_id,
@@ -449,7 +450,8 @@ class ProductRepository {
                             INNER JOIN sub_categories sbc ON sbc.id = psa.sub_category_id
                             INNER JOIN categories ca ON sbc.categories_id = ca.id
                         ) product_subcategories ON product_subcategories.product_id = p.id
-                        LEFT JOIN product_reviews pr ON p.id = pr.product_id 
+                        LEFT JOIN product_reviews pr ON p.id = pr.product_id
+                        LEFT JOIN favorites_items fi ON fi.product_id = p.id 
 					WHERE p.public_id = $1 AND pv.stock_quantity > 0
 					GROUP BY
 						p.id,
@@ -486,6 +488,7 @@ class ProductRepository {
                         variant_offers.offer_type AS variant_offer_type,
                         variant_offers.offer_value AS variant_offer_value,
                         variant_offers.offer_installments AS variant_offer_installments,
+                        EXISTS(SELECT * FROM favorites_items WHERE product_id = p.id) AS product_in_wishlist,
                         COALESCE(
                             array_agg(DISTINCT jsonb_build_object(
                                 'subcategory_id', product_subcategories.subcategory_id,
@@ -523,7 +526,7 @@ class ProductRepository {
                             INNER JOIN sub_categories sbc ON sbc.id = psa.sub_category_id
                             INNER JOIN categories ca ON sbc.categories_id = ca.id
                         ) product_subcategories ON product_subcategories.product_id = p.id
-                        LEFT JOIN product_reviews pr ON p.id = pr.product_id 
+                        LEFT JOIN product_reviews pr ON p.id = pr.product_id
 					WHERE p.public_id = $1 AND p.is_active = true AND pv.public_id = $2
 					GROUP BY
 						p.id,

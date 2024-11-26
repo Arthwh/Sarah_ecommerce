@@ -7,7 +7,7 @@ class LandingPageController {
         try {
             const mode = req.query.mode || 'main';
             const user = req.session.user;
-            const components = await LandingPageService.getLandingPageData();
+            const components = await LandingPageService.getLandingPageData(user);
             const categories = await ProductService.getAllProductCategoriesAndSubcategories();
 
             res.render('client/landingPage', { data: { user: user, components: components, page: { mode: mode, categories: categories, displayRegisterModal: true } } });
@@ -46,7 +46,6 @@ class LandingPageController {
             }
             res.render(`client/partials/landingPageComponents/${sectionData.view}`, renderData);
         } catch (error) {
-            console.log(`Erro ao carregar a sessão: ${error}`)
             res.status(500).json({ message: `Erro ao carregar a sessão: ${error.message}` });
         }
     }

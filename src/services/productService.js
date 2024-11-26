@@ -1,10 +1,11 @@
 import ProductRepository from '../repositories/productRepository.js';
 import ProductVariantRepository from '../repositories/productVariantRepository.js';
+import WishlistService from './wishlistService.js';
 import pool from '../db.js';
 
 class ProductService {
     //FUNCIONANDO CERTO
-    static async listProductsByCategoryOrSubcategoryService(category, subcategory, limitParam, pageParam) {
+    static async listProductsByCategoryOrSubcategoryService(user = null, category, subcategory, limitParam, pageParam) {
         try {
             if (!category) {
                 throw Error("Category missing.");
@@ -19,7 +20,9 @@ class ProductService {
             const page = parseInt(pageParam, 10) || 1;
             const offset = limit * (page - 1);
 
-            const products = await ProductRepository.listProductsBySubcategoryRepository('name', category, subcategory, limit, offset);
+            let products = await ProductRepository.listProductsBySubcategoryRepository('name', category, subcategory, limit, offset);
+            user ? products = await WishlistService.checkProductsInWishlist(user, products) : '';
+
             const results = products.length;
             var subcategoryCapitalized = '';
             subcategory ? subcategoryCapitalized = capitalizeWords(subcategory) : '';
@@ -134,8 +137,7 @@ class ProductService {
             await client.query('ROLLBACK');
             console.error('Error creating product: ' + error.message);
             throw Error('Error creating product: ' + error.message);
-        }
-        finally {
+        } finally {
             client.release();
         }
     }

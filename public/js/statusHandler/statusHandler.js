@@ -26,7 +26,7 @@ async function checkUserLogged() {
             showLoginNeddedModal();
             return false;
         }
-        return true;
+        return user;
     } catch (error) {
         console.error('Erro ao verificar usuário logado', error);
         logged = false;

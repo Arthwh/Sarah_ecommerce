@@ -74,41 +74,6 @@
     color: #fff;
 }
 
-/* Botão de favoritos */
-.wishlist-button-wrapper {
-    display: block;
-    position: absolute;
-    top: 0;
-    left: 0;
-    z-index: 10;
-    padding: 0.5rem;
-}
-
-.favorite-icon {
-    width: 32px;
-    height: 32px;
-}
-
-.favorite-icon-hover {
-    width: 32px;
-    height: 32px;
-    display: none;
-}
-
-.favorite-btn:hover .favorite-icon {
-    display: none;
-}
-
-.favorite-btn:hover .favorite-icon-hover {
-    display: block;
-}
-
-/* Exibir os botões ao passar o mouse sobre o card */
-.product-image-wrapper:hover .cart-button-wrapper,
-.product-image-wrapper:hover .wishlist-button-wrapper {
-    display: block;
-}
-
 /* Estilos para as informações do produto */
 .product-info-link {
     display: flex;

@@ -104,9 +104,18 @@
     justify-content: space-between;
     button + button{
         margin-left: 10px;
-    }
+    };
 }
 
 #favoriteAndShopContainer.disabled{
     display: none;
+}
+
+#favoriteAndShopContainer div{
+    display: flex;
+    flex-grow: 2;
+}
+
+.wishlist-button-wrapper{
+    position: initial;
 }

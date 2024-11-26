@@ -37,7 +37,7 @@ class ProductController {
             const { limit, page } = req.query;
             const user = req.session.user;
             const categories = await ProductService.getAllProductCategoriesAndSubcategories();
-            const data = await ProductService.listProductsByCategoryOrSubcategoryService(category, subcategory, limit, page);
+            const data = await ProductService.listProductsByCategoryOrSubcategoryService(user, category, subcategory, limit, page);
             if (!data) {
                 return res.status(404).json({ error: 'Dados não encontrados' });
             }

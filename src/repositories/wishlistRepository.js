@@ -4,7 +4,7 @@ class WishlistRepository {
     static async createNewWishlist(userId) {
         try {
             await pool.query(`
-                    INSERT INTO favorites_list (user_id) VALUES $1
+                    INSERT INTO favorites_list (user_id) VALUES ($1)
                 `, [userId]);
         } catch (error) {
             console.error('Error while creating new wishlist: ', error);

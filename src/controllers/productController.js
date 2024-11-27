@@ -118,6 +118,7 @@ class ProductController {
             res.status(500).json({ error: 'Erro ao deletar produto' });
         }
     }
+
 }
 
 export default ProductController;

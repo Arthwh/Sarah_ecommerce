@@ -9,7 +9,7 @@ router.get('/users/:id', checkAuth, UserController.getUserById);
 router.put('/users/:id', checkAuth, UserController.updateUser);
 router.delete('/users/:id', checkAuth, UserController.deleteUser);
 router.get('/users/email/:email', checkAuth, UserController.getUserByEmail);
-router.post('/api/register', checkAuth, UserController.createUser);
+router.post('/api/register', UserController.createUser);
 
 //Views
 router.get('/account', checkAuth, UserController.getUserAccountPage);

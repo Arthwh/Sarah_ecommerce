@@ -196,6 +196,15 @@ class ProductService {
             throw error;
         }
     }
+
+    static async searchProducts(query) {
+        try {
+            return await ProductRepository.searchProducts(query);
+        } catch (error) {
+            console.error('Erro ao buscar produtos:', error);
+            throw error;
+        }
+    }
 }
 
 function capitalizeWords(word) {

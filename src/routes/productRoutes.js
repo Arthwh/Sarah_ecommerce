@@ -21,4 +21,7 @@ router.get('/p/:id', ProductController.getSpecificProduct);
 router.get('/c/:category/:subcategory', ProductController.listProductsByCategoryOrSubcategory);
 router.get('/c/:category', ProductController.listProductsByCategoryOrSubcategory);
 
+//SearchBar
+router.get('/search', ProductController.searchProducts);
+
 export default router;

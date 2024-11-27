@@ -109,6 +109,19 @@ class ProductController {
             res.status(500).json({ error: 'Erro ao deletar produto' });
         }
     }
+
+    static async searchProducts(req, res) {
+        try {
+            const { query } = req.query;
+            if (!query || query.trim() === '') {
+                return res.status(400).json({ message: 'A busca não pode estar vazia.' });
+            }
+            const products = await ProductService.searchProducts(query);
+            return res.json(products);
+        } catch (error) {
+            res.status(500).json({ error: 'Erro ao buscar produto' });
+        }
+    }
 }
 
 export default ProductController;

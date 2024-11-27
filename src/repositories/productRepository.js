@@ -604,6 +604,18 @@ class ProductRepository {
             throw error;
         }
     }
+
+    static async searchProducts(query) {
+        try {
+            const { rows } = await pool.query(
+                'SELECT * FROM products WHERE name ILIKE $1 LIMIT 10',
+                [`%${query}%`]);
+            return rows;
+        } catch (error) {
+            console.error('Error searching products: ', error);
+            throw error;
+        }
+    }
 }
 
 export default ProductRepository

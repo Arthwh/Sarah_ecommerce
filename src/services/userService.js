@@ -36,7 +36,8 @@ class UserService {
             if (!userData.role) {
                 userData.role = 1;
             }
-            if (UserRepository.checkIfEmailExists(userData.email)) {
+            const emailExists = await UserRepository.checkIfEmailExists(userData.email);
+            if (emailExists) {
                 const error = new Error('E-mail already exists');
                 console.error(error.message);
                 throw error;

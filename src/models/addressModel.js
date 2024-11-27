@@ -10,7 +10,6 @@ export class Address {
         this.is_active = is_active;
     }
 
-    // Método para mapear os dados da tabela para o modelo Address
     static mapFromRow(row) {
         return new Address(
             row.id,

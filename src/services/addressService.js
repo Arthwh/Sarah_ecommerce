@@ -1,4 +1,4 @@
-const AddressRepository = require('../repositories/addressRepository');
+import AddressRepository from '../repositories/addressRepository.js';
 
 class AddressService {
     static async addAddress(cityId, addressData) {

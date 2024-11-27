@@ -32,7 +32,7 @@
 
             <!-- Botões de Login/Carrinho -->
             <div id="userControlsContainer" class="flex flex-shrink-0 justify-center items-center mx-auto ml-5">
-              <% if(data.user){ %>
+              <% if(data.user && Object.keys(data.user).length> 0){ %>
                 <div class="md:hidden relative">
                   <button id="menuUserOptionsSmallScreen">
                     <img src="/public/images/icons/menu_icon_white.svg" alt="menuIcon" class="w-8 h-8 mx-auto">

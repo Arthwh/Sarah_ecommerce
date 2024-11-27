@@ -1,7 +1,7 @@
 const cartCount = cart?.totalQuantity || 0;
 
 document.addEventListener("DOMContentLoaded", () => {
-    if (user) {
+    if (user && Object.keys(user).length > 0) {
         document.getElementById('menuUserOptionsSmallScreen').addEventListener('click', function () {
             const dropdown = document.getElementById('userOptionsDropdown');
             const dropdownButton = document.getElementById('menuUserOptionsSmallScreen');
@@ -13,7 +13,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 imgElement.src = "/public/images/icons/menu_icon_white.svg";
             }
         });
-        if (cart) {
+        if (cart && Object.keys(cart).length > 0) {
             setCartCount(cartCount);
         }
     }

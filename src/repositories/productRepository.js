@@ -260,27 +260,14 @@ class ProductRepository {
                         p.name AS product_name,
                         p.total_stock_quantity AS product_total_stock_quantity,
                         pv.public_id AS variant_public_id,
-                        pv.color AS variant_color_name,
-                        pv.color_code AS variant_color_code,
                         pv.unit_price AS variant_unit_price,
                         pv.installments AS variant_installments,
                         pv.is_on_sale AS variant_is_on_sale,
-                        pv.size AS variant_size,
                         pv.stock_quantity AS variant_stock_quantity,
                         array_agg(DISTINCT pvi.image_url) AS variant_images,
                         variant_offers.offer_type AS variant_offer_type,
                         variant_offers.offer_value AS variant_offer_value,
                         variant_offers.offer_installments AS variant_offer_installments,
-                        COALESCE(
-                            array_agg(DISTINCT jsonb_build_object(
-                                'subcategory_id', product_subcategories.subcategory_id,
-                                'subcategory_name', product_subcategories.subcategory_name,
-                                'subcategory_description', product_subcategories.subcategory_description,
-                                'category_id', product_subcategories.category_id,
-                                'category_name', product_subcategories.category_name
-                            )),
-                            '{}'
-                        ) AS subcategories,
                         COALESCE(AVG(pr.rating), 0) AS product_review_score,
 	                    COUNT(DISTINCT pr.*) AS product_review_quantity
                     FROM
@@ -605,39 +592,6 @@ class ProductRepository {
         }
     }
 
-    static async searchProducts(query, limit = 10, page = 1) {
-        try {
-            // Calcular o offset para a paginação
-            const offset = (page - 1) * limit;
-
-            // Consulta ao banco de dados com paginação
-            const { rows } = await pool.query(
-                'SELECT * FROM products WHERE name ILIKE $1 LIMIT $2 OFFSET $3',
-                [`%${query}%`, limit, offset]
-            );
-
-            // Garantir que todos os produtos tenham a propriedade variant_images
-            const productsWithImages = rows.map(product => {
-                if (!product.variant_images || product.variant_images.length === 0) {
-                    product.variant_images = ['default-image.jpg', 'default-image-hover.jpg']; // Imagens padrão
-                }
-                return product;
-            });
-
-            // Retornar os resultados e informações de paginação
-            return {
-                products: productsWithImages,
-                pagination: {
-                    currentPage: page,
-                    totalPages: Math.ceil(rows.length / limit), // Número total de páginas
-                },
-            };
-        } catch (error) {
-            console.error('Error searching products: ', error);
-            throw error;
-        }
-    }
-
     static async countTotalSearchResults(query) {
         const searchQuery = `%${query}%`;
         const sql = `
@@ -648,199 +602,59 @@ class ProductRepository {
         return { total_count: parseInt(rows[0].count, 10) };
     }
 
-    // Buscar produtos pela query de busca
     static async searchProductsByQuery(query, limit, offset) {
-        const searchQuery = `%${query}%`;
-        const sql = `
-            SELECT * FROM products
-            WHERE name ILIKE $1
-            LIMIT $2 OFFSET $3;
-        `;
-        const { rows } = await pool.query(sql, [searchQuery, limit, offset]);
-        return rows;
+        try {
+            const searchQuery = `%${query}%`;
+            const { rows } = await pool.query(`
+            SELECT
+                        p.public_id AS product_public_id,
+						p.name AS product_name,
+						p.total_stock_quantity,
+						pv.public_id AS variant_public_id,
+                        pv.unit_price AS variant_unit_price,
+                        pv.installments AS variant_installments,
+                        pv.is_on_sale AS variant_is_on_sale,
+                        pv.stock_quantity AS variant_stock_quantity,
+                        array_agg(DISTINCT pvi.image_url) AS variant_images,
+                        variant_offers.offer_type AS variant_offer_type,
+                        variant_offers.offer_value AS variant_offer_value,
+                        variant_offers.offer_installments AS variant_offer_installments,
+                        COALESCE(AVG(pr.rating), 0) AS product_review_score,
+	                    COUNT(DISTINCT pr.*) AS product_review_quantity
+						FROM products p
+                        INNER JOIN product_variant pv ON p.id = pv.products_id
+                        INNER JOIN product_variant_images_assignments pvia ON pv.id = pvia.product_variant_id
+                        INNER JOIN product_variant_images pvi ON pvia.product_variant_images_id = pvi.id
+                        LEFT JOIN (
+                            SELECT DISTINCT ON (pvo.product_variant_id) pvo.offer_type, pvo.offer_value, pvo.offer_installments, pvo.product_variant_id
+                            FROM product_variant pv
+                            INNER JOIN product_variant_offers pvo ON pv.id = pvo.product_variant_id
+                            WHERE pvo.is_active = true
+                            ORDER BY pvo.product_variant_id DESC
+                        ) variant_offers ON variant_offers.product_variant_id = pv.id
+                        -- Aplica DISTINCT ON para pegar a primeira linha por produto e cor
+                        LEFT JOIN (
+                            SELECT DISTINCT ON (p.id, pv.color) p.id AS product_id, pv.color, pv.id AS variant_id
+                            FROM products p
+                            INNER JOIN product_variant pv ON p.id = pv.products_id
+                            ORDER BY p.id, pv.color, pv.stock_quantity DESC
+                        ) unique_colors ON unique_colors.product_id = p.id AND unique_colors.color = pv.color
+                        LEFT JOIN product_reviews pr ON p.id = pr.product_id
+					WHERE p.name ILIKE $1 AND unique_colors.variant_id = pv.id
+					GROUP BY
+						p.id,
+                        pv.id,
+						variant_offers.offer_type,
+                        variant_offers.offer_value,
+                        variant_offers.offer_installments
+                    LIMIT $2 OFFSET $3;
+        `, [searchQuery, limit, offset]);
+            return rows;
+        } catch (error) {
+            console.error(`Error while getting products by search: ${error.message}`);
+            throw Error(`Error while getting products by search: ${error.message}`);
+        }
     }
-
 }
 
 export default ProductRepository
-
-// -- Obtem todas as variantes de todos os produtos (1 variante por linha (agrupa as imagens em 1 array)) #Sem ofertas
-// SELECT
-// 	p.public_id AS product_public_id,
-// 	p.name AS product_name,
-// 	p.description AS product_description,
-// 	pv.public_id AS variant_public_id,
-// 	pv.color AS variant_color_name,
-// 	pv.color_code AS variant_color_code,
-// 	pv.unit_price AS variant_unit_price,
-// 	pv.installments AS variant_installments,
-// 	pv.is_on_sale AS variant_is_on_sale,
-// 	pv.size AS variant_size,
-// 	pv.stock_quantity AS variant_stock_quantity,
-// 	array_agg(pvi.image_url ORDER BY pvi.id DESC) AS variant_images
-// FROM
-// 	products p
-// 	INNER JOIN product_variant pv ON p.id = pv.products_id
-// 	INNER JOIN product_variant_images_assignments pvia ON pv.id = pvia.product_variant_id
-// 	INNER JOIN product_variant_images pvi ON pvia.product_variant_images_id = pvi.id
-// GROUP BY
-// 	pv.id,
-// 	p.id
-
-// -- Obtem todas as variantes de todos os produtos (1 variante por linha (agrupa as imagens em 1 array)) #Com ofertas
-// SELECT
-// 	p.public_id AS product_public_id,
-// 	p.name AS product_name,
-// 	p.description AS product_description,
-// 	pv.public_id AS variant_public_id,
-// 	pv.color AS variant_color_name,
-// 	pv.color_code AS variant_color_code,
-// 	pv.unit_price AS variant_unit_price,
-// 	pv.installments AS variant_installments,
-// 	pv.is_on_sale AS variant_is_on_sale,
-// 	pv.size AS variant_size,
-// 	pv.stock_quantity AS variant_stock_quantity,
-// 	array_agg(pvi.image_url ORDER BY pvi.id DESC) AS variant_images,
-// 	variant_offers.offer_type AS variant_offer_type,
-// 	variant_offers.offer_value AS variant_offer_value,
-// 	variant_offers.offer_installments AS variant_offer_installments
-// FROM
-// 	products p
-// 	INNER JOIN product_variant pv ON p.id = pv.products_id
-// 	INNER JOIN product_variant_images_assignments pvia ON pv.id = pvia.product_variant_id
-// 	INNER JOIN product_variant_images pvi ON pvia.product_variant_images_id = pvi.id
-// 	-- Aplica DISTINCT ON para pegar a primeira linha da tabela de ofertas por variante
-// 	LEFT JOIN (
-// 		SELECT DISTINCT ON (pvo.product_variant_id) pvo.offer_type, pvo.offer_value, pvo.offer_installments, pvo.product_variant_id
-// 		FROM product_variant pv
-// 		INNER JOIN product_variant_offers pvo ON pv.id = pvo.product_variant_id
-// 		WHERE pvo.is_active = true
-// 		ORDER BY pvo.product_variant_id DESC
-// 		LIMIT 1
-// 	) variant_offers ON variant_offers.product_variant_id = pv.id
-// GROUP BY
-// 	pv.id,
-// 	p.id,
-// 	variant_offers.offer_type,
-// 	variant_offers.offer_value,
-// 	variant_offers.offer_installments
-
-// -- Obtem 1 variante (primeira) de cada cor por produto #Com ofertas
-
-// SELECT
-//     p.public_id AS product_public_id,
-//     p.name AS product_name,
-//     p.description AS product_description,
-//     pv.public_id AS variant_public_id,
-//     pv.color AS variant_color_name,
-//     pv.color_code AS variant_color_code,
-//     pv.unit_price AS variant_unit_price,
-//     pv.installments AS variant_installments,
-//     pv.is_on_sale AS variant_is_on_sale,
-//     pv.size AS variant_size,
-//     pv.stock_quantity AS variant_stock_quantity,
-//     array_agg(DISTINCT pvi.image_url) AS variant_images,
-// 	variant_offers.offer_type AS variant_offer_type,
-// 	variant_offers.offer_value AS variant_offer_value,
-// 	variant_offers.offer_installments AS variant_offer_installments,
-// 	COALESCE(
-//         array_agg(DISTINCT jsonb_build_object(
-//             'subcategory_id', product_subcategories.subcategory_id,
-//             'subcategory_name', product_subcategories.subcategory_name,
-//             'subcategory_description', product_subcategories.subcategory_description,
-//             'category_id', product_subcategories.category_id,
-//             'category_name', product_subcategories.category_name
-//         )),
-//         '{}'
-//     ) AS subcategories
-// FROM
-//     products p
-//     INNER JOIN product_variant pv ON p.id = pv.products_id
-//     INNER JOIN product_variant_images_assignments pvia ON pv.id = pvia.product_variant_id
-//     INNER JOIN product_variant_images pvi ON pvia.product_variant_images_id = pvi.id
-// 	-- Aplica DISTINCT ON para pegar a primeira linha da tabela de ofertas por variante
-// 	LEFT JOIN (
-// 		SELECT DISTINCT ON (pvo.product_variant_id) pvo.offer_type, pvo.offer_value, pvo.offer_installments, pvo.product_variant_id
-// 		FROM product_variant pv
-// 		INNER JOIN product_variant_offers pvo ON pv.id = pvo.product_variant_id
-// 		WHERE pvo.is_active = true
-// 		ORDER BY pvo.product_variant_id DESC
-// 		LIMIT 1
-// 	) variant_offers ON variant_offers.product_variant_id = pv.id
-//     -- Aplica DISTINCT ON para pegar a primeira linha por produto e cor
-//     LEFT JOIN (
-//         SELECT DISTINCT ON (p.id, pv.color) p.id AS product_id, pv.color, pv.id AS variant_id
-//         FROM products p
-//         INNER JOIN product_variant pv ON p.id = pv.products_id
-// 		WHERE pv.stock_quantity > 0
-//         ORDER BY p.id, pv.color, pv.id DESC
-//     ) unique_colors ON unique_colors.product_id = p.id AND unique_colors.color = pv.color
-// 	-- Subconsulta para agrupar subcategorias por produto
-//     LEFT JOIN (
-//         SELECT
-//             psa.product_id,
-//             sbc.id AS subcategory_id,
-//             sbc.name AS subcategory_name,
-//             sbc.description AS subcategory_description,
-//             ca.id AS category_id,
-//             ca.name AS category_name
-//         FROM product_subcategory_assignments psa
-//         INNER JOIN sub_categories sbc ON sbc.id = psa.sub_category_id
-//         INNER JOIN categories ca ON sbc.categories_id = ca.id
-//     ) product_subcategories ON product_subcategories.product_id = p.id
-// WHERE unique_colors.variant_id = pv.id
-// GROUP BY
-//     p.id,
-//     pv.id,
-// 	variant_offers.offer_type,
-// 	variant_offers.offer_value,
-// 	variant_offers.offer_installments
-// ORDER BY p.id, pv.color;
-
-// -- Obtem todas as variantes de todos os produtos (1 variante por linha (agrupa as imagens em 1 array)) #Com ofertas #Com subcategorias e categorias
-// SELECT
-// 	p.public_id AS product_public_id,
-// 	p.name AS product_name,
-// 	p.description AS product_description,
-// 	pv.public_id AS variant_public_id,
-// 	pv.color AS variant_color_name,
-// 	pv.color_code AS variant_color_code,
-// 	pv.unit_price AS variant_unit_price,
-// 	pv.installments AS variant_installments,
-// 	pv.is_on_sale AS variant_is_on_sale,
-// 	pv.size AS variant_size,
-// 	pv.stock_quantity AS variant_stock_quantity,
-// 	array_agg(DISTINCT pvi.image_url) AS variant_images,
-// 	variant_offers.offer_type AS variant_offer_type,
-// 	variant_offers.offer_value AS variant_offer_value,
-// 	variant_offers.offer_installments AS variant_offer_installments,
-// 	array_agg(json_build_object(
-// 		'subcategory_id', sbc.id,
-// 		'subcategory_name', sbc.name,
-// 		'description', sbc.description,
-// 		'category_id', sbc.categories_id,
-// 		'category_name', ca.name
-// 	)) AS product_subcategories
-// FROM
-// 	products p
-// 	INNER JOIN product_variant pv ON p.id = pv.products_id
-// 	INNER JOIN product_variant_images_assignments pvia ON pv.id = pvia.product_variant_id
-// 	INNER JOIN product_variant_images pvi ON pvia.product_variant_images_id = pvi.id
-// 	-- Aplica DISTINCT ON para pegar a primeira linha da tabela de ofertas por variante
-// 	LEFT JOIN (
-// 		SELECT DISTINCT ON (pvo.product_variant_id) pvo.offer_type, pvo.offer_value, pvo.offer_installments, pvo.product_variant_id
-// 		FROM product_variant pv
-// 		INNER JOIN product_variant_offers pvo ON pv.id = pvo.product_variant_id
-// 		WHERE pvo.is_active = true
-// 		ORDER BY pvo.product_variant_id DESC
-// 		LIMIT 1
-// 	) variant_offers ON variant_offers.product_variant_id = pv.id
-// 	INNER JOIN product_subcategory_assignments psa ON psa.product_id = p.id
-// 	INNER JOIN sub_categories sbc ON sbc.id = psa.sub_category_id
-// 	INNER JOIN categories ca ON sbc.categories_id = ca.id
-// GROUP BY
-// 	pv.id,
-// 	p.id,
-// 	variant_offers.offer_type,
-// 	variant_offers.offer_value,
-// 	variant_offers.offer_installments

@@ -43,10 +43,16 @@ class ProductController {
             }
             res.render('client/productsList', {
                 data: {
-                    user: user, page: {
-                        categories: categories, displayRegisterModal: true, title: data.page.title,
-                        quantResults: data.page.quantResults, breadcrumbs: data.page.breadcrumbs
-                    }, pagination: data.pagination, products: data.products
+                    user: user,
+                    page: {
+                        categories: categories,
+                        displayRegisterModal: true,
+                        title: data.page.title,
+                        quantResults: data.page.quantResults, 
+                        breadcrumbs: data.page.breadcrumbs
+                    }, 
+                    pagination: data.pagination, 
+                    products: data.products
                 }
             });
         } catch (error) {

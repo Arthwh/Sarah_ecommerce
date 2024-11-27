@@ -29,14 +29,14 @@ class SearchService {
 
             // Preparar dados para renderização
             const data = {
-                products: products,
+                products: products || [],
                 page: {
-                    title: `Busca por "${query}"`,
+                    title: `Resultados da busca por: ${query}`,
                     quantResults: results,
                     breadcrumbs: [
                         { name: 'Início', url: '/' },
-                        { name: `Busca por "${query}"`, url: `/search?q=${query}` }
-                    ]
+                        { name: `Busca por: ${query}`, url: `/search?q=${query}` }
+                    ],
                 },
                 pagination: {
                     currentPage: page,
@@ -44,7 +44,7 @@ class SearchService {
                     itemsPerPage: limit,
                     offset: offset
                 },
-                user: user || {}  // Adiciona os dados do usuário, caso exista
+                user: user
             };
 
             return data;

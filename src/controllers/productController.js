@@ -41,20 +41,9 @@ class ProductController {
             if (!data) {
                 return res.status(404).json({ error: 'Dados não encontrados' });
             }
-            res.render('client/productsList', {
-                data: {
-                    user: user,
-                    page: {
-                        categories: categories,
-                        displayRegisterModal: true,
-                        title: data.page.title,
-                        quantResults: data.page.quantResults, 
-                        breadcrumbs: data.page.breadcrumbs
-                    }, 
-                    pagination: data.pagination, 
-                    products: data.products
-                }
-            });
+            data.page.categories = categories;
+            data.page.displayRegisterModal = true;
+            res.render('client/productsList', { data });
         } catch (error) {
             res.status(500).json({ error: 'Erro ao buscar produtos: ', error });
         }
@@ -67,15 +56,15 @@ class ProductController {
             const { id } = req.params;
             const { sku } = req.query || undefined;
             const categories = await ProductService.getAllProductCategoriesAndSubcategories();
-            const data = await ProductService.getSpecificProduct(id, sku);
+            const data = await ProductService.getSpecificProduct(user, id, sku);
             if (!data) {
                 return res.status(404).json({ error: 'Dados não encontrados' });
             }
-            res.render('client/product', {
-                data: { user: user, page: { categories: categories, displayRegisterModal: true, breadcrumbs: data.page.breadcrumbs }, product: data.product }
-            });
+            data.page.categories = categories;
+            data.page.displayRegisterModal = true;
+            res.render('client/product', { data });
         } catch (error) {
-            res.status(500).json({ error: 'Erro ao buscar produto' });
+            res.status(500).json({ error: `Erro ao buscar produto: ${error}` });
         }
     }
 

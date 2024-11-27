@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>
-    <%= data.product.product_name %> - SARAH
+    <%= data.products.product_name %> - SARAH
   </title>
   <link rel="shortcut icon" href="/public/images/logo/logo_dourado_preto_icon.ico" type="image/x-icon">
   <link href="/public/css/pagePattern.css" rel="stylesheet">
@@ -30,7 +30,7 @@
     const user = data.user;
     const cart = user?.cart;
     const wishlist = user?.wishlist;
-    const product = data.product;
+    const product = data.products;
     const variants = product?.variants;
     const page = data.page
   </script>
@@ -41,9 +41,9 @@
     <%- include('partials/_categoryAsideMenu') %>
       <%- include('partials/_loginRegisterModal') %>
         <main class="container mx-auto py-10 w-full xl:w-4/5 h-full flex-grow"
-          data-product-public-id="<%= data.product.product_public_id %>"
-          data-product-name="<%= data.product.product_name %>"
-          data-in-wishlist="<%= data.product.product_in_wishlist %>">
+          data-product-public-id="<%= data.products.product_public_id %>"
+          data-product-name="<%= data.products.product_name %>"
+          data-in-wishlist="<%= data.products.product_in_wishlist %>">
           <!-- Breadcrumbs -->
           <%- include('partials/_breadcrumbs') %>
 
@@ -68,7 +68,7 @@
                       <!-- Imagem do Carrossel para Telas Pequenas -->
                       <div id="carouselCurrentImage" class="hidden lg:hidden h-full" data-carouselItemIndex>
                         <img class="imagemProdutoTelaPequena w-full h-auto object-cover"
-                          alt="<%= data.product.product_name %>">
+                          alt="<%= data.products.product_name %>">
                       </div>
                     </div>
                   </div>
@@ -92,11 +92,11 @@
                     <!-- Carrossel de Miniaturas -->
                     <ul id="miniImageCarousel"
                       class="lg:flex lg:flex-col lg:space-y-2 overflow-y-auto h-full custom-scrollbar">
-                      <% data.product.variant_images.forEach((image)=> { %>
+                      <% data.products.variant_images.forEach((image)=> { %>
                         <li class="flex-shrink-0">
                           <button onclick="changeMainImage('<%= image %>', this)">
                             <img class="w-28 h-auto hover:border border-gray-500" src="<%= image %>"
-                              alt="<%= data.product.product_name %>">
+                              alt="<%= data.products.product_name %>">
                           </button>
                         </li>
                         <% }); %>
@@ -117,8 +117,8 @@
                   <!-- Imagem Principal -->
                   <div id="mainVisualizationProductImage"
                     class="shadow-lg lg:block h-[700px] 2xl:h-[800px] w-fit mx-auto">
-                    <img class="object-cover w-auto h-full" src="<%= data.product.variant_images[0] %>"
-                      alt="<%= data.product.product_name %>">
+                    <img class="object-cover w-auto h-full" src="<%= data.products.variant_images[0] %>"
+                      alt="<%= data.products.product_name %>">
                   </div>
                 </div>
               </div>
@@ -126,24 +126,24 @@
               <!-- Informações do Produto -->
               <div class="px-5 lg:px-0 xl:col-span-2">
                 <h1 id="productName" class="text-3xl font-bold text-black">
-                  <%= `${data.product.product_name} ${data.product.variant_color_name}` %>
+                  <%= `${data.products.product_name} ${data.products.variant_color_name}` %>
                 </h1>
-                <%- include('partials/productReviewStars/productReviewStars', { product: data.product }) %>
-                  <% if ( data.product.total_stock_quantity> 0) { %>
+                <%- include('partials/productReviewStars/productReviewStars', { product: data.products }) %>
+                  <% if ( data.products.total_stock_quantity> 0) { %>
                     <p id="productPrice"
-                      class="text-xl text-amber-400 mt-2 <%= data.product.variant_stock_quantity === 0 ? 'hidden' : '' %>">
-                      R$ <%= data.product.variant_unit_price %>
+                      class="text-xl text-amber-400 mt-2 <%= data.products.variant_stock_quantity === 0 ? 'hidden' : '' %>">
+                      R$ <%= data.products.variant_unit_price %>
                     </p>
                     <% } %>
                       <p id="ProductDescription" class="text-gray-700 mt-4">
-                        <%= data.product.product_description.split('<br>')[0] %>
+                        <%= data.products.product_description.split('<br>')[0] %>
                       </p>
 
-                      <% if ( data.product.total_stock_quantity===0) { %>
+                      <% if ( data.products.total_stock_quantity===0) { %>
                         <div id="unavaliableMessage" class="product-unavailable-message">
                           <h2>Produto Indisponível</h2>
                           <p>Infelizmente o produto <strong>
-                              <%= data.product.product_name %>
+                              <%= data.products.product_name %>
                             </strong> está temporariamente fora de estoque.</p>
                           <p>Por favor, verifique novamente mais tarde</p>
                           <span>ou</span>
@@ -153,12 +153,12 @@
                           <!-- Opções de cores -->
                           <div class="mt-6">
                             <h2 id="colorTitle" class="text-sm">Cor: <b>
-                                <%= data.product.variant_color_name%>
+                                <%= data.products.variant_color_name%>
                               </b>
                             </h2>
                             <div id="productColorVariants" class="flex space-x-4 mt-2">
                               <% const displayedColors=new Set(); const colorsWithNoStock=new Map();
-                                data.product.variants.forEach(variant=>{
+                                data.products.variants.forEach(variant=>{
                                 if (!displayedColors.has(variant.variant_color_name)) {
                                 if (variant.variant_stock_quantity > 0) {
                                 displayedColors.add(variant.variant_color_name);
@@ -187,12 +187,12 @@
                           <!-- Opções de tamanhos -->
                           <div class="mt-6">
                             <h2 id="sizeTitle" class="text-sm">Tamanho: <b>
-                                <%= data.product.variant_size %>
+                                <%= data.products.variant_size %>
                               </b>
                             </h2>
                             <div id="productSizesComponent" class="flex flex-wrap mt-2">
-                              <% data.product.variants.forEach(variant=> {
-                                if (variant.variant_color_name === data.product.variant_color_name) { %>
+                              <% data.products.variants.forEach(variant=> {
+                                if (variant.variant_color_name === data.products.variant_color_name) { %>
                                 <div id="productSize_<%= variant.variant_public_id %>"
                                   data-productSku="<%= variant.variant_public_id %>"
                                   data-productStock="<%= variant.variant_stock_quantity %>" data-variantType="size">
@@ -206,26 +206,26 @@
                           </div>
 
                           <!-- Mensagem de produto indisponível -->
-                          <% if (data.product.variant_stock_quantity===0) { %>
+                          <% if (data.products.variant_stock_quantity===0) { %>
                             <div id="unavaliableMessage" class="product-unavailable-message">
                               <h2>Produto Indisponível</h2>
                               <p>Infelizmente o produto <strong>
-                                  <%= `${data.product.product_name} ${data.product.variant_color_name}
-                                    ${data.product.variant_size} `%>
+                                  <%= `${data.products.product_name} ${data.products.variant_color_name}
+                                    ${data.products.variant_size} `%>
                                 </strong> está temporariamente fora de estoque.</p>
                               <p>Por favor, verifique novamente mais tarde ou selecione outro produto</p>
                             </div>
                             <% } %>
                               <!-- Botão de Comprar e Favorito -->
-                              <div id="favoriteAndShopContainer" <%=data.product.variant_stock_quantity===0
+                              <div id="favoriteAndShopContainer" <%=data.products.variant_stock_quantity===0
                                 ? 'class=disabled' : '' %>>
                                 <!-- Botão de favoritos -->
 
                                 <div>
                                   <div class="wishlist-button-wrapper">
                                     <button
-                                      onclick="addRemoveProductFromWishlist('<%= data.product.product_public_id %>')"
-                                      <%=data.product.variant_stock_quantity===0 ? ' disabled ' : '' %>
+                                      onclick="addRemoveProductFromWishlist('<%= data.products.product_public_id %>')"
+                                      <%=data.products.variant_stock_quantity===0 ? ' disabled ' : '' %>
                                       class="favorite-btn">
                                       <img src="/public/images/icons/favorite_icon_border_black.svg" alt="Favoritar"
                                         class="favorite-icon">
@@ -234,7 +234,7 @@
                                     </button>
                                   </div>
                                   <button id="addToCartButton" class="action-btn-contrast"
-                                    <%=data.product.variant_stock_quantity===0 ? ' disabled ' : '' %>>Adicionar
+                                    <%=data.products.variant_stock_quantity===0 ? ' disabled ' : '' %>>Adicionar
                                     ao
                                     Carrinho</button>
                                 </div>
@@ -247,7 +247,7 @@
             <div class="mt-10 p-5 lg:">
               <h2 class="text-2xl font-bold">Detalhes do Produto</h2>
               <p class="mt-4 text-gray-700">
-                <%- data.product.product_description %>
+                <%- data.products.product_description %>
               </p>
             </div>
         </main>

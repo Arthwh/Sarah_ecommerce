@@ -1,50 +1,25 @@
 import ProductRepository from '../repositories/productRepository.js';
 import ProductVariantRepository from '../repositories/productVariantRepository.js';
 import WishlistService from './wishlistService.js';
+import { calculatePageParams, createDataStructureForListProducts, createBreadcrumbs, capitalizeWords } from '../helpers/listPageHelpers.js';
 import pool from '../db.js';
 
 class ProductService {
-    //FUNCIONANDO CERTO
     static async listProductsByCategoryOrSubcategoryService(user = null, category, subcategory, limitParam, pageParam) {
         try {
             if (!category) {
                 throw Error("Category missing.");
             }
-            const countProducts = await ProductRepository.countTotalProducts(category, subcategory);
-            const totalProducts = countProducts.total_count
-            const limit = parseInt(limitParam, 10) || 20;
-            const totalPages = Math.ceil(totalProducts / limit);
-            if (pageParam > totalPages) {
-                pageParam = totalPages;
-            }
-            const page = parseInt(pageParam, 10) || 1;
-            const offset = limit * (page - 1);
+            const totalProducts = (await ProductRepository.countTotalProducts(category, subcategory)).total_count;
+            const { limit, offset, page, totalPages } = await calculatePageParams(limitParam, pageParam, totalProducts);
 
             let products = await ProductRepository.listProductsBySubcategoryRepository('name', category, subcategory, limit, offset);
             user ? products = await WishlistService.checkProductsInWishlist(user, products) : '';
 
             const results = products.length;
-            var subcategoryCapitalized = '';
-            subcategory ? subcategoryCapitalized = capitalizeWords(subcategory) : '';
-            const categoryCapitalized = capitalizeWords(category);
-            const data = {
-                products: products,
-                page: {
-                    title: subcategoryCapitalized ? `${subcategoryCapitalized} ${categoryCapitalized}` : categoryCapitalized,
-                    quantResults: results,
-                    breadcrumbs: [
-                        { name: 'Início', url: '/' },
-                        { name: categoryCapitalized, url: `/c/${category}` },
-                        subcategoryCapitalized ? { name: subcategoryCapitalized, url: `/c/masculino/${subcategory}` } : null
-                    ]
-                },
-                pagination: {
-                    currentPage: page,
-                    totalPages: totalPages,
-                    itemsPerPage: limit,
-                    offset: offset
-                }
-            }
+            const breadcrumbs = await createBreadcrumbs(null, category, subcategory);
+            const title = subcategory ? `${capitalizeWords(subcategory)} ${capitalizeWords(category)}` : `${capitalizeWords(category)}`;
+            const data = await createDataStructureForListProducts(user, products, title, results, breadcrumbs, page, totalPages, offset, limit);
             return data;
         } catch (error) {
             console.error('Error getting products: ' + error.message);
@@ -53,9 +28,10 @@ class ProductService {
     }
 
     //FUNCIONANDO CERTO
-    static async getSpecificProduct(id, sku) {
+    static async getSpecificProduct(user = null, id, sku) {
         try {
-            var productData = {};
+            let productData = {};
+
             if (!id) {
                 throw Error("Product ID missing.");
             }
@@ -66,29 +42,24 @@ class ProductService {
             else {
                 productData = await ProductRepository.getProductByProductAndVariantIdRepository(id, sku);
             }
+
             const variantsData = await ProductVariantRepository.getAllProductVariantsByProductIdRepository(id);
             if (variantsData) {
                 productData['variants'] = variantsData;
             }
-            var productStock = 0;
+            //Parte desnecessaria em novos produtos (já é atualizado o estoque total ao criar o produto)
+            let productStock = 0;
             productData.variants.forEach(product => {
                 productStock += product.variant_stock_quantity;
             });
             productData.total_stock_quantity = productStock;
+
             productData.product_description = await replaceLineBreakCharacterInDescription(productData.product_description)
-            const category = productData.subcategories[0].category_name;
-            const subcategory = productData.subcategories[0].subcategory_name;
-            const data = {
-                product: productData,
-                page: {
-                    breadcrumbs: [
-                        { name: 'Início', url: '/' },
-                        { name: category, url: `/c/${category.toLowerCase()}` },
-                        { name: subcategory, url: `/c/${category.toLowerCase()}/${subcategory.toLowerCase()}` },
-                        { name: productData.product_name, url: `/p/${productData.product_public_id}` }
-                    ]
-                }
-            }
+            const category = productData.subcategories[0].category_name.toLowerCase();
+            const subcategory = productData.subcategories[0].subcategory_name.toLowerCase();
+            const breadcrumbs = await createBreadcrumbs(null, category, subcategory, productData);
+            const data = await createDataStructureForListProducts(user, productData, null, null, breadcrumbs);
+
             return data;
         } catch (error) {
             console.error('Error getting product: ', error);
@@ -107,6 +78,7 @@ class ProductService {
             return variantData;
         } catch (error) {
             console.error('Error getting product variant data: ', error);
+            throw error;
         }
     }
 
@@ -205,11 +177,6 @@ class ProductService {
             throw error;
         }
     }
-}
-
-function capitalizeWords(word) {
-    const wordCapitalized = word.charAt(0).toUpperCase() + word.slice(1);
-    return wordCapitalized;
 }
 
 async function replaceLineBreakCharacterInDescription(product_description) {

@@ -7,9 +7,7 @@ class SearchController {
             const user = req.session.user;
             const { query, page, limit } = req.query;
 
-            // Obter os produtos que correspondem à pesquisa
             const searchResults = await SearchService.searchProducts(user, query, limit, page);
-
             const categories = await ProductService.getAllProductCategoriesAndSubcategories();
 
             searchResults.page.categories = categories;

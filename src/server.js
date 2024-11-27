@@ -10,6 +10,7 @@ import adminRoutes from './routes/adminRoutes.js';
 import authRoutes from './routes/authRoutes.js';
 import addressRoutes from './routes/addressRoutes.js';
 import orderRoutes from './routes/orderRoutes.js';
+import searchRoutes from './routes/searchRoutes.js';
 import landingPageRoutes from './routes/landingPageRoutes.js';
 import wishlistRoutes from './routes/wishlistRoutes.js';
 
@@ -45,6 +46,7 @@ app.use(productRoutes);
 app.use(wishlistRoutes);
 app.use(addressRoutes);
 app.use(orderRoutes);
+app.use(searchRoutes);
 
 app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`);

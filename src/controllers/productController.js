@@ -110,21 +110,6 @@ class ProductController {
         }
     }
 
-    static async searchProducts(req, res) {
-        const { query } = req.query;
-        if (!query || query.trim() === '') {
-            return res.status(400).json({ message: 'A busca não pode estar vazia.' });
-        }
-        try {
-            const products = await ProductService.searchProducts(query);
-            if (products.length === 0) {
-                // return res.render('', { message: 'Nenhum produto encontrado.', query });
-            }
-            // return res.render('', { products, query });
-        } catch (error) {
-            res.status(500).json({ error: 'Erro ao buscar produto' });
-        }
-    }
 }
 
 export default ProductController;

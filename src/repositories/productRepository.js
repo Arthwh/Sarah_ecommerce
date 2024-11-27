@@ -605,17 +605,61 @@ class ProductRepository {
         }
     }
 
-    static async searchProducts(query) {
+    static async searchProducts(query, limit = 10, page = 1) {
         try {
+            // Calcular o offset para a paginação
+            const offset = (page - 1) * limit;
+
+            // Consulta ao banco de dados com paginação
             const { rows } = await pool.query(
-                'SELECT * FROM products WHERE name ILIKE $1 LIMIT 10',
-                [`%${query}%`]);
-            return rows;
+                'SELECT * FROM products WHERE name ILIKE $1 LIMIT $2 OFFSET $3',
+                [`%${query}%`, limit, offset]
+            );
+
+            // Garantir que todos os produtos tenham a propriedade variant_images
+            const productsWithImages = rows.map(product => {
+                if (!product.variant_images || product.variant_images.length === 0) {
+                    product.variant_images = ['default-image.jpg', 'default-image-hover.jpg']; // Imagens padrão
+                }
+                return product;
+            });
+
+            // Retornar os resultados e informações de paginação
+            return {
+                products: productsWithImages,
+                pagination: {
+                    currentPage: page,
+                    totalPages: Math.ceil(rows.length / limit), // Número total de páginas
+                },
+            };
         } catch (error) {
             console.error('Error searching products: ', error);
             throw error;
         }
     }
+
+    static async countTotalSearchResults(query) {
+        const searchQuery = `%${query}%`;
+        const sql = `
+            SELECT COUNT(*) FROM products
+            WHERE name ILIKE $1;
+        `;
+        const { rows } = await pool.query(sql, [searchQuery]);
+        return { total_count: parseInt(rows[0].count, 10) };
+    }
+
+    // Buscar produtos pela query de busca
+    static async searchProductsByQuery(query, limit, offset) {
+        const searchQuery = `%${query}%`;
+        const sql = `
+            SELECT * FROM products
+            WHERE name ILIKE $1
+            LIMIT $2 OFFSET $3;
+        `;
+        const { rows } = await pool.query(sql, [searchQuery, limit, offset]);
+        return rows;
+    }
+
 }
 
 export default ProductRepository

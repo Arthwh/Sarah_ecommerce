@@ -1,0 +1,44 @@
+.wishlist-page-content{
+    display: flex;
+    flex-direction: column;
+    max-width: 90%;
+}
+
+/* Banner de Ação */
+.favorites-banner {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 20px 40px;
+    background: #f1f1f1 80%;
+    border-left: 6px solid #E9C495; 
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 30px;
+    color: #333; 
+}
+
+.favorites-banner-content {
+    margin-left: 20px;
+    max-width: 80%;
+}
+
+.favorites-banner-content h2 {
+    font-size: 26px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #333; 
+    text-transform: uppercase;
+}
+
+.favorites-banner-content p {
+    font-size: 16px;
+    line-height: 1.5;
+    color: #777;
+}
+
+.favorites-count {
+    text-align: center;
+    font-size: 1rem;
+    margin-bottom: 20px;
+    color: #34495e;
+}

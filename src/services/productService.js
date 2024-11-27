@@ -1,7 +1,7 @@
 import ProductRepository from '../repositories/productRepository.js';
 import ProductVariantRepository from '../repositories/productVariantRepository.js';
 import WishlistService from './wishlistService.js';
-import { calculatePageParams, createDataStructureForListProducts, createBreadcrumbs, capitalizeWords } from '../helpers/listPageHelpers.js';
+import { calculatePageParams, createDataStructureForListProducts, createBreadcrumbs, capitalizeWords } from '../helpers/pageHelpers.js';
 import pool from '../db.js';
 
 class ProductService {
@@ -18,7 +18,7 @@ class ProductService {
 
             const results = products.length;
             const breadcrumbs = await createBreadcrumbs(null, category, subcategory);
-            const title = subcategory ? `${capitalizeWords(subcategory)} ${capitalizeWords(category)}` : `${capitalizeWords(category)}`;
+            const title = subcategory ? `${capitalizeWords(subcategory)} ${category}` : `${capitalizeWords(category)}`;
             const data = await createDataStructureForListProducts(user, products, title, results, breadcrumbs, page, totalPages, offset, limit);
             return data;
         } catch (error) {
@@ -41,6 +41,9 @@ class ProductService {
             }
             else {
                 productData = await ProductRepository.getProductByProductAndVariantIdRepository(id, sku);
+            }
+            if (user) {
+                productData.product_in_wishlist = await WishlistService.checkProductIsAddedWishlist(user.id, productData.product_public_id);
             }
 
             const variantsData = await ProductVariantRepository.getAllProductVariantsByProductIdRepository(id);
@@ -89,7 +92,7 @@ class ProductService {
             //Inicia a transaction
             await client.query('BEGIN');
             const variantsData = JSON.parse(productData.variants);
-            var totalStock = 0;
+            let totalStock = 0;
             for (const variant of variantsData) {
                 totalStock += parseInt(variant.variantInitialStock);
             }

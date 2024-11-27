@@ -6,12 +6,10 @@ class WishlistController {
         try {
             const user = req.session.user;
             const categories = await ProductService.getAllProductCategoriesAndSubcategories();
-            res.render('client/wishlist', {
-                data: {
-                    user: user, page: { categories: categories, displayRegisterModal: true },
-                    products: null
-                }
-            });
+            const data = await WishlistService.getWishlistItemsByUser(user);
+            data.page.categories = categories;
+
+            res.render('client/wishlist', { data });
         } catch (error) {
             res.status(500).json({ error: 'Erro ao obter página de favoritos: ', error });
         }

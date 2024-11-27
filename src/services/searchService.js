@@ -1,7 +1,7 @@
 
 import ProductRepository from '../repositories/productRepository.js';
 import WishlistService from '../services/wishlistService.js';
-import { calculatePageParams, createDataStructureForListProducts, createBreadcrumbs } from '../helpers/listPageHelpers.js';
+import { calculatePageParams, createDataStructureForListProducts, createBreadcrumbs } from '../helpers/pageHelpers.js';
 
 class SearchService {
     static async searchProducts(user = null, query, limitParam, pageParam) {

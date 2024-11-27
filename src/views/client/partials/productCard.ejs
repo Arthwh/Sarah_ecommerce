@@ -1,7 +1,6 @@
 <div class="product-card" data-product-public-id="<%= product.product_public_id %>"
     data-variant-public-id="<%= product.variant_public_id %>" data-product-name="<%= product.product_name %>"
-    data-product-on-sale="<%= product.variant_is_on_sale %>"
-    data-in-wishlist="<%= product.product_in_wishlist %>">
+    data-product-on-sale="<%= product.variant_is_on_sale %>" data-in-wishlist="<%= product.product_in_wishlist %>">
     <div class="product-image-wrapper">
         <!-- Link e imagens do produto -->
         <a href="/p/<%= product.product_public_id %>?sku=<%= product.variant_public_id %>" class="product-link">
@@ -15,14 +14,17 @@
             </div>
         </a>
 
-        <!-- Botão de favoritos -->
-        <div class="wishlist-button-wrapper">
-            <button onclick="addRemoveProductFromWishlist('<%= product.product_public_id %>')" class="favorite-btn">
-                <img src="/public/images/icons/favorite_icon_border_black.svg" alt="Favoritar" class="favorite-icon">
-                <img src="/public/images/icons/favorite_icon_fill_black.svg" alt="Favoritado"
-                    class="favorite-icon-hover">
-            </button>
-        </div>
+        <% if ( mode !=='edit' ){ %>
+            <!-- Botão de favoritos -->
+            <div class="wishlist-button-wrapper">
+                <button onclick="addRemoveProductFromWishlist('<%= product.product_public_id %>')" class="favorite-btn">
+                    <img src="/public/images/icons/favorite_icon_border_black.svg" alt="Favoritar"
+                        class="favorite-icon">
+                    <img src="/public/images/icons/favorite_icon_fill_black.svg" alt="Favoritado"
+                        class="favorite-icon-hover">
+                </button>
+            </div>
+            <% } %>
     </div>
 
     <!-- Nome e Preço do Produto -->

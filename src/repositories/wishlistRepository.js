@@ -12,7 +12,7 @@ class WishlistRepository {
         }
     }
 
-    static async fetchWishlistItemsByUserId(userId) {
+    static async fetchWishlistItemsByUserId_resumedForm(userId) {
         try {
             const { rows } = await pool.query(`
                     SELECT 
@@ -26,6 +26,72 @@ class WishlistRepository {
                     ORDER BY fi.created_at
                 `, [userId]);
 
+            return rows;
+        } catch (error) {
+            console.error('Error while fetching wishlist items: ', error);
+            throw Error('Error while fetching wishlist items: ', error.message);
+        }
+    }
+
+    static async fetchWishlistItemsByUserId_completeForm(userId) {
+        try {
+            const { rows } = await pool.query(`
+                        SELECT
+                            p.public_id AS product_public_id,
+                            p.name AS product_name,
+                            p.total_stock_quantity,
+                            pv.public_id AS variant_public_id,
+                            pv.unit_price AS variant_unit_price,
+                            pv.installments AS variant_installments,
+                            pv.is_on_sale AS variant_is_on_sale,
+                            pv.stock_quantity AS variant_stock_quantity,
+                            array_agg(DISTINCT pvi.image_url) AS variant_images,
+                            variant_offers.offer_type AS variant_offer_type,
+                            variant_offers.offer_value AS variant_offer_value,
+                            variant_offers.offer_installments AS variant_offer_installments,
+                            COALESCE(AVG(pr.rating), 0) AS product_review_score,
+                            COUNT(DISTINCT pr.*) AS product_review_quantity,
+                            CASE WHEN fi.product_id IS NOT NULL THEN TRUE ELSE FALSE END AS product_in_wishlist
+                        FROM products p
+                        INNER JOIN (
+                            SELECT DISTINCT ON (p.id) 
+                                pv.public_id,
+                                pv.unit_price,
+                                pv.installments,
+                                pv.is_on_sale,
+                                pv.stock_quantity,
+                                pv.id,
+                                p.id AS product_id
+                            FROM product_variant pv
+                            INNER JOIN products p ON p.id = pv.products_id
+                            ORDER BY p.id, pv.stock_quantity DESC
+                        ) pv ON pv.product_id = p.id
+                        INNER JOIN product_variant_images_assignments pvia ON pv.id = pvia.product_variant_id
+                        INNER JOIN product_variant_images pvi ON pvia.product_variant_images_id = pvi.id
+                        -- Aplica DISTINCT ON para pegar a primeira linha da tabela de ofertas por variante
+                        LEFT JOIN (
+                            SELECT DISTINCT ON (pvo.product_variant_id) pvo.offer_type, pvo.offer_value, pvo.offer_installments, pvo.product_variant_id
+                            FROM product_variant_offers pvo
+                            WHERE pvo.is_active = true
+                            ORDER BY pvo.product_variant_id DESC
+                        ) variant_offers ON variant_offers.product_variant_id = pv.id
+                        LEFT JOIN product_reviews pr ON p.id = pr.product_id
+                        INNER JOIN favorites_items fi ON fi.product_id = p.id
+                        INNER JOIN favorites_list fl ON fi.favorites_list_id = fl.id
+                        WHERE fl.user_id = $1
+                        GROUP BY
+                            p.id,
+                            pv.id,
+                            pv.public_id,
+                            pv.unit_price,
+                            pv.installments,
+                            pv.is_on_sale,
+                            pv.stock_quantity,
+                            variant_offers.offer_type,
+                            variant_offers.offer_value,
+                            variant_offers.offer_installments,
+                            fi.product_id
+            `, [userId]);
             return rows;
         } catch (error) {
             console.error('Error while fetching wishlist items: ', error);

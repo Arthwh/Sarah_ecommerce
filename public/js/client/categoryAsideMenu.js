@@ -1,4 +1,4 @@
-var activeSubmenu = ''
+let activeSubmenu = ''
 
 //Função para alterar a cor (imagem) da seta dos menus no hover
 document.addEventListener("DOMContentLoaded", () => {

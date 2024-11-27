@@ -1,5 +1,5 @@
-const userLoggedOnLoad = (user && Object.keys(user).length > 0) !== undefined;
-var logged = userLoggedOnLoad;
+const userLoggedOnLoad = (user !== null && user !== undefined && Object.keys(user).length > 0);
+let logged = userLoggedOnLoad;
 
 async function checkSessionExpired() {
     try {

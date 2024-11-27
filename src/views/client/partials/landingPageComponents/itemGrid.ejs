@@ -31,7 +31,7 @@
                         <div id="gridSectionContent_<%= component.id %>"
                             class="grid-section-content overflow-hidden grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
                             <% component.section_content.forEach(item=> { %>
-                                <%- include('../../partials/productCard', { product: item }) %>
+                                <%- include('../../partials/productCard', { product: item, mode }) %>
                                     <% }); %>
                         </div>
     </div>

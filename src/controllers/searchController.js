@@ -11,7 +11,6 @@ class SearchController {
             const categories = await ProductService.getAllProductCategoriesAndSubcategories();
 
             searchResults.page.categories = categories;
-            searchResults.page.displayRegisterModal = true;
 
             res.render('client/productsList', { data: searchResults });
         } catch (error) {

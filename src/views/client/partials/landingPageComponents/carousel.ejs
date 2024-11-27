@@ -33,7 +33,7 @@
                         <div class="carousel-content-container">
                             <div id="carousel-content_<%= component.id %>" class="carousel-content">
                                 <% component.section_content.forEach(item=> { %>
-                                    <%- include('../../partials/productCard', { product: item }) %>
+                                    <%- include('../../partials/productCard', { product: item, mode }) %>
                                         <% }); %>
                             </div>
                         </div>

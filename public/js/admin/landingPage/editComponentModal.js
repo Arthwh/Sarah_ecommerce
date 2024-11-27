@@ -1,4 +1,4 @@
-var categoriesAndSubcategories = [];
+let categoriesAndSubcategories = [];
 
 async function fetchCategoriesAndSubcategories() {
     try {
@@ -211,7 +211,7 @@ async function saveSectionConfig(sectionId, mainElementId, mode, sectionType) {
         const sectionTitle = document.getElementById('sectionTitle').value;
         const mainComponent = document.getElementById(mainElementId);
         const sectionPosition = mainComponent?.dataset.componentSectionPosition ? parseInt(mainComponent.dataset.componentSectionPosition, 10) : document.querySelectorAll('[data-element="section"]').length + 1;
-        var endDate = productEndDate.disabled !== true ? productEndDate.value : '';
+        let endDate = productEndDate.disabled !== true ? productEndDate.value : '';
 
         if (!productType || !productLimit || (!endDate && enableEndDate === true)) {
             showToast(`${mode === 'add' ? 'Erro ao criar sessão' : 'Erro ao editar sessão'}: Preencha todos os campos`, 'error');

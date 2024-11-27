@@ -9,13 +9,14 @@ export async function calculatePageParams(limitParam, pageParam, totalProducts) 
 
 export async function createDataStructureForListProducts(user = null, products = [], title = null,
     quantResults = null, breadcrumbs = [], currentPage = null, totalPages = null,
-    offset = null, itemsPerPage = null) {
+    offset = null, itemsPerPage = null, displayRegisterModal = true) {
     const data = {
         products: products,
         page: {
             title: title,
             breadcrumbs: breadcrumbs,
-            quantResults: quantResults
+            quantResults: quantResults,
+            displayRegisterModal: displayRegisterModal
         },
         pagination: {
             currentPage: currentPage,

@@ -49,7 +49,7 @@ function selectItem(mainElement, elementType) {
 
     const buttons = document.createElement("div");
     buttons.classList.add("move-buttons");
-    var elementDatasetProperty = mainElement.dataset.element;
+    let elementDatasetProperty = mainElement.dataset.element;
     if (!elementDatasetProperty || elementDatasetProperty != elementType) {
         elementDatasetProperty = mainElement.parentElement.dataset.element
     }

@@ -81,7 +81,8 @@
                                 <!-- Lista de Produtos -->
                                 <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
                                     <% data.products?.forEach(product=> { %>
-                                        <%- include('partials/productCard', { product: product }) %>
+                                        <%- include('partials/productCard', { product: product, mode: data.page.mode
+                                            || 'main' }) %>
                                             <% }); %>
                                 </div>
 

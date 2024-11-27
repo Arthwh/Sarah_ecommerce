@@ -1,6 +1,6 @@
-var categoriesAndSubcategories = [];
-var allBrands = [];
-var variantsWithImages = [];
+let categoriesAndSubcategories = [];
+let allBrands = [];
+let variantsWithImages = [];
 const formData = new FormData();
 
 // Função de renderização do cadastro de produtos
@@ -258,7 +258,7 @@ function verifyVariantData() {
     const inheritImageSelect = document.getElementById('inheritImageSelect');
     const variantImages = document.getElementById('variantImages');
 
-    var ok = true;
+    let ok = true;
 
     const variantPriceError = document.getElementById('variantPriceError');
     const variantInstallmentsError = document.getElementById('variantInstallmentsError');
@@ -475,7 +475,7 @@ function checkBaseProductFormData() {
     productBrandError.innerHTML = '';
     categoriesAndSubcategoriesError.innerHTML = '';
 
-    var ok = true;
+    let ok = true;
     if (!productName) {
         productNameError.innerHTML = "O nome do produto é obrigatório."
         productNameError.classList.remove('hidden');

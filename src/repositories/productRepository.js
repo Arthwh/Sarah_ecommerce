@@ -253,7 +253,7 @@ class ProductRepository {
     //FUNCIONANDO CERTO
     static async listProductsBySubcategoryRepository(filterCategorySubcategoryBy, category, subcategory, limit, offset) {
         try {
-            var parameters = [category];
+            let parameters = [category];
             const selectAndJoinsQuery = `
                     SELECT
                         p.public_id AS product_public_id,
@@ -336,7 +336,7 @@ class ProductRepository {
     //FUNCIONANDO CERTO
     static async countTotalProducts(category, subcategory) {
         try {
-            var parameters = [category];
+            let parameters = [category];
 
             const selectAndJoinsQuery = `
                     SELECT
@@ -473,7 +473,6 @@ class ProductRepository {
                         variant_offers.offer_type AS variant_offer_type,
                         variant_offers.offer_value AS variant_offer_value,
                         variant_offers.offer_installments AS variant_offer_installments,
-                        EXISTS(SELECT * FROM favorites_items WHERE product_id = p.id) AS product_in_wishlist,
                         COALESCE(
                             array_agg(DISTINCT jsonb_build_object(
                                 'subcategory_id', product_subcategories.subcategory_id,

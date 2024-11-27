@@ -1,6 +1,4 @@
-var { actualVariants, variant_images, ...actualProductData } = product
-// var cartItems = cart?.items;
-// var wishlistItems = wishlist?.items;
+let { actualVariants, variant_images, ...actualProductData } = product
 
 const smallScreenImagemCarousel = document.getElementById('carouselCurrentImage')
 const miniImageCarousel = document.getElementById('miniImageCarousel');
@@ -11,7 +9,7 @@ const sizeTitle = document.getElementById('sizeTitle');
 const addToCartButton = document.getElementById('addToCartButton');
 const wishlistButton = document.getElementById('wishlistButton');
 
-var currentIndex = 0;
+let currentIndex = 0;
 
 document.addEventListener('DOMContentLoaded', () => {
     updateUrl(actualProductData.variant_public_id)

@@ -53,7 +53,7 @@ class LandingPageService {
     }
 
     //FUNCIONANDO CERTO
-    static async getLandingPageData(userId = null) {
+    static async getLandingPageData(user = null) {
         try {
             const components = await LandingPageRepository.getActiveLandingPageComponents();
             if (!components) {
@@ -62,7 +62,8 @@ class LandingPageService {
             for (const component of components) {
                 if (component.section_model === 'grid' || component.section_model === 'carousel') {
                     const products = await this.getProductsBySectionProductType(component.section_product_type, component.section_product_limit, component.section_product_type_category_id, component.section_product_type_subcategory_id);
-                    userId ? component.section_content = await WishlistService.checkProductsInWishlist(userId, products) : component.section_content = products;
+                    console.log(products)
+                    user ? component.section_content = await WishlistService.checkProductsInWishlist(user, products) : component.section_content = products;
                 }
                 else if (component.section_model === 'banner' || component.section_model === 'cards') {
                     const images = await LandingPageRepository.getActiveLandingPageImages(component.id);
@@ -100,7 +101,7 @@ class LandingPageService {
             console.error('Error while saving landing page: ' + error);
             logAction(userIP, userAgent, 'landingPage-edit', { status: 'error', details: error.message });
             throw new Error('Error while saving landing page: ' + error.message)
-        }finally {
+        } finally {
             client.release();
         }
     }

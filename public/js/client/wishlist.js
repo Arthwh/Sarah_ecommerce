@@ -65,6 +65,7 @@ async function verifyIfProductIsAddedToWishlist(product_public_id) {
 
 async function updateDataInWishlistProperty(inWishlist, product_public_id) {
     const elements = document.querySelectorAll(`[data-product-public-id="${product_public_id}"]`);
+    console.log(elements)
     if (elements.length === 0) {
         console.warn(`Elemento com data-product-public-id="${product_public_id}" não encontrado.`);
         throw new Error(`Elemento com data-product-public-id="${product_public_id}" não encontrado.`);
@@ -82,7 +83,9 @@ async function addItemToWishlist(product_public_id) {
             throw new Error('Usuário precisa estar logado para realizar essa ação!');
         }
 
-        const response = await fetch(`/api/wishlist/add/${userLogged.id}/${product_public_id}`);
+        const response = await fetch(`/api/wishlist/add/${userLogged.id}/${product_public_id}`, {
+            method: 'POST'
+        });
         if (!response.ok) {
             const errorDetails = await response.json().catch(() => ({}));
             throw new Error(`${response.status} - ${response.statusText || 'Detalhes não disponíveis'} - ${JSON.stringify(errorDetails)}`);
@@ -100,7 +103,9 @@ async function removeItemFromWishlist(product_public_id) {
             throw new Error('Usuário precisa estar logado para realizar essa ação!');
         }
 
-        const response = await fetch(`/api/wishlist/remove/${userLogged.id}/${product_public_id}`);
+        const response = await fetch(`/api/wishlist/remove/${userLogged.id}/${product_public_id}`, {
+            method: 'DELETE'
+        });
         if (!response.ok) {
             const errorDetails = await response.json().catch(() => ({}));
             throw new Error(`${response.status} - ${response.statusText || 'Detalhes não disponíveis'} - ${JSON.stringify(errorDetails)}`);

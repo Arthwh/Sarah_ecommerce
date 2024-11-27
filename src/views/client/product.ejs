@@ -37,12 +37,11 @@
 </head>
 
 <body>
-  <!-- Header -->
   <%- include('partials/_header') %>
     <%- include('partials/_categoryAsideMenu') %>
       <%- include('partials/_loginRegisterModal') %>
         <main class="container mx-auto py-10 w-full xl:w-4/5 h-full flex-grow"
-          data-product_public-id="<%= data.product.product_public_id %>"
+          data-product-public-id="<%= data.product.product_public_id %>"
           data-product-name="<%= data.product.product_name %>"
           data-in-wishlist="<%= data.product.product_in_wishlist %>">
           <!-- Breadcrumbs -->

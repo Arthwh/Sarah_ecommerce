@@ -10,6 +10,11 @@ body{
     background-color: white;
 }
 
+main{
+    display: flex;
+    flex-grow: 3;
+}
+
 #headerContent{
     z-index: 100;
 }

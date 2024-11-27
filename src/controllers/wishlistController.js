@@ -1,6 +1,22 @@
 import WishlistService from "../services/wishlistService.js";
+import ProductService from "../services/productService.js";
 
 class WishlistController {
+    static async getWishlistPage(req, res) {
+        try {
+            const user = req.session.user;
+            const categories = await ProductService.getAllProductCategoriesAndSubcategories();
+            res.render('client/wishlist', {
+                data: {
+                    user: user, page: { categories: categories, displayRegisterModal: true },
+                    products: null
+                }
+            });
+        } catch (error) {
+            res.status(500).json({ error: 'Erro ao obter página de favoritos: ', error });
+        }
+    }
+
     static async getWishlistItemsByUser(req, res) {
         try {
             const user = req.session.user;

@@ -39,7 +39,7 @@
                   <div id="userOptionsDropdown"
                     class="hidden md:hidden absolute right-0 mt-2 p-4 w-36 bg-black shadow-lg min-h-fit">
                     <a href="/cart" class="block pb-2 text-white menuItem w-fit">Carrinho</a>
-                    <a href="/user/favorites" class="block py-2 text-white menuItem w-fit">Favoritos</a>
+                    <a href="/wishlist" class="block py-2 text-white menuItem w-fit">Favoritos</a>
                     <% if(data.user?.role=='3' ){ %>
                       <a href="/admin" class="block py-2 text-white menuItem w-fit">Administrador</a>
                       <% } %>
@@ -56,7 +56,7 @@
                     <span id="cartNumber"
                       class="hidden absolute top-0 right-0 transform -translate-x-1/2 -translate-y-1/2 bg-white text-black group-hover:bg-black group-hover:text-white font-bold rounded-full w-4 h-4 flex items-center justify-center text-xs"></span>
                   </a>
-                  <a href="/user/favorites" class="relative inline-block group">
+                  <a href="/wishlist" class="relative inline-block group">
                     <img id="favoriteIcon" src="/public/images/icons/favorite_icon.svg" title="Favoritos"
                       alt="Favoritos" class="w-8 h-8 group-hover:hidden">
                     <img id="favoriteIcon" src="/public/images/icons/favorite_icon_hover.svg" title="Favoritos"

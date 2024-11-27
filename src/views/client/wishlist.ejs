@@ -4,63 +4,42 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Erro - SARAH</title>
+    <title>Favoritos - SARAH</title>
     <link rel="shortcut icon" href="/public/images/logo/logo_dourado_preto_icon.ico" type="image/x-icon">
     <link href="/public/css/pagePattern.css" rel="stylesheet">
     <link href="/public/css/tailwind/style.css" rel="stylesheet">
-    <link href="/public/css/client/footer.css" rel="stylesheet">
+    <link href="/public/css/client/carouselControllStyles.css" rel="stylesheet">
     <link href="/public/css/messageModal/modal.css" rel="stylesheet">
-    <link href="/public/css/client/errorPage.css" rel="stylesheet">
+    <link href="/public/css/client/footer.css" rel="stylesheet">
     <link href="/public/css/client/categoryAsideMenu.css" rel="stylesheet">
     <link href="/public/css/client/loginRegisterModal.css" rel="stylesheet">
+    <link href="/public/css/client/wishlist.css" rel="stylesheet">
+    <link href="/public/css/client/reviewStars.css" rel="stylesheet">
 
     <script>
         // Obtem os dados enviados do backend e converte para JSON
-        data = JSON.parse('<%- JSON.stringify(data) %>');
+        const data = JSON.parse('<%- JSON.stringify(data) %>');
         if (!data) {
             console.error('Dados incompletos.');
             window.location.href = "/error";
         }
         // Separa os dados em variáveis
         const user = data.user;
-        const cart = user?.cart || {};
-        const wishlist = user?.wishlist || {};
+        const cart = user?.cart;
+        const wishlist = user?.wishlist;
+        const product = data.product;
+        const variants = product?.variants;
         const page = data.page
     </script>
 </head>
 
 <body>
-    <!-- Header -->
     <%- include('partials/_header') %>
         <%- include('partials/_categoryAsideMenu') %>
             <%- include('partials/_loginRegisterModal') %>
-                <main class="w-full h-full flex-grow flex flex-col">
-                    <div>
-                        <h1 id="errorTitle">
-                            <%= data.title %>
-                        </h1>
-                    </div>
-                    <div>
-                        <p id="errorMessage">
-                            <%= data.message%>
-                        </p>
-                    </div>
-                    <div class="w-fit mx-auto">
-                        <% if(data.buttonText && data.buttonAction){ %>
-                            <button id="action-button-error-page" class="action-btn-contrast"
-                                onclick="<%= data.buttonAction %>()">
-                                <%= data.buttonText %>
-                            </button>
-                            <% } %>
-                                <% if(data.link && data.linkText){ %>
-                                    <a id="link-error-page" href="<%= data.link %>">
-                                        <%= data.linkText %>
-                                    </a>
-                                    <% } %>
-                    </div>
+                <main>
+                    <h1>WISHLIST</h1>
                 </main>
-
-                <!-- Footer -->
                 <%- include('partials/_footer') %>
                     <script src="/public/js/messageModal/toastMessageModal.js"></script>
                     <script src="/public/js/messageModal/centralMessageModal.js"></script>
@@ -71,6 +50,7 @@
                     <script src="/public/js/client/header.js"></script>
                     <script src="/public/js/client/loginAndRegister.js"></script>
                     <script src="/public/js/client/wishlist.js"></script>
+
 </body>
 
 </html>

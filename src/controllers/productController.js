@@ -41,9 +41,16 @@ class ProductController {
             if (!data) {
                 return res.status(404).json({ error: 'Dados não encontrados' });
             }
-            res.render('client/productsList', { data: { user: user, page: { categories: categories, displayRegisterModal: true, title: data.page.title, quantResults: data.page.quantResults, breadcrumbs: data.page.breadcrumbs }, pagination: data.pagination, products: data.products } });
+            res.render('client/productsList', {
+                data: {
+                    user: user, page: {
+                        categories: categories, displayRegisterModal: true, title: data.page.title,
+                        quantResults: data.page.quantResults, breadcrumbs: data.page.breadcrumbs
+                    }, pagination: data.pagination, products: data.products
+                }
+            });
         } catch (error) {
-            res.status(500).json({ error: 'Erro ao buscar produtos', error });
+            res.status(500).json({ error: 'Erro ao buscar produtos: ', error });
         }
     }
 
@@ -58,7 +65,9 @@ class ProductController {
             if (!data) {
                 return res.status(404).json({ error: 'Dados não encontrados' });
             }
-            res.render('client/product', { data: { user: user, page: { categories: categories, displayRegisterModal: true, breadcrumbs: data.page.breadcrumbs }, product: data.product } });
+            res.render('client/product', {
+                data: { user: user, page: { categories: categories, displayRegisterModal: true, breadcrumbs: data.page.breadcrumbs }, product: data.product }
+            });
         } catch (error) {
             res.status(500).json({ error: 'Erro ao buscar produto' });
         }

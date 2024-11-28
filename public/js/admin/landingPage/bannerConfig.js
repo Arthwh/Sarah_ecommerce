@@ -129,8 +129,6 @@ async function createBannerElement(bannerData) {
     if (!bannerCarousel) {
         throw Error('Banner carousel not found!')
     }
-    console.log(bannerCarousel);
-    console.log(element)
     const buttonPrev = bannerCarousel.querySelector('.carousel-control');
     bannerCarousel.insertBefore(element, buttonPrev);
     return element;

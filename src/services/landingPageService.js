@@ -62,7 +62,6 @@ class LandingPageService {
             for (const component of components) {
                 if (component.section_model === 'grid' || component.section_model === 'carousel') {
                     const products = await this.getProductsBySectionProductType(component.section_product_type, component.section_product_limit, component.section_product_type_category_id, component.section_product_type_subcategory_id);
-                    console.log(products)
                     user ? component.section_content = await WishlistService.checkProductsInWishlist(user, products) : component.section_content = products;
                 }
                 else if (component.section_model === 'banner' || component.section_model === 'cards') {

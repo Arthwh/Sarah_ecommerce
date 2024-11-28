@@ -103,7 +103,6 @@ async function register() {
         return;
     }
     const formData = new FormData(formRegister);
-    console.log(formData);
     const registerData = Object.fromEntries(formData.entries());
     try {
         const response = await fetch(`/api/register`, {
@@ -126,7 +125,6 @@ async function register() {
             throw new Error(`Erro HTTP: ${response.status}`);
         }
         const data = await response.json();
-        console.log("Registro bem-sucedido:", data);
         showToast("Usuário criado com sucesso!", "success")
         toggleRegisterModal();
     } catch (error) {

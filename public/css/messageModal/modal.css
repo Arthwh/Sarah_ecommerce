@@ -15,7 +15,7 @@
 }
 
 .toast .toast-message {
-    margin-right: 10px;
+    margin-inline: 10px;
 }
 
 .toast .toast-close {

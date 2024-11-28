@@ -49,8 +49,6 @@ class WishlistRepository {
     }
 
     static async fetchWishlistItemsByUserId_completeForm(userId, limit, offset) {
-        console.log(limit);
-        console.log(offset)
         try {
             const { rows } = await pool.query(`
                         SELECT

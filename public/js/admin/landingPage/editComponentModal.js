@@ -25,7 +25,6 @@ function addOptionsToCategorySelect(selectElement, categorySelected = null, subc
             if (categorySelected == category.id) {
                 option.selected = true;
                 let subcategory = category.subcategories.find(subcat => subcat.id == subcategorySelected);
-                console.log(subcategory)
                 if (subcategory) {
                     renderSubcategoryByCategorySelected(category.id, selectElement, subcategory.id);
                 }
@@ -171,10 +170,7 @@ async function addComponent(sectionType) {
             const mainElement = document.querySelector('main');
             const sectionPosition = mainElement.querySelectorAll('[data-element="section"]').length + 1;
             const sectionHTML = await getNewSectionElement(sectionId, sectionType, 'image', null, null, null, null, null, null, sectionPosition);
-            console.log(sectionHTML)
             mainElement.insertAdjacentHTML('beforeend', sectionHTML);
-            // console.log('banner');
-            // alert('Funcionalidade em implementação')
         }
         else if (sectionType === 'carousel' || sectionType === 'grid') {
             const sectionId = Date.now();
@@ -185,7 +181,6 @@ async function addComponent(sectionType) {
             addOptionsToCategorySelect(categorySelect);
         }
         else if (sectionType === 'cards') {
-            console.log('cards');
             alert('Funcionalidade em implementação')
         }
         else throw Error('Tipo da sessão inválida.');

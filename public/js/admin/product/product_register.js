@@ -204,7 +204,6 @@ function calculateInstallmentsValues() {
 
 function checkIfThereAreImagesToInherit() {
     const inheritImage = document.getElementById('inheritImage');
-    console.log(variantsWithImages)
     if (variantsWithImages.length === 0) {
         inheritImage.parentElement.classList.add('hidden');
     }

@@ -65,7 +65,6 @@ async function verifyIfProductIsAddedToWishlist(product_public_id) {
 
 async function updateDataInWishlistProperty(inWishlist, product_public_id) {
     const elements = document.querySelectorAll(`[data-product-public-id="${product_public_id}"]`);
-    console.log(elements)
     if (elements.length === 0) {
         console.warn(`Elemento com data-product-public-id="${product_public_id}" não encontrado.`);
         throw new Error(`Elemento com data-product-public-id="${product_public_id}" não encontrado.`);

@@ -164,7 +164,6 @@ class ProductService {
     static async getAllActiveProductColors() {
         try {
             const colors = await ProductRepository.getAllActiveProductColors();
-            console.log(colors);
             return colors;
         } catch (error) {
             console.error('Erro ao processar cores:', error);

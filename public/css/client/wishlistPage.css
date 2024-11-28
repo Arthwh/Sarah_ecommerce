@@ -1,7 +1,15 @@
 .wishlist-page-content{
     display: flex;
     flex-direction: column;
-    max-width: 90%;
+    width: 90%;
+    flex-grow: 3;
+}
+
+.wishlist-page-content .wishlist-items{
+    display: flex;
+    flex-grow: 3;
+    height: 100%;
+    width: 100%;
 }
 
 /* Banner de Ação */

@@ -11,7 +11,7 @@ function showToast(message, type = 'info') {
 
     // Adiciona a mensagem
     toast.innerHTML = `
-        <img src="public/images/icons/${type === 'error' ? 'error_icon_red.svg' : 'check_circle_green_icon.svg'}">
+        <img src="../../public/images/icons/${type === 'error' ? 'error_icon_red.svg' : 'check_circle_green_icon.svg'}">
         <div>
             <span class="toast-message">${message}</span>
             <button class="toast-close">&times;</button>
@@ -29,7 +29,7 @@ function showToast(message, type = 'info') {
     // Remove o toast após 5 segundos
     setTimeout(() => {
         toast.remove();
-    }, 100000000000);
+    }, 5000);
 }
 
 // Exemplo de uso:

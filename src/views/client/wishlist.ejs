@@ -55,50 +55,55 @@
                         <p class="favorites-count">Você tem <strong>
                                 <%= data.page.quantResults %>
                             </strong>
-                            <%= data.page.quantResults> 1 ? 'produtos favoritos' : 'produto favorito' %>
+                            <%= data.page.quantResults != 1 ? 'produtos favoritos' : 'produto favorito' %>
                         </p>
-                        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
-                            <% data.products.forEach(item=> { %>
-                                <%- include('partials/productCard', { product: item, mode: 'main' }) %>
-                                    <% }); %>
+                        <div class="wishlist-items">
+                            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+                                <% data.products.forEach(item=> { %>
+                                    <%- include('partials/productCard', { product: item, mode: 'main' }) %>
+                                        <% }); %>
+                            </div>
                         </div>
 
-                        <!-- Paginação -->
-                        <div class="flex flex-col mt-10">
-                            <div class="flex justify-center items-center p-2">
-                                <p class="text-sm">VOCÊ ESTÁ NA PÁGINA</p>
-                            </div>
-                            <div class="flex justify-center items-center space-x-2">
-                                <button id="prevPageButton" <% if( data.pagination?.currentPage==1) { %>
-                                    class="bg-white text-black border border-black px-4 py-2" disabled
-                                    <% } else{ %>
-                                        class="bg-white text-black border border-black px-4 py-2 hover:bg-black
-                                        hover:text-white
-                                        font-bold"
-                                        <% } %>>
-                                            Anterior
-                                </button>
-
-                                <div class="text-xl">
-                                    <span class="font-bold">
-                                        <%= data.pagination?.currentPage %>
-                                    </span> | <span>
-                                        <%= data.pagination?.totalPages %>
-                                    </span>
+                        <% if (data.page.quantResults> 0) { %>
+                            <!-- Paginação -->
+                            <div class="flex flex-col mt-10">
+                                <div class="flex justify-center items-center p-2">
+                                    <p class="text-sm">VOCÊ ESTÁ NA PÁGINA</p>
                                 </div>
+                                <div class="flex justify-center items-center space-x-2">
+                                    <button id="prevPageButton" <% if( data.pagination?.currentPage==1) { %>
+                                        class="bg-white text-black border border-black px-4 py-2" disabled
+                                        <% } else{ %>
+                                            class="bg-white text-black border border-black px-4 py-2 hover:bg-black
+                                            hover:text-white
+                                            font-bold"
+                                            <% } %>>
+                                                Anterior
+                                    </button>
 
-                                <button id="nextPageButton" <% if(
-                                    data.pagination?.currentPage===data.pagination?.totalPages) { %>
-                                    class="bg-white text-black border border-black px-4 py-2" disabled
-                                    <% } else{ %>
-                                        class="bg-white text-black border border-black px-4 py-2 hover:bg-black
-                                        hover:text-white
-                                        font-bold"
-                                        <% } %>>
-                                            Próxima
-                                </button>
+                                    <div class="text-xl">
+                                        <span class="font-bold">
+                                            <%= data.pagination?.currentPage %>
+                                        </span> | <span>
+                                            <%= data.pagination?.totalPages %>
+                                        </span>
+                                    </div>
+
+                                    <button id="nextPageButton" <% if(
+                                        data.pagination?.currentPage===data.pagination?.totalPages) { %>
+                                        class="bg-white text-black border border-black px-4 py-2" disabled
+                                        <% } else{ %>
+                                            class="bg-white text-black border border-black px-4 py-2 hover:bg-black
+                                            hover:text-white
+                                            font-bold"
+                                            <% } %>>
+                                                Próxima
+                                    </button>
+                                </div>
                             </div>
-                        </div>
+                            <% } %>
+
 
                 </main>
                 <%- include('partials/_footer') %>

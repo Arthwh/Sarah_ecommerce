@@ -2,7 +2,8 @@ import OrderService from '../services/orderService.js';
 
 class OrderController {
     static async createOrder(req, res) {
-        const userId = req.user.id;
+        const user = req.session.user;
+        const userId = user.id;
         const { address_id, payment_id, total_price, status, items } = req.body;
 
         try {
@@ -15,7 +16,8 @@ class OrderController {
     }
 
     static async getOrdersByUser(req, res) {
-        const userId = req.user.id;
+        const user = req.session.user;
+        const userId = user.id;
 
         try {
             const orders = await OrderService.getOrdersByUser(userId);

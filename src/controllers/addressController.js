@@ -40,7 +40,8 @@ class AddressController {
     }
 
     static async getAddressesByUser(req, res) {
-        const userId = req.user.id;
+        const user = req.session.user;
+        const userId = user.id;
 
         try {
             const addresses = await AddressService.getAddressesByUser(userId);
@@ -53,7 +54,8 @@ class AddressController {
 
     static async assignAddressToUser(req, res) {
         const { addressId } = req.params;
-        const userId = req.user.id;
+        const user = req.session.user;
+        const userId = user.id;
 
         try {
             const assignment = await AddressService.assignAddressToUser(userId, addressId);
@@ -66,7 +68,8 @@ class AddressController {
 
     static async removeAddressFromUser(req, res) {
         const { addressId } = req.params;
-        const userId = req.user.id;
+        const user = req.session.user;
+        const userId = user.id;
 
         try {
             const removal = await AddressService.removeAddressFromUser(userId, addressId);

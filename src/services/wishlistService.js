@@ -2,14 +2,17 @@ import WishlistRepository from "../repositories/wishlistRepository.js";
 import { calculatePageParams, createDataStructureForListProducts } from '../helpers/pageHelpers.js';
 
 class WishlistService {
-    static async getWishlistItemsByUser(user) {
+    static async getWishlistItemsByUser(user, limitParam, pageParam) {
         try {
             const userId = user.id;
             if (!user) {
                 throw Error('User is required!');
             }
-            const wishlistItems = await WishlistRepository.fetchWishlistItemsByUserId_completeForm(userId);
-            const data = await createDataStructureForListProducts(user, wishlistItems);
+
+            const totalProducts = (await WishlistRepository.getCountWishlistProductsByUserId(user.id));
+            const { limit, offset, page, totalPages } = await calculatePageParams(limitParam, pageParam, totalProducts);
+            const wishlistItems = await WishlistRepository.fetchWishlistItemsByUserId_completeForm(userId, limit, offset);
+            const data = await createDataStructureForListProducts(user, wishlistItems, null, totalProducts, null, page, totalPages, offset, limit);
             return data;
         } catch (error) {
             console.error('Failed to get wishlist items by user id: ', error.message)

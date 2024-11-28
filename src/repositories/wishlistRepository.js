@@ -12,6 +12,21 @@ class WishlistRepository {
         }
     }
 
+    static async getCountWishlistProductsByUserId(userId) {
+        try {
+            const { rows } = await pool.query(`
+                    SELECT COUNT(DISTINCT fi.product_id)
+                    FROM favorites_list fl INNER JOIN favorites_items fi ON fl.id = fi.favorites_list_id
+                    WHERE fl.user_id = $1
+                `, [userId]);
+
+            return rows[0].count || 0;
+        } catch (error) {
+            console.error('Error while getting count wishlist products by user id: ', error);
+            throw Error(`Error while getting count wishlist products by user id: ${error.message}`);
+        }
+    }
+
     static async fetchWishlistItemsByUserId_resumedForm(userId) {
         try {
             const { rows } = await pool.query(`
@@ -33,7 +48,9 @@ class WishlistRepository {
         }
     }
 
-    static async fetchWishlistItemsByUserId_completeForm(userId) {
+    static async fetchWishlistItemsByUserId_completeForm(userId, limit, offset) {
+        console.log(limit);
+        console.log(offset)
         try {
             const { rows } = await pool.query(`
                         SELECT
@@ -91,7 +108,9 @@ class WishlistRepository {
                             variant_offers.offer_value,
                             variant_offers.offer_installments,
                             fi.product_id
-            `, [userId]);
+                        LIMIT $2 
+                        OFFSET $3
+            `, [userId, limit, offset]);
             return rows;
         } catch (error) {
             console.error('Error while fetching wishlist items: ', error);

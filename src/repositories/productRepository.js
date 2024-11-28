@@ -244,7 +244,8 @@ class ProductRepository {
                         vod.offer_value,
                         vod.offer_installments
                     LIMIT $1
-                `, [limit])
+                `, [limit]);
+                return rows;
         } catch (error) {
 
         }

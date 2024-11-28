@@ -7,9 +7,9 @@ const totalPages = pagination.totalPages;
 const limit = pagination.itemsPerPage;
 const offset = pagination.offset;
 
-toggleFilterMenuButton.addEventListener("click", toggleFilterMenu);
-nextPageButton.addEventListener("click", nextPage);
-prevPageButton.addEventListener("click", prevPage);
+toggleFilterMenuButton?.addEventListener("click", toggleFilterMenu);
+nextPageButton?.addEventListener("click", nextPage);
+prevPageButton?.addEventListener("click", prevPage);
 
 document.addEventListener('DOMContentLoaded', () => {
     changePageParam();
@@ -25,7 +25,7 @@ function changePageParam() {
 }
 
 function toggleFilterMenu() {
-    filterMenu.classList.toggle("active");
+    filterMenu.classList?.toggle("active");
 }
 
 function updateURL(newPage, newLimit) {

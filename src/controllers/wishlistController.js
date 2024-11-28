@@ -5,8 +5,11 @@ class WishlistController {
     static async getWishlistPage(req, res) {
         try {
             const user = req.session.user;
+            const { limit, page } = req.query;
+            console.log("Limit: ", limit);
+            console.log("Page: ", page);
             const categories = await ProductService.getAllProductCategoriesAndSubcategories();
-            const data = await WishlistService.getWishlistItemsByUser(user);
+            const data = await WishlistService.getWishlistItemsByUser(user, limit, page);
             data.page.categories = categories;
 
             res.render('client/wishlist', { data });

@@ -1,11 +1,15 @@
 export async function calculatePageParams(limitParam, pageParam, totalProducts) {
-    const limit = parseInt(limitParam, 10) || 20;
-    const totalPages = Math.ceil(totalProducts / limit) || 1;
-    const page = Math.min(parseInt(pageParam, 10) || 1, totalPages);
+    const limit = (limitParam && !isNaN(parseInt(limitParam, 10))) ? parseInt(limitParam, 10) : 20;
+    const totalPages = totalProducts > 0 ? Math.ceil(totalProducts / limit) : 1;
+    let page = (pageParam && !isNaN(parseInt(pageParam, 10))) ? parseInt(pageParam, 10) : 1;
+    if (page > totalPages) {
+        page = totalPages;
+    }
     const offset = limit * (page - 1);
 
     return { limit, offset, page, totalPages };
 }
+
 
 export async function createDataStructureForListProducts(user = null, products = [], title = null,
     quantResults = null, breadcrumbs = [], currentPage = null, totalPages = null,

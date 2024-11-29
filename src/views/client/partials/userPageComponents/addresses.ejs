@@ -1,4 +1,4 @@
-<% const userAddresses=sectionData %>
+<% const userAddresses=sectionData.addresses; const countries=sectionData?.countries %>
     <div class="addresses-container">
         <div class="section-header">
             <h2 class="section-title">Meus Endereços</h2>
@@ -90,6 +90,13 @@
                         <label for="country">País</label>
                         <select name="country" id="country" required>
                             <option readonly disabled selected value=""></option>
+                            <% if (countries.length> 0){ %>
+                                <% countries.forEach(country=> { %>
+                                    <option value="<%= country.country_id %>">
+                                        <%= `${country.country_name} (${country.country_abbreviation})` %>
+                                    </option>
+                                    <% }) %>
+                                        <% } %>
                         </select>
                     </div>
 

@@ -46,7 +46,9 @@ class AddressService {
     static async getAddressesByUser(user) {
         try {
             const addresses = await AddressRepository.getAddressesByUser(user.id);
-            return addresses;
+            const countries = await this.getAllCountries();
+            console.log(countries)
+            return { addresses, countries };
         } catch (error) {
             console.error('Erro ao obter endereços:', error);
             throw Error('Erro ao obter endereços.');

@@ -64,7 +64,7 @@ class AddressRepository {
         }
     }
 
-    static async deleteAddress(addressId) {
+    static async deleteAddress(userId, addressId) {
         try {
             const { rows } = await pool.query(`
             UPDATE addresses 
@@ -77,6 +77,8 @@ class AddressRepository {
             throw Error('Error deleting address:' + error);
         }
     }
+
+
 
     static async getAddressesByUser(userId) {
         try {

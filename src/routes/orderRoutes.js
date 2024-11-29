@@ -1,11 +1,21 @@
 import express from 'express';
-import { checkAuth } from '../middlewares/auth.js';
+import { checkAuth, isAdmin } from '../middlewares/auth.js';
 import OrderController from '../controllers/orderController.js';
 
 const router = express.Router();
 
-router.post('/orders', checkAuth, OrderController.createOrder);
-router.get('/orders', checkAuth, OrderController.getOrdersByUser);
-router.get('/orders/:orderId', checkAuth, OrderController.getOrderDetails);
+// Acesso do usuário
+
+router.post('/orders/user', checkAuth, OrderController.createOrder);
+router.get('/orders/user/all', checkAuth, OrderController.getOrdersByUser);
+router.get('/orders/user/open', checkAuth, OrderController.getUserOpenOrders);
+router.get('/orders/user/finished', checkAuth, OrderController.getUserFinishedOrders);
+router.get('/orders/user/:orderId', checkAuth, OrderController.getOrderDetails);
+
+// Acesso do administrador
+
+router.get('/orders/all', isAdmin, OrderController.getAllOrders);
+router.get('/orders/open', isAdmin, OrderController.getOpenOrders);
+router.get('/orders/finished', isAdmin, OrderController.getFinishedOrders);
 
 export default router;

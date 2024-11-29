@@ -23,9 +23,9 @@ class AddressService {
         }
     }
 
-    static async deleteAddress(addressId) {
+    static async deleteAddress(userId, addressId) {
         try {
-            const deletedAddress = await AddressRepository.deleteAddress(addressId);
+            const deletedAddress = await AddressRepository.deleteAddress(userId, addressId);
             return deletedAddress;
         } catch (error) {
             console.error('Erro ao excluir endereço:', error);
@@ -47,7 +47,6 @@ class AddressService {
         try {
             const addresses = await AddressRepository.getAddressesByUser(user.id);
             const countries = await this.getAllCountries();
-            console.log(countries)
             return { addresses, countries };
         } catch (error) {
             console.error('Erro ao obter endereços:', error);

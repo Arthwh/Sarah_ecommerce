@@ -1,5 +1,5 @@
 import pool from '../db.js';
-import { Order } from '../models/orderModel.js'
+import { Order, OrderItem, Payment } from '../models/orderModel.js'
 
 class OrderRepository {
     static async createOrder(userId, addressId, paymentId, totalPrice, status) {
@@ -20,11 +20,11 @@ class OrderRepository {
     static async addOrderItems(orderId, items) {
         try {
             const query = `
-            INSERT INTO order_items (order_id, product_id, quantity, unit_price)
+            INSERT INTO order_items (order_id, product_variant_id, quantity, unit_price)
             VALUES ($1, $2, $3, $4) RETURNING *;
         `;
             const promises = items.map(item => {
-                const values = [orderId, item.product_id, item.quantity, item.unit_price];
+                const values = [orderId, item.product_variant_id, item.quantity, item.unit_price];
                 return pool.query(query, values);
             });
             const results = await Promise.all(promises);
@@ -71,6 +71,79 @@ class OrderRepository {
         } catch (error) {
             console.error(`Error getting order items: ${error}`);
             throw Error(`Error getting orders items": ${error.message}`)
+        }
+    }
+
+    static async getUserOpenOrders(userId) {
+        try {
+            const query = `
+            SELECT * FROM orders
+            WHERE user_id = $1 AND status NOT IN ('delivered', 'cancelled')
+            ORDER BY created_at DESC;
+        `;
+            const { rows } = await pool.query(query, [userId]);
+            return rows.map(row => Order.mapFromRow(row));
+        } catch (error) {
+            console.error(`Error getting orders by user: ${error}`);
+            throw Error(`Error getting orders by user": ${error.message}`)
+        }
+    }
+
+    static async getUserFinishedOrders(userId) {
+        try {
+            const query = `
+            SELECT * FROM orders
+            WHERE user_id = $1 AND status = 'delivered'
+            ORDER BY created_at DESC;
+        `;
+            const { rows } = await pool.query(query, [userId]);
+            return rows.map(row => Order.mapFromRow(row));
+        } catch (error) {
+            console.error(`Error getting orders by user: ${error}`);
+            throw Error(`Error getting orders by user": ${error.message}`)
+        }
+    }
+
+    static async getOpenOrders() {
+        try {
+            const query = `
+            SELECT * FROM orders
+            WHERE status NOT IN ('delivered', 'cancelled')
+            ORDER BY created_at DESC;
+        `;
+            const { rows } = await pool.query(query);
+            return rows.map(row => Order.mapFromRow(row));
+        } catch (error) {
+            console.error(`Error getting orders by user: ${error}`);
+            throw Error(`Error getting orders by user": ${error.message}`)
+        }
+    }
+
+    static async getFinishedOrders() {
+        try {
+            const query = `
+            SELECT * FROM orders
+            WHERE status = 'delivered'
+            ORDER BY created_at DESC;
+        `;
+            const { rows } = await pool.query(query);
+            return rows.map(row => Order.mapFromRow(row));
+        } catch (error) {
+            console.error(`Error getting orders by user: ${error}`);
+            throw Error(`Error getting orders by user": ${error.message}`)
+        }
+    }
+
+    static async getAllOrders() {
+        try {
+            const query = `
+            SELECT * FROM orders ORDER BY created_at DESC;
+        `;
+            const { rows } = await pool.query(query);
+            return rows.map(row => Order.mapFromRow(row));
+        } catch (error) {
+            console.error(`Error getting orders by user: ${error}`);
+            throw Error(`Error getting orders by user": ${error.message}`)
         }
     }
 

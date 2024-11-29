@@ -40,6 +40,57 @@ class OrderService {
             throw Error('Erro ao obter detalhes do pedido.');
         }
     }
+
+    static async getUserOpenOrders(userId) {
+        try {
+            const orders = await OrderRepository.getUserOpenOrders(userId);
+            return orders;
+        } catch (error) {
+            console.error('Erro ao obter pedidos:', error);
+            throw Error('Erro ao obter pedidos.');
+        }
+    }
+
+    static async getUserFinishedOrders(userId) {
+        try {
+            const orders = await OrderRepository.getUserFinishedOrders(userId);
+            return orders;
+        } catch (error) {
+            console.error('Erro ao obter pedidos:', error);
+            throw Error('Erro ao obter pedidos.');
+        }
+    }
+
+    static async getOpenOrders() {
+        try {
+            const orders = await OrderRepository.getOpenOrders();
+            return orders;
+        } catch (error) {
+            console.error('Erro ao obter pedidos:', error);
+            throw Error('Erro ao obter pedidos.');
+        }
+    }
+
+    static async getFinishedOrders() {
+        try {
+            const orders = await OrderRepository.getFinishedOrders();
+            return orders;
+        } catch (error) {
+            console.error('Erro ao obter pedidos:', error);
+            throw Error('Erro ao obter pedidos.');
+        }
+    }
+
+    static async getAllOrders() {
+        try {
+            const orders = await OrderRepository.getAllOrders();
+            return orders;
+        } catch (error) {
+            console.error('Erro ao obter pedidos:', error);
+            throw Error('Erro ao obter pedidos.');
+        }
+    }
+
 }
 
 export default OrderService;

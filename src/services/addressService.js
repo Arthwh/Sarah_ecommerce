@@ -1,9 +1,9 @@
 import AddressRepository from '../repositories/addressRepository.js';
 
 class AddressService {
-    static async addAddress(cityId, addressData) {
+    static async addAddress(userId, addressData) {
         try {
-            const newAddress = await AddressRepository.addAddress(cityId, addressData);
+            const newAddress = await AddressRepository.addAddress(userId, addressData);
             return newAddress;
         } catch (error) {
             console.error('Erro ao adicionar endereço:', error);
@@ -21,9 +21,9 @@ class AddressService {
         }
     }
 
-    static async deleteAddress(addressId) {
+    static async deleteAddress(userId, addressId) {
         try {
-            const deletedAddress = await AddressRepository.deleteAddress(addressId);
+            const deletedAddress = await AddressRepository.deleteAddress(userId, addressId);
             return deletedAddress;
         } catch (error) {
             console.error('Erro ao excluir endereço:', error);

@@ -26,7 +26,7 @@ export class Order {
     }
 }
 
-class OrderItem {
+export class OrderItem {
     constructor(id, order_id, product_id, quantity, unit_price, created_at, updated_at) {
         this.id = id;
         this.order_id = order_id;
@@ -50,7 +50,7 @@ class OrderItem {
     }
 }
 
-class Payment {
+export class Payment {
     constructor(id, payment_method, amount, status, transaction_id, created_at, updated_at) {
         this.id = id;
         this.payment_method = payment_method;

@@ -2,11 +2,12 @@ import AddressService from '../services/addressService.js';
 
 class AddressController {
     static async addAddress(req, res) {
-        const cityId = req.body.city_id;
         const addressData = req.body;
+        const user = req.session.user;
+        const userId = user.id;
 
         try {
-            const newAddress = await AddressService.addAddress(cityId, addressData);
+            const newAddress = await AddressService.addAddress(userId, addressData);
             res.status(201).json(newAddress);
         } catch (error) {
             console.error(error);
@@ -29,9 +30,11 @@ class AddressController {
 
     static async deleteAddress(req, res) {
         const { addressId } = req.params;
+        const user = req.session.user;
+        const userId = user.id;
 
         try {
-            const deletedAddress = await AddressService.deleteAddress(addressId);
+            const deletedAddress = await AddressService.deleteAddress(userId, addressId);
             res.status(200).json(deletedAddress);
         } catch (error) {
             console.error(error);

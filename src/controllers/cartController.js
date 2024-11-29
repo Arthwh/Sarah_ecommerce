@@ -16,8 +16,8 @@ class CartController {
         try {
             const user = req.session.user;
             const userId = user.id;
-            const { productId, quantity } = req.body;
-            await CartService.addToCart(userId, productId, quantity);
+            const { productVariantId, quantity } = req.body;
+            await CartService.addToCart(userId, productVariantId, quantity);
             res.status(201).json({ success: true, message: "Produto adicionado ao carrinho!" });
         } catch (error) {
             res.status(500).json({ success: false, error: 'Erro ao adicionar produto ao carrinho:', message: error.message });
@@ -28,8 +28,8 @@ class CartController {
         try {
             const user = req.session.user;
             const userId = user.id;
-            const { productId } = req.params;
-            await CartService.removeFromCart(userId, productId);
+            const { productVariantId } = req.params;
+            await CartService.removeFromCart(userId, productVariantId);
             res.status(200).json({ success: true, message: "Produto removido do carrinho!" });
         } catch (error) {
             res.status(500).json({ success: false, error: 'Erro ao remover produto ao carrinho:', message: error.message });

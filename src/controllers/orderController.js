@@ -43,6 +43,63 @@ class OrderController {
             res.status(500).json({ message: 'Erro ao obter detalhes do pedido.' });
         }
     }
+
+    static async getUserOpenOrders(req, res) {
+        const user = req.session.user;
+        const userId = user.id;
+
+        try {
+            const orders = await OrderService.getUserOpenOrders(userId);
+            res.status(200).json(orders);
+        } catch (error) {
+            console.error(error);
+            res.status(500).json({ message: 'Erro ao obter pedidos.' });
+        }
+    }
+
+    static async getUserFinishedOrders(req, res) {
+        const user = req.session.user;
+        const userId = user.id;
+
+        try {
+            const orders = await OrderService.getUserFinishedOrders(userId);
+            res.status(200).json(orders);
+        } catch (error) {
+            console.error(error);
+            res.status(500).json({ message: 'Erro ao obter pedidos.' });
+        }
+    }
+
+    static async getOpenOrders(req, res) {
+        try {
+            const orders = await OrderService.getOpenOrders();
+            res.status(200).json(orders);
+        } catch (error) {
+            console.error(error);
+            res.status(500).json({ message: 'Erro ao obter pedidos.' });
+        }
+    }
+
+    static async getFinishedOrders(req, res) {
+        try {
+            const orders = await OrderService.getFinishedOrders();
+            res.status(200).json(orders);
+        } catch (error) {
+            console.error(error);
+            res.status(500).json({ message: 'Erro ao obter pedidos.' });
+        }
+    }
+
+    static async getAllOrders(req, res) {
+        try {
+            const orders = await OrderService.getAllOrders();
+            res.status(200).json(orders);
+        } catch (error) {
+            console.error(error);
+            res.status(500).json({ message: 'Erro ao obter pedidos.' });
+        }
+    }
+
 }
 
 export default OrderController;

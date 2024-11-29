@@ -5,12 +5,12 @@ class CartService {
         return await CartRepository.getCartItems(userId);
     }
 
-    static async addToCart(userId, productId, quantity) {
-        return await CartRepository.addCartItem(userId, productId, quantity);
+    static async addToCart(userId, productVariantId, quantity) {
+        return await CartRepository.addCartItem(userId, productVariantId, quantity);
     }
 
-    static async removeFromCart(userId, productId) {
-        return await CartRepository.removeCartItem(userId, productId);
+    static async removeFromCart(userId, productVariantId) {
+        return await CartRepository.removeCartItem(userId, productVariantId);
     }
 }
 

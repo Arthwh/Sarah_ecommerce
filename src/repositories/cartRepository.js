@@ -6,7 +6,7 @@ class CartRepository {
             const { rows } = await pool.query(`
                 SELECT 
                     sci.id AS cart_item_id,
-                    sci.product_id,
+                    sci.product_variant_id,
                     pv.id AS product_variant_id,
                     p.name AS product_name,
                     pv.color,
@@ -26,7 +26,7 @@ class CartRepository {
                     ) AS primary_image
                 FROM shopping_cart_items sci
                 JOIN shopping_carts sc ON sci.shopping_cart_id = sc.id
-                JOIN product_variant pv ON sci.product_id = pv.id
+                JOIN product_variant pv ON sci.product_variant_id = pv.id
                 JOIN products p ON pv.products_id = p.id
                 WHERE sc.user_id = $1
             `, [userId]);
@@ -56,7 +56,7 @@ class CartRepository {
 
             const { rows: itemRows } = await pool.query(`
                 SELECT id, quantity FROM shopping_cart_items 
-                WHERE shopping_cart_id = $1 AND product_id = $2
+                WHERE shopping_cart_id = $1 AND product_variant_id = $2
             `, [cartId, productVariantId]);
 
             if (itemRows.length > 0) {
@@ -67,7 +67,7 @@ class CartRepository {
                 `, [quantity, itemRows[0].id]);
             } else {
                 await pool.query(`
-                    INSERT INTO shopping_cart_items (shopping_cart_id, product_id, quantity) 
+                    INSERT INTO shopping_cart_items (shopping_cart_id, product_variant_id, quantity) 
                     VALUES ($1, $2, $3)
                 `, [cartId, productVariantId, quantity]);
             }
@@ -85,7 +85,7 @@ class CartRepository {
                 USING shopping_carts
                 WHERE shopping_cart_items.shopping_cart_id = shopping_carts.id 
                 AND shopping_carts.user_id = $1
-                AND shopping_cart_items.product_id = $2
+                AND shopping_cart_items.product_variant_id = $2
             `, [userId, productVariantId]);
         } catch (error) {
             console.error('Error removing from cart: ', error);

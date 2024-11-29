@@ -25,8 +25,6 @@
             console.error('Dados incompletos.');
             window.location.href = "/error";
         }
-        console.log(data)
-        // Separa os dados em variáveis
         const user = data.user;
         const cart = user?.cart;
         const wishlist = user?.wishlist;
@@ -51,21 +49,21 @@
                                     encontrar mais inspirações.</p>
                             </div>
                         </div>
-
-                        <p class="favorites-count">Você tem <strong>
-                                <%= data.page.quantResults %>
-                            </strong>
-                            <%= data.page.quantResults != 1 ? 'produtos favoritos' : 'produto favorito' %>
-                        </p>
-                        <div class="wishlist-items">
-                            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
-                                <% data.products.forEach(item=> { %>
-                                    <%- include('partials/productCard', { product: item, mode: 'main' }) %>
-                                        <% }); %>
-                            </div>
-                        </div>
-
                         <% if (data.page.quantResults> 0) { %>
+                            <p class="favorites-count">Você tem <strong>
+                                    <%= data.page.quantResults %>
+                                </strong>
+                                <%= data.page.quantResults !=1 ? 'produtos favoritos' : 'produto favorito' %>
+                            </p>
+                            <div class="wishlist-items">
+                                <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+                                    <% data.products.forEach(item=> { %>
+                                        <%- include('partials/productCard', { product: item, mode: 'main' }) %>
+                                            <% }); %>
+                                </div>
+                            </div>
+
+
                             <!-- Paginação -->
                             <div class="flex flex-col mt-10">
                                 <div class="flex justify-center items-center p-2">
@@ -102,8 +100,18 @@
                                     </button>
                                 </div>
                             </div>
-                            <% } %>
-
+                            <% } else { %>
+                                <!-- Banner para Wishlist vazia -->
+                                <div class="empty-wishlist-banner">
+                                    <h2>Sua lista de desejos está
+                                        vazia</h2>
+                                    <p>Adicione produtos à sua lista de desejos para
+                                        encontrá-los facilmente mais tarde.</p>
+                                    <a href="/" class="action-btn-contrast">
+                                        Explorar Produtos
+                                    </a>
+                                </div>
+                                <% } %>
 
                 </main>
                 <%- include('partials/_footer') %>

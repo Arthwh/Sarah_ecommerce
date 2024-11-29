@@ -12,6 +12,7 @@
     <link href="/public/css/client/footer.css" rel="stylesheet">
     <link href="/public/css/client/categoryAsideMenu.css" rel="stylesheet">
     <link href="/public/css/client/loginRegisterModal.css" rel="stylesheet">
+    <link href="/public/css/client/userPage/addresses.css" rel="stylesheet">
 
     <script>
         // Obtem os dados enviados do backend e converte para JSON
@@ -20,7 +21,7 @@
             const redirect = () => {
                 window.location.href = '/';
             }
-            showCentralModal("Listagem de produtos", "Dados incompletos.", redirect)
+            showCentralModal("Configurações do Usuário", "Dados incompletos.", redirect)
             console.error('Dados incompletos.');
         }
         // Separa os dados em variáveis
@@ -40,21 +41,41 @@
                     <!-- Menu Lateral -->
                     <aside class="menu-lateral">
                         <ul>
-                            <li><a href="#" class="menuItem" data-section="userProfile">Informações Pessoais</a></li>
-                            <li><a href="#" class="menuItem" data-section="userAddresses">Endereços</a></li>
-                            <li><a href="#" class="menuItem" data-section="userOrders">Pedidos</a></li>
-                            <li><a href="#" class="menuItem" data-section="userPaymentMethods">Métodos de Pagamento</a>
+                            <li><button class="menuItem" id="userProfile">Informações Pessoais</button></li>
+                            <li><button class="menuItem" id="userOrders">Pedidos</button></li>
+                            <li><button class="menuItem" id="userAddresses">Endereços</button></li>
+                            <li><button class="menuItem" id="userPaymentMethods">Métodos de Pagamento</button>
                             </li>
-                            <li><a href="#" class="menuItem" data-section="userNotifications">Notificações</a></li>
-                            <li><a href="#" class="menuItem" data-section="userSecurity">Segurança e Privacidade</a>
+                            <li><button class="menuItem" id="userNotifications">Notificações</button></li>
+                            <li><button class="menuItem" id="userSecurity">Segurança e Privacidade</button>
                             </li>
                         </ul>
                     </aside>
 
                     <!-- Conteúdo Dinâmico -->
                     <section class="config-content" id="configContent">
-                        <h1>Bem-vindo à área de configurações do usuário!</h1>
-                        <p>Selecione uma opção no menu para visualizar os detalhes.</p>
+                        <% if (data.section){ %>
+                            <% if (data.sectionData){ %>
+                                <%- include(`partials/userPageComponents/${data.section}`, { sectionData:
+                                    data.sectionData }) %>
+                                    <% } else { %>
+                                        <div class="user-account__error-message">
+                                            <h2 class="user-account__error-title">Erro: Seção não encontrada</h2>
+                                            <p class="user-account__error-description">A seção solicitada não pôde ser
+                                                localizada. Verifique se a URL está correta ou se você tem permissão
+                                                para
+                                                acessar este conteúdo.</p>
+                                            <p><a href="/account" class="user-account__btn-back">Voltar para a página
+                                                    inicial do usuário</a></p>
+                                        </div>
+                                        <% } } else { %>
+                                            <div class="user-welcome-banner">
+                                                <h1 class="user-welcome-title">Bem-vindo à área de configurações do
+                                                    usuário!</h1>
+                                                <p class="user-welcome-subtitle">Selecione uma opção no menu para
+                                                    visualizar os detalhes.</p>
+                                            </div>
+                                            <% } %>
                     </section>
                 </main>
 
@@ -69,7 +90,9 @@
                     <script src="/public/js/client/categoryAsideMenu.js"></script>
                     <script src="/public/js/client/header.js"></script>
                     <script src="/public/js/client/loginAndRegister.js"></script>
+                    <script src="/public/js/client/userPage.js"></script>
                     <script src="/public/js/client/wishlist.js"></script>
+                    <script src="/public/js/client/userPage/addresses.js"></script>
 
 </body>
 

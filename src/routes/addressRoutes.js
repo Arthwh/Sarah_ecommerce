@@ -4,11 +4,16 @@ import AddressController from '../controllers/addressController.js';
 
 const router = express.Router();
 
-router.post('/addresses', checkAuth, AddressController.addAddress);
-router.put('/addresses/:addressId', checkAuth, AddressController.updateAddress);
-router.delete('/addresses/:addressId', checkAuth, AddressController.deleteAddress);
-router.get('/addresses', checkAuth, AddressController.getAddressesByUser);
+router.post('/api/addresses/add', checkAuth, AddressController.addAddress);
+router.put('/api/addresses/update/:addressId', checkAuth, AddressController.updateAddress);
+router.delete('/api/addresses/delete/:addressId', checkAuth, AddressController.deleteAddress);
+router.get('/api/addresses/get-address-by-id/:id', checkAuth, AddressController.getAddressById)
+router.get('/api/addresses/get-address-by-user-id', checkAuth, AddressController.getAddressesByUser);
 router.post('/addresses/:addressId/assign', checkAuth, AddressController.assignAddressToUser);
 router.delete('/addresses/:addressId/remove', checkAuth, AddressController.removeAddressFromUser);
+router.get('/api/addresses/country', checkAuth, AddressController.getAllCountries)
+router.get('/api/addresses/country/:id/states', checkAuth, AddressController.getAllStatesFromCountryId);
+
+router.get('/api/addresses', checkAuth, AddressController.getUserAddressesComponent)
 
 export default router;

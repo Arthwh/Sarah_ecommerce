@@ -13,5 +13,6 @@ router.post('/api/register', UserController.createUser);
 
 //Views
 router.get('/account', checkAuth, UserController.getUserAccountPage);
+router.get('/account/:section', checkAuth, UserController.getUserAccountPage);
 
 export default router;

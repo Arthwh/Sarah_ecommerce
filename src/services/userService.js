@@ -1,6 +1,9 @@
 import argon2 from 'argon2';
 import UserRepository from '../repositories/userRepository.js';
 import WishlistRepository from '../repositories/wishlistRepository.js';
+import OrderService from '../services/orderService.js';
+import AddressService from './addressService.js';
+
 import { logAction } from './logsService.js';
 
 class UserService {
@@ -51,6 +54,34 @@ class UserService {
             console.error('Error creating user: ' + error.message);
             logAction(userIP, userAgent, 'user-creation', { status: 'error', details: error.message });
             throw error;
+        }
+    }
+
+    static async getUserPageSectionData(user, section) {
+        try {
+            let sectionData = null;
+            switch (section) {
+                case 'profile':
+                    sectionData = await getUserProfileData(user);
+                    break;
+                case 'orders':
+                    sectionData = await OrderService.getOrdersByUser(user);
+                    break;
+                case 'addresses':
+                    sectionData = await AddressService.getAddressesByUser(user);
+                    break;
+            }
+            return sectionData;
+        } catch (error) {
+            console.error('Error getting user page section data: ' + error.message);
+        }
+    }
+
+    static async getUserProfileData(userId) {
+        try {
+
+        } catch (error) {
+
         }
     }
 

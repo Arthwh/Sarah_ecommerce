@@ -38,10 +38,18 @@ class UserController {
     static async getUserAccountPage(req, res) {
         try {
             const user = req.session.user;
+            let section = req.params.section || null;
+            let renderedSection = null;
+            if (section) {
+                renderedSection = await UserService.getUserPageSectionData(user, section);
+            }
+            if (!renderedSection && section) {
+                section = null;
+            }
             const categories = await ProductService.getAllProductCategoriesAndSubcategories();
             res.render('client/userConfig', {
                 data: {
-                    user: user, page: { categories: categories, displayRegisterModal: true }
+                    user: user, page: { categories: categories, displayRegisterModal: true }, sectionData: renderedSection, section: section
                 }
             });
         } catch (error) {

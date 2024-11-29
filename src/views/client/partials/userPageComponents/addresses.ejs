@@ -1,0 +1,126 @@
+<% const userAddresses=sectionData %>
+    <div class="addresses-container">
+        <div class="section-header">
+            <h2 class="section-title">Meus Endereços</h2>
+            <p class="section-subtitle">Gerencie e edite os endereços associados à sua conta</p>
+            <button onclick="toggleAddressModal('add')">
+                <img src="/public/images/icons/add_circle_black.svg" alt="Add">
+            </button>
+        </div>
+        <div class="addresses-content">
+            <% if (userAddresses?.length> 0 ){ %>
+                <% userAddresses?.forEach((address)=> { %>
+                    <div class="address-card" data-address-id="<%= address.id %>">
+                        <div class="address-card-title">
+                            <div class="address-name">
+                                <%= address.name %>
+                            </div>
+                            <div class="address-btn-container">
+                                <button class="btn-edit" onclick="editAddress('<%= address.id %>')">
+                                    <img class="btn-edit-default"
+                                        src="/public/images/icons/edit_pen_icon_black_border.svg" alt="edit">
+                                    <img class="btn-edit-hover" src="/public/images/icons/edit_pen_icon_black_fill.svg"
+                                        alt="edit">
+                                </button>
+                                <button class="btn-delete" onclick="deleteAddress('<%= address.id %>')">
+                                    <img class="btn-delete-default"
+                                        src="/public/images/icons/delete_icon_border_black.svg" alt="delete">
+                                    <img class="btn-delete-hover" src="/public/images/icons/delete_icon_fill_black.svg"
+                                        alt="delete">
+                                </button>
+                            </div>
+                        </div>
+                        <div class="address-details">
+                            <p><strong>Endereço:</strong>
+                                <%= address.street %>, <%= address.number %>
+                            </p>
+                            <p><strong>Cidade:</strong>
+                                <%= address.city %>
+                            </p>
+                            <p><strong>Estado:</strong>
+                                <%= address.state %>
+                            </p>
+                            <p><strong>CEP:</strong>
+                                <%= address.zipcode %>
+                            </p>
+                            <p><strong>Complemento:</strong>
+                                <%= address.complement || 'N/A' %>
+                            </p>
+                        </div>
+                    </div>
+                    <% }); %>
+                        <% } else { %>
+                            <div class="empty-addresses-banner">
+                                <h2>Sua lista de endereços está
+                                    vazia</h2>
+                                <p>Adicione um endereço a sua conta para usá-lo em suas compras.</p>
+                                <button onclick="toggleAddressModal('add')" class="action-btn-contrast">
+                                    Adicionar endereço
+                                </button>
+                            </div>
+                            <% } %>
+        </div>
+    </div>
+
+    <!-- Modal para edição -->
+    <section>
+        <div id="edit-address-addresses-modal" class="addresses-modal hidden">
+            <div class="addresses-modal-overlay"></div>
+            <div class="addresses-modal-content">
+                <h2 class="textColorYellow"></h2>
+                <form id="edit-address-form">
+                    <input type="hidden" id="address-id" name="id" />
+
+                    <div>
+                        <label for="name">Nome</label>
+                        <input type="text" id="name" name="name" required />
+                    </div>
+
+                    <div>
+                        <label for="street">Rua</label>
+                        <input type="text" id="street" name="street" required />
+                    </div>
+
+                    <div>
+                        <label for="number">Número</label>
+                        <input type="text" id="number" name="number" required />
+                    </div>
+
+                    <div>
+                        <label for="country">País</label>
+                        <select name="country" id="country" required>
+                            <option readonly disabled selected value=""></option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label for="state">Estado</label>
+                        <select name="state" id="state" required>
+                            <option readonly disabled selected value=""></option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label for="city">Cidade</label>
+                        <input type="text" id="city" name="city" required />
+                    </div>
+
+                    <div>
+                        <label for="zipCode">CEP</label>
+                        <input type="text" id="zipCode" name="zipCode" required />
+                    </div>
+
+                    <div>
+                        <label for="complement">Complemento</label>
+                        <input type="text" id="complement" name="complement" />
+                    </div>
+
+                    <div class="address-form-btn-container">
+                        <button id="saveAddressButton" type="button" class="action-btn-contrast">Salvar</button>
+                        <button type="button" onclick="toggleAddressModal()"
+                            class="action-btn-contrast">Cancelar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>

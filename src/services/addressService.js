@@ -1,9 +1,10 @@
 import AddressRepository from '../repositories/addressRepository.js';
 
 class AddressService {
-    static async addAddress(cityId, addressData) {
+    static async addAddress(user, addressData) {
         try {
-            const newAddress = await AddressRepository.addAddress(cityId, addressData);
+            const { name: address_name, street, number, country: country_id, state: state_id, city, zipCode, complement } = addressData;
+            const newAddress = await AddressRepository.addAddress(user.id, address_name, street, number, country_id, state_id, city, zipCode, complement);
             return newAddress;
         } catch (error) {
             console.error('Erro ao adicionar endereço:', error);
@@ -13,7 +14,8 @@ class AddressService {
 
     static async updateAddress(addressId, addressData) {
         try {
-            const updatedAddress = await AddressRepository.updateAddress(addressId, addressData);
+            const { name: address_name, street, number, country: country_id, state: state_id, city, zipCode, complement } = addressData;
+            const updatedAddress = await AddressRepository.updateAddress(addressId, address_name, street, number, country_id, state_id, city, zipCode, complement);
             return updatedAddress;
         } catch (error) {
             console.error('Erro ao atualizar endereço:', error);
@@ -31,9 +33,19 @@ class AddressService {
         }
     }
 
-    static async getAddressesByUser(userId) {
+    static async getAddressById(user, addressId) {
         try {
-            const addresses = await AddressRepository.getAddressesByUser(userId);
+            const addressData = await AddressRepository.getAddressById(user.id, addressId);
+            return addressData;
+        } catch (error) {
+            console.error('Erro ao buscar endereço:', error);
+            throw new Error('Erro ao buscar endereço.');
+        }
+    }
+
+    static async getAddressesByUser(user) {
+        try {
+            const addresses = await AddressRepository.getAddressesByUser(user.id);
             return addresses;
         } catch (error) {
             console.error('Erro ao obter endereços:', error);
@@ -58,6 +70,26 @@ class AddressService {
         } catch (error) {
             console.error('Erro ao remover endereço do usuário:', error);
             throw Error('Erro ao remover endereço.');
+        }
+    }
+
+    static async getAllCountries() {
+        try {
+            const countries = await AddressRepository.getAllCountries();
+            return countries;
+        } catch (error) {
+            console.error('Erro ao obter países:', error);
+            throw Error('Erro ao obter países.');
+        }
+    }
+
+    static async getAllStatesFromCountryId(id) {
+        try {
+            const states = await AddressRepository.getAllStatesFromCountryId(id);
+            return states;
+        } catch (error) {
+            console.error('Erro ao obter estados pelo código do país:', error);
+            throw Error('Erro ao obter estados pelo código do país' + error);
         }
     }
 }

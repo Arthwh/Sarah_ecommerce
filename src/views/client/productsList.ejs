@@ -21,7 +21,6 @@
     <script>
         // Obtem os dados enviados do backend e converte para JSON
         const data = JSON.parse('<%- JSON.stringify(data) %>');
-        console.log(data)
         if (!data) {
             const redirect = () => {
                 window.location.href = '/';

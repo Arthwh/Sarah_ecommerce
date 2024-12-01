@@ -62,7 +62,7 @@ class UserService {
             let sectionData = null;
             switch (section) {
                 case 'profile':
-                    sectionData = await getUserProfileData(user);
+                    sectionData = await this.getUserProfileData(user);
                     break;
                 case 'orders':
                     sectionData = await OrderService.getOrdersByUser(user);
@@ -74,14 +74,17 @@ class UserService {
             return sectionData;
         } catch (error) {
             console.error('Error getting user page section data: ' + error.message);
+            throw error;
         }
     }
 
-    static async getUserProfileData(userId) {
+    static async getUserProfileData(user) {
         try {
-
+            const userProfileData = await UserRepository.getUserProfileData(user.id);
+            return userProfileData;
         } catch (error) {
-
+            console.error('Error getting user profile data: ' + error.message);
+            throw error;
         }
     }
 
@@ -112,13 +115,13 @@ class UserService {
         }
     }
 
-    static async updateUserService(id, userData) {
+    static async updateUserService(user, userData) {
         try {
-            userData.password = await argon2.hash(userData.password);
-            if (!userData.role) {
-                userData.role = 1;
+            const { user_name, user_phone_number, user_gender, user_email } = userData;
+            if (!user_name || !user_phone_number || !user_gender || !user_email) {
+                throw new Error('User data is incomplete');
             }
-            await UserRepository.updateUserRepository(id, userData);
+            await UserRepository.updateUserRepository(user.id, user_name, user_email, user_phone_number, user_gender);
             return { message: "User updated successfully" };
         } catch (error) {
             console.error('Error updating user: ' + error.message);

@@ -15,9 +15,47 @@ class OrderService {
         }
     }
 
-    static async getOrdersByUser(userId) {
+    static async getOrdersByUser(user) {
         try {
-            const orders = await OrderRepository.getOrdersByUser(userId);
+            const orders = await OrderRepository.getOrdersByUser(user.id);
+            // const orders = [
+            //     {
+            //         order_id: "1",
+            //         order_public_id: "PED12345",
+            //         order_total_price: 259.90,
+            //         order_status: "Entregue",
+            //         status: "Pagamento Confirmado",
+            //         created_at: "2024-10-25T14:45:00Z",
+            //         order_total_products: 3
+            //     },
+            //     {
+            //         order_id: "2",
+            //         order_public_id: "PED12346",
+            //         order_total_price: 89.90,
+            //         order_status: "Em Transporte",
+            //         status: "Pagamento Confirmado",
+            //         created_at: "2024-11-01T10:30:00Z",
+            //         order_total_products: 1
+            //     },
+            //     {
+            //         order_id: "3",
+            //         order_public_id: "PED12347",
+            //         order_total_price: 450.00,
+            //         order_status: "Processando",
+            //         status: "Pagamento Pendente",
+            //         created_at: "2024-11-15T09:20:00Z",
+            //         order_total_products: 5
+            //     },
+            //     {
+            //         order_id: "4",
+            //         order_public_id: "PED12348",
+            //         order_total_price: 129.99,
+            //         order_status: "Cancelado",
+            //         status: "Pagamento Rejeitado",
+            //         created_at: "2024-10-20T16:10:00Z",
+            //         order_total_products: 2
+            //     },
+            // ]
             return orders;
         } catch (error) {
             console.error('Erro ao obter pedidos:', error);

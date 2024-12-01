@@ -1,6 +1,16 @@
 import OrderService from '../services/orderService.js';
 
 class OrderController {
+    static async getUserOrdersComponent(req, res) {
+        try {
+            const user = req.session.user;
+            const userOrders = await OrderService.getOrdersByUser(user);
+            res.render("client/partials/userPageComponents/orders", { sectionData: userOrders });
+        } catch (error) {
+            res.status(500).json({ message: 'Erro ao obter pedidos: ' + error.message });
+        }
+    }
+
     static async createOrder(req, res) {
         const user = req.session.user;
         const userId = user.id;

@@ -37,11 +37,23 @@ class OrderRepository {
 
     static async getOrdersByUser(userId) {
         try {
-            const query = `
-            SELECT * FROM orders WHERE user_id = $1 ORDER BY created_at DESC;
-        `;
-            const { rows } = await pool.query(query, [userId]);
-            return rows.map(row => Order.mapFromRow(row));
+            const { rows } = await pool.query(`
+            SELECT
+                o.id AS order_id, 
+                o.public_id AS order_public_id,
+                o.total_price AS order_total_price,
+                o.status AS order_status,
+				o.created_at,
+				p.status,
+                COUNT(oi.order_id) AS order_total_products
+            FROM orders o
+                INNER JOIN order_items oi ON o.id = oi.order_id
+				INNER JOIN payments p ON p.order_id = o.id
+            WHERE o.user_id = $1
+            GROUP BY oi.order_id, o.id, p.status
+            ORDER BY o.created_at DESC;
+        `, [userId]);
+            return rows;
         } catch (error) {
             console.error(`Error getting orders by user: ${error}`);
             throw Error(`Error getting orders by user": ${error.message}`)

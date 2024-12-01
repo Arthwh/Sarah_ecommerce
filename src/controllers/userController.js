@@ -57,6 +57,16 @@ class UserController {
         }
     }
 
+    static async getUserProfileComponent(req, res){
+        try {
+            const user = req.session.user;
+            const userProfile = await UserService.getUserProfileData(user);
+            res.render("client/partials/userPageComponents/profile", { sectionData: userProfile });
+        } catch (error) {
+            res.status(500).json({ message: 'Erro ao obter perfil: ' + error.message });
+        }
+    }
+
     static async getUserLogged(req, res) {
         try {
             const user = req.session.user;
@@ -114,9 +124,9 @@ class UserController {
     //AINDA NAO É USADO
     static async updateUser(req, res) {
         try {
-            const id = req.params.id;
+            const user = req.session.user
             const userData = req.body;
-            await UserService.updateUserService(id, userData);
+            await UserService.updateUserService(user, userData);
             res.status(200).send({ message: 'User updated successfully' });
         } catch (error) {
             res.status(400).send({ message: error.message });

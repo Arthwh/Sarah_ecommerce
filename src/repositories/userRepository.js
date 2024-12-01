@@ -45,13 +45,13 @@ class UserRepository {
         }
     }
 
-    static async updateUserRepository(id, { name, email, password, role, phone_number, birthdate, gender, cpf }) {
+    static async updateUserRepository(userId, user_name, user_email, user_phone_number, user_gender) {
         try {
-            const { rows } = await pool.query(
-                'UPDATE users SET name = $1, email = $2, password = $3, role = $4, phone_number = $5, birthdate = $6, gender = $7, cpf = $8 WHERE id = $9 RETURNING *',
-                [name, email, password, role, phone_number, birthdate, gender, cpf, id]
-            );
-            return rows[0];
+            await pool.query(`
+                UPDATE users 
+                SET name = $1, email = $2, phone_number = $3, gender = $4 
+                WHERE id = $5
+                `, [user_name, user_email, user_phone_number, user_gender, userId]);
         } catch (error) {
             console.error('Error updating user:', error);
             throw error;
@@ -93,6 +93,29 @@ class UserRepository {
             return parseInt(rows[0].email_count) > 0
         } catch (error) {
             console.error('Error checking if email exists:', error);
+            throw error;
+        }
+    }
+
+    static async getUserProfileData(userId) {
+        try {
+            const { rows } = await pool.query(`
+                    SELECT
+                        u.id AS user_id,
+                        u.public_id AS user_public_id,
+                        u.name AS user_name,
+                        u.email AS user_email,
+                        u.phone_number AS user_phone_number,
+                        u.birthdate AS user_birthdate,
+                        u.gender AS user_gender,
+                        u.cpf AS user_cpf,
+                        u.created_at AS user_account_created_at
+                    FROM users u
+                    WHERE u.id = $1
+                `, [userId]);
+            return rows[0];
+        } catch (error) {
+            console.error('Error getting user profile data:', error);
             throw error;
         }
     }

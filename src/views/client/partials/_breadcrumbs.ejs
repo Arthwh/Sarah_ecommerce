@@ -1,7 +1,7 @@
 <div id="breadCrumbs_wrapper" class="hidden md:block mr-auto w-full">
     <ul class="space-x-2 flex">
-        <% let count=0; if(data.page?.breadcrumbs){ data.page.breadcrumbs.forEach(breadcrumb=> {
-            if (count > 0 && count < data.page.breadcrumbs.length && breadcrumb !==null){ %>
+        <% let count=0; if(breadcrumbs){ breadcrumbs.forEach(breadcrumb=> {
+            if (count > 0 && count < breadcrumbs.length && breadcrumb !==null){ %>
                 <span class="h-4 w-4 flex pt-2 items-center"><img
                         src="/public/images/icons/chevron_right_icon_black.svg" alt="..."></span>
                 <% }%>

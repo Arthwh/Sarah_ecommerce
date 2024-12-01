@@ -1,0 +1,46 @@
+<% const userOrders=sectionData; %>
+    <div class="orders-container">
+        <div class="section-header">
+            <h2 class="section-title">Meus Pedidos</h2>
+            <p class="section-subtitle">Veja os detalhes dos pedidos realizados na sua conta</p>
+        </div>
+        <div class="orders-content">
+            <% if (userOrders?.length> 0) { %>
+                <% userOrders.forEach((order)=> { %>
+                    <div class="order-card" data-order-id="<%= order.order_id %>">
+                        <div class="order-card-title">
+                            <div class="order-id">
+                                <strong>Pedido #:</strong>
+                                <%= order.order_public_id %>
+                            </div>
+                            <div class="order-date">
+                                <strong>Data:</strong>
+                                <%= new Date(order.created_at).toLocaleDateString() %>
+                            </div>
+                        </div>
+                        <div class="order-details">
+                            <p><strong>Valor Total:</strong> R$ <%= order.order_total_price.toFixed(2) %>
+                            </p>
+                            <p><strong>Produtos:</strong>
+                                <%= order.order_total_products %>
+                            </p>
+                            <p><strong>Status:</strong>
+                                <%= order.order_status %> (<%= order.status %>)
+                            </p>
+                            <button class="action-btn-contrast" onclick="viewOrderDetails('<%= order.order_id %>')">
+                                Ver Detalhes
+                            </button>
+                        </div>
+                    </div>
+                    <% }); %>
+                        <% } else { %>
+                            <div class="empty-orders-banner">
+                                <h2>Você ainda não realizou nenhum pedido</h2>
+                                <p>Explore nossa loja e faça seu primeiro pedido agora mesmo.</p>
+                                <a href="/" class="action-btn-contrast">
+                                    Ir para a Loja
+                                </a>
+                            </div>
+                            <% } %>
+        </div>
+    </div>

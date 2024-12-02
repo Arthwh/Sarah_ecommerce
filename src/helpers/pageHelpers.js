@@ -30,7 +30,6 @@ export async function createDataStructureForListProducts(user = null, products =
         },
         user: user
     }
-
     return data;
 }
 

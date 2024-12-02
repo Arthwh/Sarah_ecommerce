@@ -154,6 +154,16 @@ class ProductVariantRepository {
             throw error;
         }
     }
+
+    static async getVariantIdByPublicId(sku) {
+        try {
+            const { rows } = await pool.query('SELECT id FROM product_variant WHERE public_id = $1', [sku])
+            return rows[0].id
+        } catch (error) {
+            console.error('Error getting variant id by public id:', error);
+            throw error;
+        }
+    }
 }
 
 export default ProductVariantRepository

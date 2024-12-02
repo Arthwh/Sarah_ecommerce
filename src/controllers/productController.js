@@ -82,6 +82,19 @@ class ProductController {
         }
     }
 
+    static async getProductVariantStockQuantity(req, res) {
+        try {
+            const { sku } = req.params
+            if (!sku) {
+                return res.status(400).json({ error: 'SKU não informado' });
+            }
+            const variantStock = await ProductService.getProductVariantStockQuantity(sku);
+            res.status(200).json({ stock_quantity: variantStock });
+        } catch (error) {
+            res.status(500).json({ error: error.message });
+        }
+    }
+
     //FUNCIONANDO CERTO
     static async createProduct(req, res) {
         try {

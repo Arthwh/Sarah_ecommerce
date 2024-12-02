@@ -3,6 +3,7 @@ import UserRepository from '../repositories/userRepository.js';
 import WishlistRepository from '../repositories/wishlistRepository.js';
 import OrderService from '../services/orderService.js';
 import AddressService from './addressService.js';
+import CartService from './cartService.js';
 
 import { logAction } from './logsService.js';
 
@@ -20,7 +21,7 @@ class UserService {
                 logAction(userIP, userAgent, 'user-login', { status: 'error', details: 'Password incorrect' }, user.id);
                 throw Error('Password incorrect.');
             }
-            const cartCount = await UserRepository.getUserCartCountRepository(user.id);
+            const cartCount = await CartService.getUserCartCount(user);
             const message = 'User logged successfully';
             logAction(userIP, userAgent, 'user-login', { status: 'success', details: message }, user.id);
             return { user: { ...user, cart: { count: cartCount } }, message: message };

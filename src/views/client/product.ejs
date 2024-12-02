@@ -18,6 +18,7 @@
   <link href="/public/css/client/wishlist.css" rel="stylesheet">
   <link href="/public/css/client/productPage.css" rel="stylesheet">
   <link href="/public/css/client/reviewStars.css" rel="stylesheet">
+  <link href="/public/css/client/cart.css" rel="stylesheet">
 
   <script>
     // Obtem os dados enviados do backend e converte para JSON
@@ -234,7 +235,8 @@
                                     </button>
                                   </div>
                                   <button id="addToCartButton" class="action-btn-contrast"
-                                    <%=data.products.variant_stock_quantity===0 ? ' disabled ' : '' %>>Adicionar
+                                    onclick="getItemToAddRemoveFromCart()" <%=data.products.variant_stock_quantity===0
+                                    ? ' disabled ' : '' %>>Adicionar
                                     ao
                                     Carrinho</button>
                                 </div>
@@ -265,6 +267,7 @@
           <script src="/public/js/client/loginAndRegister.js"></script>
           <script src="/public/js/client/product.js"></script>
           <script src="/public/js/client/wishlist.js"></script>
+          <script src="/public/js/client/cart.js"></script>
 
 </body>
 

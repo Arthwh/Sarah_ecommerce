@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout - SARAH</title>
+    <link rel="shortcut icon" href="/public/images/logo/logo_dourado_preto_icon.ico" type="image/x-icon">
+    <link href="/public/css/pagePattern.css" rel="stylesheet">
+    <link href="/public/css/tailwind/style.css" rel="stylesheet">
+    <link href="/public/css/client/checkout.css" rel="stylesheet">
+
+    <script>
+        // Obtem os dados enviados do backend e converte para JSON
+        const data = JSON.parse('<%- JSON.stringify(data) %>');
+        if (!data) {
+            console.error('Dados incompletos.');
+            window.location.href = "/error";
+        }
+        const user = data.user;
+        const cart = user?.cart;
+        const address = user?.address;
+        const paymentMethods = data.paymentMethods || [];
+        console.log(data);
+    </script>
+</head>
+
+<body>
+    <%- include('partials/_header') %>
+        <main class="checkout-container">
+            <h1 class="checkout-title">Finalizar Compra</h1>
+
+            <!-- Seção de Endereço -->
+            <section class="checkout-section">
+                <h2 class="section-title">Endereço de Entrega</h2>
+                <% if (address) { %>
+                    <div class="address-details">
+                        <p><strong>Endereço:</strong>
+                            <%= address.street %>, <%= address.number %>, <%= address.city %> - <%= address.state %>
+                        </p>
+                        <p><strong>CEP:</strong>
+                            <%= address.zip_code %>
+                        </p>
+                    </div>
+                    <button onclick="editAddress()" class="action-btn">Alterar Endereço</button>
+                    <% } else { %>
+                        <p>Nenhum endereço cadastrado.</p>
+                        <button onclick="addAddress()" class="action-btn">Adicionar Endereço</button>
+                        <% } %>
+            </section>
+
+            <!-- Seção de Pagamento -->
+            <section class="checkout-section">
+                <h2 class="section-title">Método de Pagamento</h2>
+                <div class="payment-methods">
+                    <% paymentMethods.forEach(method=> { %>
+                        <div class="payment-method">
+                            <input type="radio" id="<%= method.id %>" name="paymentMethod" value="<%= method.id %>">
+                            <label for="<%= method.id %>">
+                                <%= method.name %>
+                            </label>
+                        </div>
+                        <% }) %>
+                </div>
+                <button onclick="addPaymentMethod()" class="action-btn">Adicionar Método de Pagamento</button>
+            </section>
+
+            <!-- Resumo do Pedido -->
+            <section class="checkout-summary">
+                <h2 class="section-title">Resumo do Pedido</h2>
+                <div class="summary-details">
+                    <p><strong>Subtotal:</strong> R$ <%= cart?.total_amount || '0.00' %>
+                    </p>
+                    <p><strong>Frete:</strong> R$ <%= cart?.shipping || '0.00' %>
+                    </p>
+                    <p><strong>Desconto:</strong> R$ <%= cart?.total_discount || '0.00' %>
+                    </p>
+                    <p class="summary-total"><strong>Total:</strong> R$ <%= (parseFloat(cart?.total_amount) +
+                            parseFloat(cart?.shipping || 0)).toFixed(2) %>
+                    </p>
+                </div>
+            </section>
+
+            <!-- Botões de Ação -->
+            <div class="checkout-actions">
+                <button onclick="confirmOrder()" class="action-btn-contrast">Confirmar Pedido</button>
+                <a href="/cart" class="action-btn">Voltar ao Carrinho</a>
+            </div>
+        </main>
+        <%- include('partials/_footer') %>
+            <script src="/public/js/client/checkout.js"></script>
+</body>
+
+</html>

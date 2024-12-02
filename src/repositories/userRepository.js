@@ -68,21 +68,6 @@ class UserRepository {
         }
     }
 
-    static async getUserCartCountRepository(userId) {
-        try {
-            const { rows } = await pool.query(`
-                SELECT COUNT(*) 
-                FROM shopping_cart_items sci
-                JOIN shopping_carts sc ON sc.id = sci.shopping_cart_id
-                WHERE sc.user_id = $1`, [userId]);
-
-            return parseInt(rows[0].count);
-        } catch (error) {
-            console.error('Error getting cart count:', error);
-            throw error;
-        }
-    }
-
     static async checkIfEmailExists(email) {
         try {
             const { rows } = await pool.query(`

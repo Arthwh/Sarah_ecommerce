@@ -195,7 +195,6 @@ class ProductRepository {
         }
     }
 
-
     static async getProductsByFilter_offers(limit = 10) {
         try {
             const { rows } = await pool.query(`
@@ -245,7 +244,7 @@ class ProductRepository {
                         vod.offer_installments
                     LIMIT $1
                 `, [limit]);
-                return rows;
+            return rows;
         } catch (error) {
 
         }
@@ -526,6 +525,20 @@ class ProductRepository {
             throw error;
         }
     };
+
+    static async getProductVariantStockQuantity(sku) {
+        try {
+            const { rows } = await pool.query(`
+                    SELECT pv.stock_quantity
+                    FROM product_variant pv
+                    WHERE pv.public_id = $1
+                `, [sku]);
+            return rows[0].stock_quantity;
+        } catch (error) {
+            console.error('Error finding product variant stock quantity:', error);
+            throw error;
+        }
+    }
 
     //FUNCIONANDO CERTO
     static async createProductRepository(client, { productName, productDescription, brand, productTotalStock }) {

@@ -1,5 +1,5 @@
 import express from 'express';
-import { isAdmin } from '../middlewares/auth.js';
+import { isAdmin, checkAuth } from '../middlewares/auth.js';
 import { uploadProduct } from '../config/multerConfig.js'
 
 import ProductController from '../controllers/productController.js';
@@ -7,6 +7,7 @@ import ProductController from '../controllers/productController.js';
 const router = express.Router();
 
 router.get('/api/products/variant/:sku', ProductController.getProductVariantData);
+router.get('/api/products/variant/:sku/stock', checkAuth, ProductController.getProductVariantStockQuantity)
 router.get('/api/products/categories/subcategories', ProductController.getCategoriesAndSubcategories);
 router.get('/api/products/brands', ProductController.getBrands);
 router.get('/api/products/colors', ProductController.getProductColors);

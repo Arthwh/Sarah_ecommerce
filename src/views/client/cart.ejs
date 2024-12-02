@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carrinho - SARAH</title>
+    <link rel="shortcut icon" href="/public/images/logo/logo_dourado_preto_icon.ico" type="image/x-icon">
+    <link href="/public/css/pagePattern.css" rel="stylesheet">
+    <link href="/public/css/tailwind/style.css" rel="stylesheet">
+    <link href="/public/css/client/carouselControllStyles.css" rel="stylesheet">
+    <link href="/public/css/messageModal/modal.css" rel="stylesheet">
+    <link href="/public/css/client/footer.css" rel="stylesheet">
+    <link href="/public/css/client/categoryAsideMenu.css" rel="stylesheet">
+    <link href="/public/css/client/loginRegisterModal.css" rel="stylesheet">
+    <link href="/public/css/client/wishlist.css" rel="stylesheet">
+    <link href="/public/css/client/productCard.css" rel="stylesheet">
+    <link href="/public/css/client/reviewStars.css" rel="stylesheet">
+    <link href="/public/css/client/cart.css" rel="stylesheet">
+
+    <script>
+        // Obtem os dados enviados do backend e converte para JSON
+        const data = JSON.parse('<%- JSON.stringify(data) %>');
+        if (!data) {
+            console.error('Dados incompletos.');
+            window.location.href = "/error";
+        }
+        const user = data.user;
+        const cart = user?.cart;
+        const wishlist = user?.wishlist;
+        const product = data.product;
+        const variants = product?.variants;
+        const page = data.page
+        console.log(data)
+    </script>
+</head>
+
+<body>
+    <%- include('partials/_header') %>
+        <%- include('partials/_categoryAsideMenu') %>
+            <%- include('partials/_loginRegisterModal') %>
+                <main class="cart-container">
+                    <!-- Seção de produtos -->
+                    <section class="cart-products">
+                        <h1 class="cart-title">Seu Carrinho (<%= data.cart?.total_products || 0 %>)</h1>
+                        <% if (data.cart && data.cart.items.length> 0) { %>
+                            <div class="cart-items">
+                                <% data.cart.items.forEach(item=> { %>
+                                    <div class="cart-item" data-variant-public-id="<%= item.variant_public_id %>"
+                                        data-product-public-id="<%= item.product_public_id %>"
+                                        data-selected-quantity="<%= item.quantity %>">
+                                        <img src="<%= item.primary_image %>" alt="<%= item.name %>"
+                                            class="cart-item-image">
+                                        <div class="cart-item-info">
+                                            <a
+                                                href="/p/<%= item.product_public_id %>?sku=<%= item.variant_public_id %>">
+                                                <h2 class="cart-item-title">
+                                                    <%= item.product_name %>
+                                                </h2>
+                                            </a>
+                                            <p class="cart-item-color">
+                                                Cor: <%= item.color %>
+                                            </p>
+                                            <p class="cart-item-size">
+                                                Tamanho: <%= item.size %>
+                                            </p>
+                                            <div class="cart-item-quantity">
+                                                <p>Quantidade: </p>
+                                                <div class="cart-item-quantity-btn-container">
+                                                    <button class="cart-item-quantity-btn"
+                                                        onclick="removeOneQuantity('<%= item.variant_public_id %>', 1)">
+                                                        <img src="/public/images/icons/minus_icon_black.svg"
+                                                            alt="remove 1 quantity">
+                                                    </button>
+                                                    <span>
+                                                        <%= item.quantity %>
+                                                    </span>
+                                                    <button class="cart-item-quantity-btn"
+                                                        onclick="addOneQuantity('<%= item.variant_public_id %>', 1)">
+                                                        <img src="/public/images/icons/add_icon_black.svg"
+                                                            alt="add 1 quantity">
+                                                    </button>
+                                                </div>
+                                            </div>
+                                            <p class="cart-item-price">Preço: R$ <%= item.unit_price %>
+                                            </p>
+                                            <% if (item.is_on_sale){ %>
+                                                <p class="cart-item-offer-price">
+                                                    Preço: R$ <%= item.offer_total_price.toFixed(2) %>
+                                                </p>
+                                                <% } %>
+                                        </div>
+                                        <span class="cart-item-total">Total: R$ <%= item.is_on_sale ?
+                                                item.offer_total_price : item.total_price %></span>
+                                        <div class="cart-item-remove-btn-container">
+                                            <button onclick="removeEntireProduct('<%= item.variant_public_id %>')">
+                                                <img src="/public/images/icons/close_icon_black.svg" alt="remove">
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <% }) %>
+                            </div>
+                            <% } else { %>
+                                <!-- Mensagem para carrinho vazio -->
+                                <div class="cart-empty">
+                                    <h2 class="cart-empty-title">Seu carrinho está vazio</h2>
+                                    <p class="cart-empty-text">Adicione produtos ao carrinho para começar suas compras.
+                                    </p>
+                                    <a href="/wishlist" class="action-btn-contrast">Explorar Produtos</a>
+                                </div>
+                                <% } %>
+                    </section>
+
+                    <!-- Resumo do carrinho -->
+                    <aside class="cart-summary">
+                        <h2 class="cart-summary-title">Resumo do Carrinho</h2>
+                        <div class="cart-summary-details">
+                            <div class="discount-coupon-container">
+                                <label for="discount-coupon">Cupom de desconto:</label>
+                                <div>
+                                    <input type="text" name="discount-coupon" id="discount-coupon">
+                                    <button onclick="applyDiscountCoupon()" class="action-btn-contrast">Aplicar</button>
+                                </div>
+                            </div>
+                            <p class="cart-summary-item">
+                                <span>Subtotal:</span>
+                                <span>R$ <%= data.cart?.total_amount || '0.00' %></span>
+                            </p>
+                            <p class="cart-summary-item">
+                                <span>Desconto:</span>
+                                <span>R$ <%= data.cart?.total_discount || '0.00' %></span>
+                            </p>
+                            <p class="cart-summary-item">
+                                <span>Total de Itens:</span>
+                                <span>
+                                    <%= data.cart?.total_products || 0 %>
+                                </span>
+                            </p>
+                            <p class="cart-summary-total">
+                                <span>Total:</span>
+                                <span>R$ <%= (parseFloat(data.cart?.total_amount) + parseFloat(data.cart?.shipping ||
+                                        0)).toFixed(2) || '0.00' %>
+                                </span>
+                            </p>
+                            <% if (data.cart?.items?.length> 0){ %>
+                                <p>
+                                    <span>
+                                        <%= data.cart.installments %>x de R$ <%= (data.cart.total_amount /
+                                                data.cart.installments).toFixed(2) %>*
+                                    </span>
+                                </p>
+                                <% } %>
+                        </div>
+                        <div class="cart-summary-actions">
+                            <button onclick="checkout()" class="action-btn-contrast">Ir para o Checkout</button>
+                            <span>ou</span>
+                            <a href="/wishlist" class="action-btn-contrast">Continuar comprando</a>
+                        </div>
+                    </aside>
+                </main>
+                <%- include('partials/_footer') %>
+                    <script src="/public/js/messageModal/toastMessageModal.js"></script>
+                    <script src="/public/js/messageModal/centralMessageModal.js"></script>
+                    <script src="/public/js/messageModal/sessionExpiredModal.js"></script>
+                    <script src="/public/js/messageModal/loginNeddedMessageModal.js"></script>
+                    <script src="/public/js/statusHandler/statusHandler.js"></script>
+                    <script src="/public/js/client/categoryAsideMenu.js"></script>
+                    <script src="/public/js/client/header.js"></script>
+                    <script src="/public/js/client/loginAndRegister.js"></script>
+                    <script src="/public/js/client/wishlist.js"></script>
+                    <script src="/public/js/client/cart.js"></script>
+</body>
+
+</html>

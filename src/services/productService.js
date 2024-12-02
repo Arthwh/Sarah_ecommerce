@@ -85,6 +85,17 @@ class ProductService {
         }
     }
 
+    static async getProductVariantStockQuantity(sku) {
+        try {
+            console.log(sku)
+            const skuQuantity = await ProductRepository.getProductVariantStockQuantity(sku) || 0;
+            return skuQuantity;
+        } catch (error) {
+            console.error('Error getting product variant stock quantity: ', error);
+            throw error;
+        }
+    }
+
     //FUNCIONANDO CERTO
     static async createProductService(productData, files) {
         const client = await pool.connect();

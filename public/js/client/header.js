@@ -1,4 +1,4 @@
-const cartCount = cart?.totalQuantity || 0;
+const cartCount = cart?.count || 0;
 
 document.addEventListener("DOMContentLoaded", () => {
     if (user && Object.keys(user).length > 0) {
@@ -27,7 +27,9 @@ function setCartCount(cartCount = 0) {
     }
     else {
         const cartNumber = document.getElementById('cartNumber');
-        cartNumber.classList.add('hidden');
+        if (!cartNumber.classList.contains('hidde')) {
+            cartNumber.classList.add('hidden');
+        }
         cartNumber.innerHTML = "";
     }
 }

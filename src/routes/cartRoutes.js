@@ -4,8 +4,10 @@ import CartController from '../controllers/cartController.js';
 
 const router = express.Router();
 
-router.get('/cart', checkAuth, CartController.getCart);
+router.get('/cart/:id', checkAuth, CartController.getCartItemsByUser);
 router.post('/cart', checkAuth, CartController.addToCart);
-router.delete('/cart/:productVariantId', checkAuth, CartController.removeFromCart);
+router.delete('/cart', checkAuth, CartController.removeFromCart);
+
+router.get('/cart', checkAuth, CartController.getCartPage)
 
 export default router;

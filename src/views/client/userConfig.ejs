@@ -26,6 +26,8 @@
             showCentralModal("Configurações do Usuário", "Dados incompletos.", redirect)
             console.error('Dados incompletos.');
         }
+
+        console.log(data)
         // Separa os dados em variáveis
         const user = data.user;
         const cart = user?.cart || {};

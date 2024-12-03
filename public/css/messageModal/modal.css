@@ -92,3 +92,28 @@
 .session-expired-modal-content p{
     font-size: 14px;
 }
+
+#orderModal .modal-content{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+#orderModal .modal-content img{
+    margin-inline: auto;
+    width: 70px;
+    height: 70px;
+}
+
+#orderModal .modal-buttons{
+    gap: 1.5rem;
+    height: fit-content;
+    margin-top: 1rem;
+    margin-inline: none;
+}
+
+#orderModal .modal-buttons .action-btn-contrast{
+    width: fit-content;
+    min-width: 70%;
+    margin-inline: auto;
+}

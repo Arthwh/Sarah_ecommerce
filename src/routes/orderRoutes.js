@@ -5,8 +5,8 @@ import OrderController from '../controllers/orderController.js';
 const router = express.Router();
 
 // Acesso do usuário
-
-router.post('/orders/user', checkAuth, OrderController.createOrder);
+router.get('/checkout', checkAuth, OrderController.getCheckoutComponent)
+router.post('/checkout', checkAuth, OrderController.createOrder);
 router.get('/orders/user/all', checkAuth, OrderController.getOrdersByUser);
 router.get('/orders/user/open', checkAuth, OrderController.getUserOpenOrders);
 router.get('/orders/user/finished', checkAuth, OrderController.getUserFinishedOrders);

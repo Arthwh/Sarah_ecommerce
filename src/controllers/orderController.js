@@ -1,6 +1,19 @@
 import OrderService from '../services/orderService.js';
+import ProductService from '../services/productService.js';
 
 class OrderController {
+    static async getCheckoutComponent(req, res) {
+        try {
+            const user = req.session.user;
+            const categories = await ProductService.getAllProductCategoriesAndSubcategories();
+            const data = await OrderService.getCheckoutComponentData(user);
+            data.page.categories = categories;
+            res.render('client/checkout', { data: data });
+        } catch (error) {
+            res.status(500).json({ message: 'Erro ao obter dados para o checkout: ' + error.message });
+        }
+    }
+
     static async getUserOrdersComponent(req, res) {
         try {
             const user = req.session.user;
@@ -12,16 +25,14 @@ class OrderController {
     }
 
     static async createOrder(req, res) {
-        const user = req.session.user;
-        const userId = user.id;
-        const { address_id, payment_id, total_price, status, items } = req.body;
-
         try {
-            const order = await OrderService.createOrder(userId, address_id, payment_id, total_price, status, items);
+            const user = req.session.user;
+            const { addressId, creditCardData, paymentMethod, cart } = req.body;
+            const order = await OrderService.processCheckout(user, addressId, creditCardData, paymentMethod, cart);
             res.status(201).json(order);
         } catch (error) {
             console.error(error);
-            res.status(500).json({ message: 'Erro ao criar pedido.' });
+            res.status(500).json({ message: error.message || 'Erro ao criar pedido.' });
         }
     }
 

@@ -9,6 +9,11 @@
     <link href="/public/css/pagePattern.css" rel="stylesheet">
     <link href="/public/css/tailwind/style.css" rel="stylesheet">
     <link href="/public/css/client/checkout.css" rel="stylesheet">
+    <link href="/public/css/client/carouselControllStyles.css" rel="stylesheet">
+    <link href="/public/css/messageModal/modal.css" rel="stylesheet">
+    <link href="/public/css/client/footer.css" rel="stylesheet">
+    <link href="/public/css/client/categoryAsideMenu.css" rel="stylesheet">
+    <link href="/public/css/client/loginRegisterModal.css" rel="stylesheet">
 
     <script>
         // Obtem os dados enviados do backend e converte para JSON
@@ -19,6 +24,7 @@
         }
         const user = data.user;
         const cart = user?.cart;
+        const cartData = data.cart
         const address = user?.address;
         const paymentMethods = data.paymentMethods || [];
         console.log(data);
@@ -27,68 +33,232 @@
 
 <body>
     <%- include('partials/_header') %>
-        <main class="checkout-container">
-            <h1 class="checkout-title">Finalizar Compra</h1>
+        <%- include('partials/_categoryAsideMenu') %>
+            <%- include('partials/_loginRegisterModal') %>
+                <main class="checkout-container">
 
-            <!-- Seção de Endereço -->
-            <section class="checkout-section">
-                <h2 class="section-title">Endereço de Entrega</h2>
-                <% if (address) { %>
-                    <div class="address-details">
-                        <p><strong>Endereço:</strong>
-                            <%= address.street %>, <%= address.number %>, <%= address.city %> - <%= address.state %>
-                        </p>
-                        <p><strong>CEP:</strong>
-                            <%= address.zip_code %>
-                        </p>
+                    <div class="checkout-info">
+                        <h1 class="checkout-title">Finalização da compra</h1>
+                        <!-- Seção de Endereço -->
+                        <section id="addressSection" class="checkout-section">
+                            <div id="address"
+                                data-address-id-selected="<%= data.addresses.length > 0 ? data.addresses[0].id : '' %>">
+                                <h2 class="section-title">Endereço de Entrega</h2>
+                                <% if (data.addresses.length> 0) { %>
+                                    <% const address=data.addresses[0] %>
+                                        <div id="mainAddressDataDisplay" class="address-details"
+                                            data-address-id="<%= address.id %>">
+                                            <p>
+                                                <strong>Nome:</strong>
+                                                <%= address.name %>
+                                            </p>
+                                            <p><strong>Endereço:</strong>
+                                                <%= address.street %>, <%= address.number %>, <%= address.city %>
+                                                            /
+                                                            <%= address.state %>
+                                            </p>
+                                            <p><strong>CEP:</strong>
+                                                <%= address.zipcode %>
+                                            </p>
+                                        </div>
+                                        <div class="address-action-container">
+                                            <% if (data.addresses.length> 1) { %>
+                                                <button onclick="toggleAddressSelectModal()" class="action-btn">Alterar
+                                                    Endereço</button>
+                                                <% } %> <button onclick="addAddress()" class="action-btn">Adicionar
+                                                        Endereço</button>
+                                        </div>
+
+                                        <div id="addressSelectModal" class="change-address-modal disabled"
+                                            data-selected-address="<%= data.addresses[0].id %>">
+                                            <div class="change-address-modal-overlay">
+                                                <div class="change-address-modal-content">
+                                                    <div class="change-address-modal-title">
+                                                        <p>Selecione um endereço para
+                                                            a
+                                                            entrega</p>
+                                                        <button onclick="toggleAddressSelectModal()">
+                                                            <img src="/public/images/icons/close_icon_black.svg"
+                                                                alt="close">
+                                                        </button>
+                                                    </div>
+
+                                                    <% data.addresses.forEach(address=> { %>
+                                                        <div class="address-option">
+                                                            <div class="address-details"
+                                                                data-address-id="<%= address.id %>">
+                                                                <input onclick="changeAddressSelectedData(this)"
+                                                                    type="radio" name="address_radio" id="address_radio"
+                                                                    <%=data.addresses[0].id===address.id ? 'checked'
+                                                                    : '' %>>
+                                                                <div>
+                                                                    <p>
+                                                                        <strong>Nome:</strong>
+                                                                        <%= address.name %>
+                                                                    </p>
+                                                                    <p><strong>Endereço:</strong>
+                                                                        <%= address.street %>, <%= address.number %>,
+                                                                                <%= address.city %>
+                                                                                    /
+                                                                                    <%= address.state %>
+                                                                    </p>
+                                                                    <p><strong>CEP:</strong>
+                                                                        <%= address.zipcode %>
+                                                                    </p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <% }) %>
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+                                        <% } else { %>
+                                            <p>Nenhum endereço cadastrado.</p>
+                                            <div class="address-action-container">
+                                                <button onclick="addAddress()" class="action-btn">Adicionar
+                                                    Endereço</button>
+                                            </div>
+                                            <% } %>
+                            </div>
+                        </section>
+                        <!-- Seção de Pagamento -->
+                        <section id="paymentSection" class="checkout-section">
+                            <h2 class="section-title">Métodos de Pagamento</h2>
+                            <div class="payment-methods">
+                                <div id="creditCardMethod" class="payment-method">
+                                    <h3 class="payment-method-title">
+                                        Cartão de crédito
+                                    </h3>
+                                    <div class="payment-method-input">
+                                        <div class="credit-card-input-container">
+                                            <input type="radio" id="payment_method_credit_card_radio"
+                                                name="paymentMethod" value="credit-card"
+                                                onclick="verifyIfCreditCardInputChecked(this)">
+                                            <p>
+                                                Insira os dados do cartão exatamente como aparecem no cartão físico.
+                                                A
+                                                confirmação do pagamento será imediata após a validação.
+                                            </p>
+                                        </div>
+                                        <div id="credit_card_form" class="credit-card-info-container disabled">
+                                            <div class="credit-card-info-item">
+                                                <h4>Número do cartão</h4>
+                                                <input type="number" id="credit_card_number">
+                                            </div>
+                                            <div class="credit-card-info-item">
+                                                <h4>Nome no cartão</h4>
+                                                <input type="text" id="credit_card_name">
+                                            </div>
+                                            <div class="credit-card-info-item">
+                                                <h4>Data de expiração</h4>
+                                                <select name="credit_card_expiration_month"
+                                                    id="credit_card_expiration_month">
+                                                    <% for (let i=1; i <=12; i++) { %>
+                                                        <option value="<%= i %>" <% i===1 ? 'selected' : '' %>>
+                                                            <%= i %>
+                                                        </option>
+                                                        <% } %>
+                                                </select>
+                                                <select name="credit_card_expiration_year"
+                                                    id="credit_card_expiration_year">
+                                                    <% for (let year=2024; year <=2048; year++) { %>
+                                                        <option value="<%= year %>" <% year===2024 ? 'selected' : '' %>>
+                                                            <%= year %>
+                                                        </option>
+                                                        <% } %>
+                                                </select>
+                                            </div>
+                                            <div class="credit-card-info-item">
+                                                <h4>Código de segurança (CVV)</h4>
+                                                <input type="number" id="credit_card_cvv" maxlength="3">
+                                            </div>
+                                            <div class="credit-card-info-item">
+                                                <h4>Parcelas</h4>
+                                                <select name="credit_card_installments" id="credit_card_installments">
+                                                    <% for (let i=1; i <=data.cart.installments; i++) { %>
+                                                        <option value="<%= i %>">
+                                                            <%= i %>x de R$ <%= (data.cart.total_amount / i).toFixed(2)
+                                                                    %>
+                                                        </option>
+                                                        <% } %>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div id="bankSlipMethod" class="payment-method">
+                                    <h3 class="payment-method-title">
+                                        Boleto
+                                    </h3>
+                                    <div class="payment-method-input">
+                                        <div class="input-container">
+                                            <input type="radio" id="payment_method_bank_slip_radio" name="paymentMethod"
+                                                value="bank-slip" onclick="verifyIfCreditCardInputChecked(this)">
+                                            <p>
+                                                Vencimento em 1 dia útil. A data de entrega será alterada devido ao
+                                                tempo de
+                                                processamento do Boleto.
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="pixMethod" class="payment-method">
+                                    <h3 class="payment-method-title">
+                                        Pix
+                                    </h3>
+                                    <div class="payment-method-input">
+                                        <div class="input-container">
+                                            <input type="radio" id="payment_method_pix_input" name="paymentMethod"
+                                                value="pix" onclick="verifyIfCreditCardInputChecked(this)">
+                                            <p>
+                                                O código Pix gerado para o pagamento é válido por 30 minutos após a
+                                                finalização do pedido.
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
                     </div>
-                    <button onclick="editAddress()" class="action-btn">Alterar Endereço</button>
-                    <% } else { %>
-                        <p>Nenhum endereço cadastrado.</p>
-                        <button onclick="addAddress()" class="action-btn">Adicionar Endereço</button>
-                        <% } %>
-            </section>
 
-            <!-- Seção de Pagamento -->
-            <section class="checkout-section">
-                <h2 class="section-title">Método de Pagamento</h2>
-                <div class="payment-methods">
-                    <% paymentMethods.forEach(method=> { %>
-                        <div class="payment-method">
-                            <input type="radio" id="<%= method.id %>" name="paymentMethod" value="<%= method.id %>">
-                            <label for="<%= method.id %>">
-                                <%= method.name %>
-                            </label>
+                    <!-- Resumo do Pedido -->
+                    <section class="checkout-summary">
+                        <h2 class="section-title">Resumo do Pedido</h2>
+                        <div class="summary-details">
+                            <p><strong>Subtotal:</strong> R$ <%= data.cart?.total_amount || '0.00' %>
+                            </p>
+                            <p><strong>Frete:</strong> R$ <%= data.cart?.shipping || '0.00' %>
+                            </p>
+                            <p><strong>Desconto:</strong> R$ <%= data.cart?.total_discount || '0.00' %>
+                            </p>
+                            <p class="summary-total"><strong>Total:</strong> R$ <%= (parseFloat(data.cart?.total_amount)
+                                    + parseFloat(data.cart?.shipping || 0)).toFixed(2) %>
+                            </p>
                         </div>
-                        <% }) %>
-                </div>
-                <button onclick="addPaymentMethod()" class="action-btn">Adicionar Método de Pagamento</button>
-            </section>
+                        <!-- Botões de Ação -->
+                        <div class="checkout-actions">
+                            <button onclick="confirmOrder()" class="action-btn-contrast">Confirmar
+                                Pedido</button>
+                            <a href="/cart" class="action-btn">Voltar ao Carrinho</a>
+                        </div>
+                    </section>
 
-            <!-- Resumo do Pedido -->
-            <section class="checkout-summary">
-                <h2 class="section-title">Resumo do Pedido</h2>
-                <div class="summary-details">
-                    <p><strong>Subtotal:</strong> R$ <%= cart?.total_amount || '0.00' %>
-                    </p>
-                    <p><strong>Frete:</strong> R$ <%= cart?.shipping || '0.00' %>
-                    </p>
-                    <p><strong>Desconto:</strong> R$ <%= cart?.total_discount || '0.00' %>
-                    </p>
-                    <p class="summary-total"><strong>Total:</strong> R$ <%= (parseFloat(cart?.total_amount) +
-                            parseFloat(cart?.shipping || 0)).toFixed(2) %>
-                    </p>
-                </div>
-            </section>
 
-            <!-- Botões de Ação -->
-            <div class="checkout-actions">
-                <button onclick="confirmOrder()" class="action-btn-contrast">Confirmar Pedido</button>
-                <a href="/cart" class="action-btn">Voltar ao Carrinho</a>
-            </div>
-        </main>
-        <%- include('partials/_footer') %>
-            <script src="/public/js/client/checkout.js"></script>
+                </main>
+                <%- include('partials/_footer') %>
+                    <script src="/public/js/messageModal/toastMessageModal.js"></script>
+                    <script src="/public/js/messageModal/centralMessageModal.js"></script>
+                    <script src="/public/js/messageModal/sessionExpiredModal.js"></script>
+                    <script src="/public/js/messageModal/loginNeddedMessageModal.js"></script>
+                    <script src="/public/js/messageModal/orderMessageModal.js"></script>
+                    <script src="/public/js/statusHandler/statusHandler.js"></script>
+                    <script src="/public/js/client/categoryAsideMenu.js"></script>
+                    <script src="/public/js/client/header.js"></script>
+                    <script src="/public/js/client/loginAndRegister.js"></script>
+                    <script src="/public/js/client/checkout.js"></script>
 </body>
 
 </html>

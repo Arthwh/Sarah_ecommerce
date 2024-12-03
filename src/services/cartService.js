@@ -13,7 +13,6 @@ class CartService {
             cartItems.forEach(item => {
                 total_products += item.quantity;
             });
-            // console.log("CArtITems: ", cartItems)
             const data = {
                 user: user,
                 cart: {
@@ -27,16 +26,60 @@ class CartService {
                     displayRegisterModal: true
                 }
             }
-            // console.log("Data: ", data)
             return data;
         } catch (error) {
-            console.error(error);
-
+            console.log('Error getting cart page data: ', error);
+            throw error;
         }
     }
 
-    static async getCart(userId) {
-        return await CartRepository.getCartItems(userId);
+    static async getCart(user) {
+        try {
+            const cartItems = await CartRepository.getCartItems(user.id);
+            const { cartItems: cartProducts, total_amount: cart_total_amount, total_installments: cart_installments } = await calculateCartParams(cartItems);
+            let total_products = 0;
+            cartItems.forEach(item => {
+                total_products += item.quantity;
+            });
+
+            const cart = {
+                items: cartProducts,
+                total_amount: cart_total_amount,
+                installments: cart_installments,
+                total_products: total_products
+            };
+
+            return cart;
+        } catch (error) {
+            console.log('Error getting cart data: ', error);
+            throw error;
+        }
+    }
+
+    static async areCartsEqual(user, cartFromFront) {
+        const cartFromDb = await this.getCart(user);
+        if (!cartFromDb) {
+            return false;
+        }
+        // Verificação dos campos simples
+        const keysToCompare = ['total_amount', 'installments', 'total_products'];
+        for (const key of keysToCompare) {
+            if (cartFromFront[key] !== cartFromDb[key]) {
+                console.error(`Mismatch in ${key}: Front: ${cartFromFront[key]}, DB: ${cartFromDb[key]}`);
+                return false;
+            }
+        }
+
+        // Verificação dos itens
+        const itemsFromFront = cartFromFront.items;
+        const itemsFromDb = cartFromDb.items;
+
+        if (itemsFromFront.length !== itemsFromDb.length) {
+            console.error(`Mismatch in number of items: Front: ${itemsFromFront.length}, DB: ${itemsFromDb.length}`);
+            return false;
+        }
+
+        return true;
     }
 
     static async getUserCartCount(user) {
@@ -104,6 +147,21 @@ class CartService {
             throw error;
         }
     }
+
+    static async clearCart(user){
+        try {
+            if (!user){
+                throw new Error('User is required');
+            }
+            let userShoppingCartId = await CartRepository.getUserShoppingCartId(user.id);
+            if (!userShoppingCartId) {
+                throw Error('User shopping cart not found.')
+            }
+            await CartRepository.clearCart(userShoppingCartId);
+        } catch (error) {
+            
+        }
+    }
 }
 
 async function calculateCartParams(cartItems) {
@@ -129,8 +187,9 @@ async function calculateCartParams(cartItems) {
             } else if (offerType === 'fixed') {
                 discountValue = parseFloat(offerValue);
             }
-            item.offer_total_price = (parseFloat(item.unit_price) - discountValue) * parseInt(item.quantity);
-            total_amount += parseFloat(item.offer_total_price);
+            item.variant_offer_unit_price = (parseFloat(item.unit_price) - discountValue);
+            item.variant_offer_total_price = (parseFloat(item.unit_price) - discountValue) * parseInt(item.quantity);
+            total_amount += parseFloat(item.variant_offer_total_price);
         } else {
             total_amount += parseFloat(item.total_price);
             if (item.installments && !isNaN(item.installments)) {

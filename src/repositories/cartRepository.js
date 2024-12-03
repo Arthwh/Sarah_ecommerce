@@ -146,6 +146,17 @@ class CartRepository {
         }
     }
 
+    static async clearCart(shoppingCartId) {
+        try {
+            await pool.query(`
+                    DELETE FROM shopping_cart_items 
+                    WHERE shopping_cart_id = $1
+                `, [shoppingCartId]);
+        } catch (error) {
+            console.error('Error clearing cart: ', error);
+            throw Error('Error clearing cart:', error);
+        }
+    }
 }
 
 export default CartRepository;

@@ -164,6 +164,34 @@ class ProductVariantRepository {
             throw error;
         }
     }
+
+    static async reserveStock(client, productVariantId, quantity) {
+        try {
+            await client.query(`
+                    UPDATE product_variant 
+                    SET stock_quantity = (stock_quantity - $1), reserved_stock_quantity = (reserved_stock_quantity + $1)
+                    WHERE id = $2
+                `, [quantity, productVariantId]);
+        } catch (error) {
+            console.error('Error reserving stock:', error);
+            throw error;
+        }
+    }
+
+    static async getVariantStock(productVariantId) {
+        try {
+            const { rows } = await pool.query(`
+                    SELECT stock_quantity
+                    FROM product_variant
+                    WHERE id = $1
+                `, [productVariantId]);
+
+            return rows[0]?.stock_quantity
+        } catch (error) {
+            console.error('Error getting variant stock:', error);
+            throw error;
+        }
+    }
 }
 
 export default ProductVariantRepository

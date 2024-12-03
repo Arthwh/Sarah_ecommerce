@@ -92,3 +92,31 @@
 .empty-orders-banner .action-btn-contrast {
     width: fit-content;
 }
+
+.status {
+    font-weight: bold;
+    padding: 4px 8px;
+    border-radius: 4px;
+    display: inline-block;
+    color: white;
+}
+
+.status-pending {
+    background-color: #ffc107;
+}
+
+.status-paid {
+    background-color: #28a745;
+}
+
+.status-shipped {
+    background-color: #007bff;
+}
+
+.status-delivered {
+    background-color: #6c757d;
+}
+
+.status-cancelled {
+    background-color: #dc3545;
+}

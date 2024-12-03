@@ -19,13 +19,23 @@
                             </div>
                         </div>
                         <div class="order-details">
-                            <p><strong>Valor Total:</strong> R$ <%= order.order_total_price.toFixed(2) %>
+                            <p><strong>Valor Total:</strong> R$ <%= parseFloat(order.order_total_price)?.toFixed(2) %>
                             </p>
                             <p><strong>Produtos:</strong>
                                 <%= order.order_total_products %>
                             </p>
                             <p><strong>Status:</strong>
-                                <%= order.order_status %> (<%= order.status %>)
+                                <% if (order.status==='pending' ) { %>
+                                    <span class="status status-pending">Pendente</span>
+                                    <% } else if (order.status==='paid' ) { %>
+                                        <span class="status status-paid">Pago</span>
+                                        <% } else if (order.status==='shipped' ) { %>
+                                            <span class="status status-shipped">Enviado</span>
+                                            <% } else if (order.status==='delivered' ) { %>
+                                                <span class="status status-delivered">Entregue</span>
+                                                <% } else if (order.status==='cancelled' ) { %>
+                                                    <span class="status status-cancelled">Cancelado</span>
+                                                    <% } %>
                             </p>
                             <button class="action-btn-contrast" onclick="viewOrderDetails('<%= order.order_id %>')">
                                 Ver Detalhes

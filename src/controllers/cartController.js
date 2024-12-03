@@ -59,6 +59,19 @@ class CartController {
             res.status(500).json({ success: false, error: 'Erro ao remover produto ao carrinho:', message: error.message });
         }
     }
+
+    static async clearCart(req, res) {
+        try {
+            const user = req.session.user;
+            await CartService.clearCart(user);
+            req.session.user.cart = {
+                count: 0
+            }
+            res.status(200).json({ success: true, message: "Carrinho esvaziado com sucesso!" });
+        } catch (error) {
+            res.status(500).json({ success: false, error: 'Erro ao limpar carrinho!' });
+        }
+    }
 }
 
 export default CartController;

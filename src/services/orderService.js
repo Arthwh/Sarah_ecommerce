@@ -1,13 +1,72 @@
 import OrderRepository from '../repositories/orderRepository.js';
+import AddressService from '../services/addressService.js';
+import CartService from './cartService.js';
+import PaymentService from './paymentService.js';
+
+import pool from "../db.js";
+import ProductService from './productService.js';
 
 class OrderService {
-    static async createOrder(userId, addressId, paymentId, totalPrice, status, items) {
+    static async getCheckoutComponentData(user) {
         try {
-            const order = await OrderRepository.createOrder(userId, addressId, paymentId, totalPrice, status);
-            const orderItems = await OrderRepository.addOrderItems(order.id, items);
-            order.items = orderItems;
-            const payment = await OrderRepository.getPaymentByOrderId(order.id);
+            const { addresses } = await AddressService.getAddressesByUser(user);
+            const cart = await CartService.getCart(user);
+            const data = {
+                user: user,
+                addresses: addresses,
+                cart: cart,
+                page: {
+                    categories: []
+                }
+            };
+
+            return data;
+        } catch (error) {
+            console.error('Erro ao obter tela de checkout:', error);
+            throw Error('Erro ao obter tela de checkout.');
+        }
+    }
+
+    static async processCheckout(user, addressId, creditCardData, paymentMethod, cart) {
+        const client = await pool.connect();
+        try {
+            const addressSelected = await AddressService.getAddressById(user, addressId);
+            if (!addressSelected) {
+                throw new Error('Endereço não encontrado.');
+            }
+            const cartOk = await CartService.areCartsEqual(user, cart);
+            if (!cartOk) {
+                throw new Error('Carrinho recebido difere do salvo no banco de dados.');
+            }
+            await client.query('BEGIN');
+            const order = await this.createOrder(client, user, addressSelected, cart);
+            const payment = await PaymentService.createNewPayment(client, user, paymentMethod, creditCardData, order);
             order.payment = payment;
+            await client.query('COMMIT');
+            return order;
+        } catch (error) {
+            await client.query('ROLLBACK');
+            console.error('Erro ao processar checkout: ', error);
+            throw error;
+        }
+        finally {
+            client.release();
+        }
+    }
+
+    static async createOrder(client, user, addressSelected, cart) {
+        try {
+            const order = await OrderRepository.createOrder(client, user.id, addressSelected.id, cart.total_amount);
+            for (const item of cart?.items) {
+                const ok = await ProductService.checkProductStock(item.id, item.quantity);
+                if (!ok) {
+                    throw new Error('Produto não tem estoque suficiente.');
+                }
+                await ProductService.reserveProductStock(client, item.product_variant_id, item.quantity);
+            }
+            const orderItems = await OrderRepository.addOrderItems(client, order.id, cart.items);
+            order.items = orderItems;
+
             return order;
         } catch (error) {
             console.error('Erro ao criar pedido:', error);
@@ -18,44 +77,7 @@ class OrderService {
     static async getOrdersByUser(user) {
         try {
             const orders = await OrderRepository.getOrdersByUser(user.id);
-            // const orders = [
-            //     {
-            //         order_id: "1",
-            //         order_public_id: "PED12345",
-            //         order_total_price: 259.90,
-            //         order_status: "Entregue",
-            //         status: "Pagamento Confirmado",
-            //         created_at: "2024-10-25T14:45:00Z",
-            //         order_total_products: 3
-            //     },
-            //     {
-            //         order_id: "2",
-            //         order_public_id: "PED12346",
-            //         order_total_price: 89.90,
-            //         order_status: "Em Transporte",
-            //         status: "Pagamento Confirmado",
-            //         created_at: "2024-11-01T10:30:00Z",
-            //         order_total_products: 1
-            //     },
-            //     {
-            //         order_id: "3",
-            //         order_public_id: "PED12347",
-            //         order_total_price: 450.00,
-            //         order_status: "Processando",
-            //         status: "Pagamento Pendente",
-            //         created_at: "2024-11-15T09:20:00Z",
-            //         order_total_products: 5
-            //     },
-            //     {
-            //         order_id: "4",
-            //         order_public_id: "PED12348",
-            //         order_total_price: 129.99,
-            //         order_status: "Cancelado",
-            //         status: "Pagamento Rejeitado",
-            //         created_at: "2024-10-20T16:10:00Z",
-            //         order_total_products: 2
-            //     },
-            // ]
+            console.log(orders)
             return orders;
         } catch (error) {
             console.error('Erro ao obter pedidos:', error);

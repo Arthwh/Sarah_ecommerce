@@ -190,6 +190,36 @@ class ProductService {
             throw error;
         }
     }
+
+    static async checkProductStock(productVariantId, quantity) {
+        try {
+            const stock = ProductVariantRepository.getVariantStock(productVariantId);
+            if (!stock) {
+                return false;
+            }
+            if (stock < quantity) {
+                return false;
+            }
+
+            return true;
+        } catch (error) {
+            console.error('Erro ao verificar estoque:', error);
+            throw error;
+        }
+    }
+
+    static async reserveProductStock(client, productVariantId, quantity) {
+        try {
+            if (!productVariantId || !quantity) {
+                throw new Error('Produto ou quantidade não informados');
+            }
+
+            await ProductVariantRepository.reserveStock(client, productVariantId, quantity);
+        } catch (error) {
+            console.error('Erro ao reservar estoque: ', error);
+            throw Error('Erro ao reservar estoque: ', error);
+        }
+    }
 }
 
 async function replaceLineBreakCharacterInDescription(product_description) {

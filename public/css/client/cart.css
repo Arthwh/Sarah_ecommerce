@@ -14,7 +14,7 @@
     }
 }
 
-.cart-products {
+.cart-products, .cart-summary{
     background-color: #fff;
     padding: 2rem;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -154,12 +154,6 @@
 }
 
 /* Resumo do carrinho */
-.cart-summary {
-    background-color: #fff;
-    padding: 2rem;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
 .cart-summary-title {
     font-size: 1.5rem;
     margin-bottom: 1rem;
@@ -189,6 +183,15 @@
 
 .cart-summary-actions .action-btn-contrast {
     margin-top: 2rem;
+}
+
+.cart-summary-actions .action-btn {
+    text-decoration: none;
+    color: #000;
+    font-weight: bold;
+    transition: color 0.2s ease;
+    text-align: center;
+    margin-top: 1rem;
 }
 
 .cart-summary-actions{

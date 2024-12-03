@@ -2,36 +2,43 @@ import pool from '../db.js';
 import { Order, OrderItem, Payment } from '../models/orderModel.js'
 
 class OrderRepository {
-    static async createOrder(userId, addressId, paymentId, totalPrice, status) {
+    static async createOrder(client, userId, addressId, total_amount) {
         try {
-            const query = `
-            INSERT INTO orders (user_id, address_id, payment_id, total_price, status)
-            VALUES ($1, $2, $3, $4, $5) RETURNING *;
-        `;
-            const values = [userId, addressId, paymentId, totalPrice, status];
-            const { rows } = await pool.query(query, values);
-            return Order.mapFromRow(rows[0]);
+            const { rows } = await client.query(`
+                INSERT INTO orders (user_id, address_id, total_price)
+                VALUES ($1, $2, $3) RETURNING *;
+            `, [userId, addressId, total_amount]);
+            return rows[0];
         } catch (error) {
             console.error(`Error creating order: ${error}`);
             throw Error(`Error creating order": ${error.message}`)
         }
     }
 
-    static async addOrderItems(orderId, items) {
+    static async addOrderItems(client, orderId, items) {
         try {
-            const query = `
-            INSERT INTO order_items (order_id, product_variant_id, quantity, unit_price)
-            VALUES ($1, $2, $3, $4) RETURNING *;
-        `;
-            const promises = items.map(item => {
-                const values = [orderId, item.product_variant_id, item.quantity, item.unit_price];
-                return pool.query(query, values);
-            });
-            const results = await Promise.all(promises);
-            return results.map(result => OrderItem.mapFromRow(result.rows[0]));
+            const queryBase = `
+                INSERT INTO order_items (order_id, product_variant_id, quantity, unit_price)
+                VALUES
+            `;
+            const placeholders = items
+                .map((_, index) => `($${index * 4 + 1}, $${index * 4 + 2}, $${index * 4 + 3}, $${index * 4 + 4})`)
+                .join(', ');
+
+            const query = `${queryBase} ${placeholders} RETURNING *;`;
+
+            const values = items.flatMap(item => [
+                orderId,
+                item.product_variant_id,
+                item.quantity,
+                parseFloat(item.is_on_sale ? item.variant_offer_value : item.unit_price)
+            ]);
+            const { rows } = await client.query(query, values);
+
+            return rows;
         } catch (error) {
             console.error(`Error adding order items: ${error}`);
-            throw Error(`Error adding order items": ${error.message}`)
+            throw Error(`Error adding order items: ${error.message}`);
         }
     }
 
@@ -156,21 +163,6 @@ class OrderRepository {
         } catch (error) {
             console.error(`Error getting orders by user: ${error}`);
             throw Error(`Error getting orders by user": ${error.message}`)
-        }
-    }
-
-    static async getPaymentByOrderId(orderId) {
-        try {
-            const query = `
-            SELECT p.* FROM payments p
-            JOIN orders o ON p.id = o.payment_id
-            WHERE o.id = $1;
-        `;
-            const { rows } = await pool.query(query, [orderId]);
-            return rows.length ? Payment.mapFromRow(rows[0]) : null;
-        } catch (error) {
-            console.error(`Error getting order payment: ${error}`);
-            throw Error(`Error getting orders payment": ${error.message}`)
         }
     }
 }

@@ -1,0 +1,120 @@
+/* Container Geral */
+.order-details-container {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    padding: 2rem;
+    background-color: #f9f9f9;
+}
+
+@media (min-width: 1350px) {
+    .order-details-container {
+        grid-template-columns: 2fr 1fr;
+    }
+}
+
+.section-content {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    background-color: #fff;
+    padding: 1.5rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.section-header {
+    text-align: center;
+    margin-bottom: 1.5rem;
+}
+
+.section-title {
+    font-size: 1.8rem;
+    color: #222;
+}
+
+.section-subtitle {
+    font-size: 1rem;
+    color: #666;
+}
+
+.subsection-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #333;
+    border-bottom: 2px solid #e0e0e0;
+    padding-bottom: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.order-items {
+    flex-grow: 1;
+    overflow-y: auto;
+    padding: 1rem;
+    background-color: #fff;
+}
+
+.order-item {
+    display: flex;
+    gap: 1.5rem;
+    padding: 1rem 0;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.order-item:last-child {
+    border-bottom: none;
+}
+
+.order-item-image {
+    min-width: 9rem;
+    max-width: 9rem;
+}
+
+.order-item-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.order-item-details p {
+    margin: 0.5rem 0;
+}
+
+.order-summary, .delivery-address, .payment-info {
+    margin-bottom: 1.5rem;
+    background-color: #fff;
+    padding: 1.5rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.status {
+    font-weight: bold;
+    padding: 4px 8px;
+    border-radius: 4px;
+    color: #fff;
+    text-transform: uppercase;
+    font-size: 0.875rem;
+}
+
+.status-pending {
+    background: #ffc107;
+}
+
+.status-paid {
+    background: #28a745;
+}
+
+.status-shipped {
+    background: #007bff;
+}
+
+.status-delivered {
+    background: #6c757d;
+}
+
+.status-cancelled {
+    background: #dc3545;
+}
+
+p {
+    margin: 0.5rem 0;
+}

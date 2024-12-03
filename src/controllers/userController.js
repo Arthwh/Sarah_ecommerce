@@ -1,5 +1,6 @@
 import UserService from '../services/userService.js';
 import ProductService from '../services/productService.js';
+import OrderService from '../services/orderService.js';
 import { getUserAgent, getUserIP, logAction } from '../services/logsService.js';
 
 class UserController {
@@ -39,6 +40,7 @@ class UserController {
         try {
             const user = req.session.user;
             let section = req.params.section || null;
+            let itemId = req.params.itemId || null;
             let renderedSection = null;
             if (section) {
                 renderedSection = await UserService.getUserPageSectionData(user, section);
@@ -57,7 +59,26 @@ class UserController {
         }
     }
 
-    static async getUserProfileComponent(req, res){
+    static async getOrderDetailsPage(req, res) {
+        try {
+            const user = req.session.user;
+            let orderId = req.params.orderId;
+            if (!orderId) {
+                res.status(400).send({ message: 'Order ID is required.' });
+            }
+            const orderData = await OrderService.getOrderDetails(user, orderId);
+            const categories = await ProductService.getAllProductCategoriesAndSubcategories();
+            res.render('client/userConfig', {
+                data: {
+                    user: user, page: { categories: categories, displayRegisterModal: true }, sectionData: orderData, section: 'orderDetails'
+                }
+            });
+        } catch (error) {
+            res.status(400).send({ message: error.message });
+        }
+    }
+
+    static async getUserProfileComponent(req, res) {
         try {
             const user = req.session.user;
             const userProfile = await UserService.getUserProfileData(user);

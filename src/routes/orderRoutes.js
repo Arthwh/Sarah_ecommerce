@@ -11,7 +11,8 @@ router.get('/orders/user/all', checkAuth, OrderController.getOrdersByUser);
 router.get('/orders/user/open', checkAuth, OrderController.getUserOpenOrders);
 router.get('/orders/user/finished', checkAuth, OrderController.getUserFinishedOrders);
 router.get('/orders/user/:orderId', checkAuth, OrderController.getOrderDetails);
-router.get('/api/orders', checkAuth, OrderController.getUserOrdersComponent)
+router.get('/api/orders', checkAuth, OrderController.getUserOrdersComponent);
+router.get('/api/orders/:id', checkAuth, OrderController.getOrderDetailsComponent);
 
 // Acesso do administrador
 router.get('/orders/all', isAdmin, OrderController.getAllOrders);

@@ -67,13 +67,27 @@ class OrderRepository {
         }
     }
 
-    static async getOrderById(orderId) {
+    static async getOrderById(userId, orderId) {
         try {
-            const query = `
-            SELECT * FROM orders WHERE id = $1;
-        `;
-            const { rows } = await pool.query(query, [orderId]);
-            return rows.length ? Order.mapFromRow(rows[0]) : null;
+            const { rows } = await pool.query(`
+            SELECT
+                o.public_id AS order_public_id, 
+                o.total_price AS order_total_amount,
+                o.status AS order_status,
+                o.created_at,
+                p.payment_method,
+                p.amount AS payment_amount,
+                p.status AS payment_status,
+                p.installments AS payment_installments,
+                p.installments_value AS payment_installments_value,
+                p.transaction_id AS payment_transaction_id,
+                a.id AS address_id
+            FROM orders o
+                INNER JOIN payments p ON p.order_id = o.id
+                INNER JOIN addresses a ON a.id = o.address_id
+            WHERE o.id = $1 AND o.user_id = $2;
+        `, [orderId, userId]);
+            return rows[0];
         } catch (error) {
             console.error(`Error getting orders by ID: ${error}`);
             throw Error(`Error getting orders by ID": ${error.message}`)
@@ -82,11 +96,33 @@ class OrderRepository {
 
     static async getOrderItems(orderId) {
         try {
-            const query = `
-            SELECT * FROM order_items WHERE order_id = $1;
-        `;
-            const { rows } = await pool.query(query, [orderId]);
-            return rows.map(row => OrderItem.mapFromRow(row));
+            const { rows } = await pool.query(`
+            SELECT 
+                p.name AS product_name,
+                pv.public_id AS variant_public_id,
+                p.public_id AS product_public_id,
+                pv.size,
+                pv.color,
+                pv.installments,
+                pv.unit_price,
+                pv.unit_price * oi.quantity AS total_price,
+                pv.is_on_sale,
+                oi.quantity,
+                (
+                    SELECT image_url 
+                    FROM product_variant_images pvi
+                    JOIN product_variant_images_assignments pvia 
+                    ON pvi.id = pvia.product_variant_images_id
+                    WHERE pvia.product_variant_id = pv.id AND pvi.is_primary = TRUE
+                    LIMIT 1
+                ) AS primary_image
+            FROM order_items oi
+            INNER JOIN product_variant pv ON oi.product_variant_id = pv.id
+            INNER JOIN products p ON pv.products_id = p.id
+            WHERE oi.order_id = $1
+            ORDER BY oi.quantity ASC
+        `, [orderId]);
+            return rows;
         } catch (error) {
             console.error(`Error getting order items: ${error}`);
             throw Error(`Error getting orders items": ${error.message}`)

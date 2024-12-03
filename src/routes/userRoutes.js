@@ -13,6 +13,7 @@ router.post('/api/register', UserController.createUser);
 
 //Views
 router.get('/account', checkAuth, UserController.getUserAccountPage);
+router.get('/account/orders/:orderId', checkAuth, UserController.getOrderDetailsPage);
 router.get('/account/:section', checkAuth, UserController.getUserAccountPage);
 router.get('/api/user', checkAuth, UserController.getUserProfileComponent)
 

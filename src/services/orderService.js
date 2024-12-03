@@ -85,15 +85,18 @@ class OrderService {
         }
     }
 
-    static async getOrderDetails(orderId) {
+    static async getOrderDetails(user, orderId) {
         try {
-            const order = await OrderRepository.getOrderById(orderId);
-            if (order) {
-                const items = await OrderRepository.getOrderItems(orderId);
-                order.items = items;
-                const payment = await OrderRepository.getPaymentByOrderId(orderId);
-                order.payment = payment;
+            const order = await OrderRepository.getOrderById(user.id, orderId);
+            if (!order) {
+                throw new Error('Pedido não encontrado.');
             }
+            const address = await AddressService.getAddressById(user, order.address_id);
+            const orderItems = await OrderRepository.getOrderItems(orderId);
+            order.items = orderItems;
+            order.address = address;
+
+            console.log(order);
             return order;
         } catch (error) {
             console.error('Erro ao obter detalhes do pedido:', error);

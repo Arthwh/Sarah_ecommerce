@@ -24,6 +24,21 @@ class OrderController {
         }
     }
 
+    static async getOrderDetailsComponent(req, res) {
+        try {
+            const user = req.session.user;
+            const orderId = req.params.id;
+            if (!orderId) {
+                res.status(400).json({ message: 'Id do pedido não informado.' });
+            }
+
+            const orderData = await OrderService.getOrderDetails(user, orderId);
+            res.render('client/partials/userPageComponents/orderDetails', { sectionData: orderData });
+        } catch (error) {
+            res.status(500).json({ message: 'Erro ao obter detalhes do pedido: ' + error.message });
+        }
+    }
+
     static async createOrder(req, res) {
         try {
             const user = req.session.user;

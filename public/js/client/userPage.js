@@ -65,6 +65,30 @@ async function loadUserOrdersComponent() {
     }
 }
 
+async function loadOrderDetailsComponent(orderId) {
+    try {
+        if (!userContentComponent) {
+            throw new Error('User content component not found');
+        }
+        if (!orderId) {
+            throw new Error('Order ID not found');
+        }
+        const response = await fetch(`/api/orders/${orderId}`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(response.message);
+                }
+                return response.text();
+            });
+
+        userContentComponent.innerHTML = response;
+        updateUrl(`/orders/${orderId}`)
+    } catch (error) {
+        console.error('Ocorreu um erro ao carregar os pedidos do usuário');
+        showToast('Ocorreu um erro ao carregar os pedidos do usuário', 'error');
+    }
+}
+
 async function loadUserAddressesComponent() {
     try {
         if (!userContentComponent) {

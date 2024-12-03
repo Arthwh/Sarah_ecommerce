@@ -37,7 +37,8 @@
                                                     <span class="status status-cancelled">Cancelado</span>
                                                     <% } %>
                             </p>
-                            <button class="action-btn-contrast" onclick="viewOrderDetails('<%= order.order_id %>')">
+                            <button class="action-btn-contrast"
+                                onclick="loadOrderDetailsComponent('<%= order.order_id %>')">
                                 Ver Detalhes
                             </button>
                         </div>

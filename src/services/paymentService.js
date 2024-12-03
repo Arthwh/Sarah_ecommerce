@@ -2,9 +2,6 @@ import PaymentRepository from "../repositories/paymentRepository.js";
 
 class PaymentService {
     static async createNewPayment(client, user, paymentMethod, creditCardData, order) {
-        console.log("PaymentMethod: ", paymentMethod);
-        console.log("CreditCardData: ", creditCardData);
-        console.log("Order: ", order);
         if (!paymentMethod || (paymentMethod === 'credit-card' && !creditCardData) || !order) {
             throw new Error("Missing required parameters");
         }
@@ -16,14 +13,12 @@ class PaymentService {
         if (!payment) {
             throw new Error("Erro ao registrar o pagamento");
         }
-
         return payment;
     }
 
     static async createNewTransaction(client, user, creditCardData, paymentMethod, order) {
-        let transaction = null;
-
         try {
+            let transaction = null;
             switch (paymentMethod) {
                 case "credit-card":
                     transaction = await PaymentRepository.createCreditCardTransaction(client, user, creditCardData, order.total_price, paymentMethod);

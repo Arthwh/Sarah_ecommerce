@@ -28,7 +28,6 @@
             console.error('Dados incompletos.');
         }
 
-        console.log(data)
         // Separa os dados em variáveis
         const user = data.user;
         const cart = user?.cart || {};
@@ -49,11 +48,6 @@
                             <li><button class="menuItem" id="userProfile">Informações Pessoais</button></li>
                             <li><button class="menuItem" id="userOrders">Pedidos</button></li>
                             <li><button class="menuItem" id="userAddresses">Endereços</button></li>
-                            <!-- <li><button class="menuItem" id="userPaymentMethods">Métodos de Pagamento</button>
-                            </li>
-                            <li><button class="menuItem" id="userNotifications">Notificações</button></li>
-                            <li><button class="menuItem" id="userSecurity">Segurança e Privacidade</button>
-                            </li> -->
                         </ul>
                     </aside>
 
@@ -92,7 +86,6 @@
                                                     <% } %>
                             </section>
                     </div>
-
                 </main>
 
                 <!-- Footer -->

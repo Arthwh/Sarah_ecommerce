@@ -77,7 +77,7 @@ async function confirmOrder() {
         }
         const order = await sendOrderData(method, creditCardData, addressId, cart);
         await clearCart();
-        showOrderModal('success', `Pedido ${order.id} criado com sucesso! <br>Acompanhe o pedido na seção de pedidos da conta.`);
+        showOrderModal('success', `Pedido ${order.id} criado com sucesso! <br>Acompanhe o pedido na seção de pedidos da conta.`, order.id);
     } catch (error) {
         console.error(error);
         showOrderModal('error', 'Houve um erro ao processar o pedido<br>' + error.message);

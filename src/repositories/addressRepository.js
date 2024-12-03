@@ -1,5 +1,4 @@
 import pool from '../db.js';
-import { Address } from '../models/addressModel.js';
 
 class AddressRepository {
     static async addAddress(userId, address_name, street, number, country_id, state_id, city, zipCode, complement) {
@@ -13,7 +12,6 @@ class AddressRepository {
             const addressesReturning = await client.query(`
                     INSERT INTO addresses (name, road, complement, zip_code, number, city_id) VALUES ($1, $2, $3, $4, $5, $6) RETURNING id
                 `, [address_name, street, complement, zipCode, number, cityid]);
-
             const addressId = addressesReturning.rows[0].id;
             await client.query(`
                     INSERT INTO user_address_assignments (user_id, address_id) VALUES ($1, $2)
@@ -77,8 +75,6 @@ class AddressRepository {
             throw Error('Error deleting address:' + error);
         }
     }
-
-
 
     static async getAddressesByUser(userId) {
         try {

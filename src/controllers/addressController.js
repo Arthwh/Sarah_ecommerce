@@ -78,11 +78,9 @@ class AddressController {
         try {
             const addressId = req.params.id;
             const user = req.session.user;
-
             if (!addressId) {
                 return res.status(400).json({ message: 'Id do endereço não informado' });
             }
-
             const addressData = await AddressService.getAddressById(user, addressId);
             res.status(200).json(addressData);
         } catch (error) {
@@ -92,9 +90,8 @@ class AddressController {
     }
 
     static async getAddressesByUser(req, res) {
-        const userId = req.session.user;
-
         try {
+            const userId = req.session.user;
             const addresses = await AddressService.getAddressesByUser(userId);
             res.status(200).json(addresses);
         } catch (error) {
@@ -104,11 +101,10 @@ class AddressController {
     }
 
     static async assignAddressToUser(req, res) {
-        const { addressId } = req.params;
-        const user = req.session.user;
-        const userId = user.id;
-
         try {
+            const { addressId } = req.params;
+            const user = req.session.user;
+            const userId = user.id;
             const assignment = await AddressService.assignAddressToUser(userId, addressId);
             res.status(200).json(assignment);
         } catch (error) {
@@ -118,11 +114,10 @@ class AddressController {
     }
 
     static async removeAddressFromUser(req, res) {
-        const { addressId } = req.params;
-        const user = req.session.user;
-        const userId = user.id;
-
         try {
+            const { addressId } = req.params;
+            const user = req.session.user;
+            const userId = user.id;
             const removal = await AddressService.removeAddressFromUser(userId, addressId);
             res.status(200).json(removal);
         } catch (error) {

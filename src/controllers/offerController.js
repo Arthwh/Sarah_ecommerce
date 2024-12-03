@@ -3,7 +3,8 @@ import OfferService from '../services/offerService.js';
 class OfferController {
     static async createOffer(req, res) {
         try {
-            const offer = await OfferService.createOffer(req.body);
+            const offerData = req.body;
+            const offer = await OfferService.createOffer(offerData);
             res.status(201).json(offer);
         } catch (error) {
             res.status(500).json({ message: "Erro ao criar oferta" + error.message });

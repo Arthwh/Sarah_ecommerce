@@ -52,7 +52,6 @@ class LandingPageService {
         }
     }
 
-    //FUNCIONANDO CERTO
     static async getLandingPageData(user = null) {
         try {
             const components = await LandingPageRepository.getActiveLandingPageComponents();
@@ -76,7 +75,6 @@ class LandingPageService {
         }
     }
 
-    //FUNCIONAL MAS NAO ESTA PRONTA
     static async saveLandingPageEdits(user, userIP, userAgent, landingPageData, images) {
         const client = await pool.connect();
         try {
@@ -107,13 +105,11 @@ class LandingPageService {
 
     static async compareLandingPageComponentsChanges(newLandingPageComponentsData) {
         const oldLandingPageComponentsData = await LandingPageRepository.getActiveLandingPageComponents();
-
         const componentsToDeactivate = [];
         const componentsToUpdate = [];
         const componentsToAdd = [];
         const newLandingPageComponentsMap = new Map(newLandingPageComponentsData.map(item => [parseInt(item.componentId), item]));
         const oldLandingPageComponentsMap = new Map(oldLandingPageComponentsData.map(item => [parseInt(item.id), item]));
-
         oldLandingPageComponentsData.forEach(oldComponent => {
             if (!newLandingPageComponentsMap.has(oldComponent.id)) {
                 componentsToDeactivate.push(oldComponent);
@@ -122,13 +118,11 @@ class LandingPageService {
                 componentsToUpdate.push(newLandingPageComponentsMap.get(oldComponent.id));
             }
         });
-
         newLandingPageComponentsData.forEach(newComponent => {
             if (!oldLandingPageComponentsMap.has(parseInt(newComponent.componentId))) {
                 componentsToAdd.push(newComponent);
             }
         });
-
         return {
             componentsToDeactivate,
             componentsToUpdate,
@@ -138,24 +132,20 @@ class LandingPageService {
 
     static async compareLandingPageImagesChanges(componentId, newLandingPageImagesData) {
         const oldLandingPageImagesData = await LandingPageRepository.getActiveLandingPageImages(componentId);
-
         const imagesToDeactivate = [];
         const imagesToAdd = [];
         const newLandingPageImagesMap = new Map(newLandingPageImagesData.map(item => [parseInt(item.id), item]));
         const oldLandingPageImagesMap = new Map(oldLandingPageImagesData.map(item => [parseInt(item.id), item]));
-
         oldLandingPageImagesData.forEach(oldImage => {
             if (!newLandingPageImagesMap.has(oldImage.id)) {
                 imagesToDeactivate.push(oldImage);
             }
         });
-
         newLandingPageImagesData.forEach(newImage => {
             if (!oldLandingPageImagesMap.has(parseInt(newImage.id))) {
                 imagesToAdd.push(newImage);
             }
         });
-
         return {
             imagesToAdd,
             imagesToDeactivate

@@ -1,7 +1,6 @@
 import ProductService from '../services/productService.js';
 
 class ProductController {
-    //FUNCIONANDO CERTO
     static async getCategoriesAndSubcategories(req, res) {
         try {
             const data = await ProductService.getAllProductCategoriesAndSubcategories();
@@ -11,7 +10,6 @@ class ProductController {
         }
     }
 
-    //FUNCIONANDO CERTO
     static async getBrands(req, res) {
         try {
             const data = await ProductService.getAllBrands();
@@ -30,7 +28,6 @@ class ProductController {
         }
     }
 
-    //FUNCIONANDO CERTO
     static async listProductsByCategoryOrSubcategory(req, res) {
         try {
             const { category, subcategory } = req.params;
@@ -49,7 +46,6 @@ class ProductController {
         }
     }
 
-    //FUNCIONANDO CERTO
     static async getSpecificProduct(req, res) {
         try {
             const user = req.session.user;
@@ -68,7 +64,6 @@ class ProductController {
         }
     }
 
-    //FUNCIONANDO CERTO
     static async getProductVariantData(req, res) {
         try {
             const { sku } = req.params;
@@ -95,7 +90,6 @@ class ProductController {
         }
     }
 
-    //FUNCIONANDO CERTO
     static async createProduct(req, res) {
         try {
             const productData = req.body;

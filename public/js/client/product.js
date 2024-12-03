@@ -25,7 +25,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    //Adiciona listener para quando a tela carregar e quando houver redimensionamento dela para verificar o overflow do carrossel de imagens
     window.addEventListener('resize', checkCarouselOverflow);
     window.addEventListener('load', checkCarouselOverflow);
 });
@@ -48,14 +47,12 @@ async function clearColorsSelected() {
     });
 }
 
-//Adiciona uma marca no tamanho selecionado
 async function markSizeSelected(sizeSKU) {
     await clearSizesSelected();
     const button = document.getElementById(`productSize_${sizeSKU}`).querySelector('button')
     button.classList.add('sizeSelected');
 }
 
-//Adiciona uma marca na cor selecionada
 async function markColorSelected() {
     await clearColorsSelected();
     const colorSelectedDiv = document.querySelector(`div[data-variantColor="${actualProductData.variant_color_name}"]`);
@@ -71,7 +68,6 @@ function changeMainImage(newImageUrl, buttonElement) {
     buttonElement.querySelector('img').classList.add('border')
 }
 
-// Funcoes para controlar o carrossel de imagens dos produtos
 function updateMainImageSmallScreen(index) {
     const mainImage = document.querySelector(".imagemProdutoTelaPequena");
     if (mainImage) {
@@ -101,7 +97,6 @@ function checkCarouselOverflow() {
     scrollDownButton.style.display = isOverflowing ? 'block' : 'none';
 }
 
-// Requisição AJAX para trocar os dados do produto pelos da variante selecionada
 function loadVariantData(button) {
     const parentElement = button.parentElement
     const variantId = parentElement?.dataset.productsku
@@ -115,7 +110,6 @@ function loadVariantData(button) {
         .catch(error => console.error('Erro ao carregar variante:', error));
 }
 
-// Função para atualizar as informações do produto no DOM
 function updateProductInfo(product, variantType, variantId) {
     images = product.variant_images;
     actualProductData = product;

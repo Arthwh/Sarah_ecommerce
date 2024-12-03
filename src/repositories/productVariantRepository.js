@@ -1,9 +1,6 @@
-import { compareSync } from 'bcrypt';
 import pool from '../db.js';
-import { ProductVariant } from '../models/productVariantModel.js'
 
 class ProductVariantRepository {
-    //FUNCIONANDO CERTO
     static async getAllProductVariantsByProductIdRepository(id) {
         try {
             const { rows } = await pool.query(`
@@ -71,7 +68,6 @@ class ProductVariantRepository {
         }
     }
 
-    //FUNCIONANDO CERTO
     static async createProductVariantRepository(client, product_id, variants) {
         try {
             const rows = [];
@@ -91,7 +87,6 @@ class ProductVariantRepository {
         }
     }
 
-    //FUNCIONANDO CERTO
     static async insertVariantImages(client, files) {
         try {
             const images = [];
@@ -109,7 +104,6 @@ class ProductVariantRepository {
         }
     }
 
-    //FUNCIONANDO CERTO
     static async assignVariantImageRepository(client, variants, images) {
         try {
             const assignments = [];
@@ -120,7 +114,6 @@ class ProductVariantRepository {
                     }
                 }
             }
-
             if (assignments.length > 0) {
                 const values = assignments.map((_, i) => `($${i * 2 + 1}, $${i * 2 + 2})`).join(', ');
                 const flattenedValues = assignments.flat();
@@ -185,7 +178,6 @@ class ProductVariantRepository {
                     FROM product_variant
                     WHERE id = $1
                 `, [productVariantId]);
-
             return rows[0]?.stock_quantity
         } catch (error) {
             console.error('Error getting variant stock:', error);

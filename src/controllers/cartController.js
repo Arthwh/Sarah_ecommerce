@@ -11,7 +11,6 @@ class CartController {
 
             res.render('client/cart', { data });
         } catch (error) {
-            console.log(error)
             res.status(500).json({ error: 'Erro ao obter página de carrinho: ', error });
         }
     }

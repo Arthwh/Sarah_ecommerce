@@ -1,5 +1,5 @@
 import pool from '../db.js';
-import { Order, OrderItem, Payment } from '../models/orderModel.js'
+import { Order } from '../models/orderModel.js'
 
 class OrderRepository {
     static async createOrder(client, userId, addressId, total_amount) {
@@ -24,9 +24,7 @@ class OrderRepository {
             const placeholders = items
                 .map((_, index) => `($${index * 4 + 1}, $${index * 4 + 2}, $${index * 4 + 3}, $${index * 4 + 4})`)
                 .join(', ');
-
             const query = `${queryBase} ${placeholders} RETURNING *;`;
-
             const values = items.flatMap(item => [
                 orderId,
                 item.product_variant_id,
@@ -56,7 +54,7 @@ class OrderRepository {
             FROM orders o
                 INNER JOIN order_items oi ON o.id = oi.order_id
 				INNER JOIN payments p ON p.order_id = o.id
-            WHERE o.user_id = $1
+            WHERE o.user_id = $1 AND o.is_active = true
             GROUP BY oi.order_id, o.id, p.status
             ORDER BY o.created_at DESC;
         `, [userId]);
@@ -113,7 +111,7 @@ class OrderRepository {
                     FROM product_variant_images pvi
                     JOIN product_variant_images_assignments pvia 
                     ON pvi.id = pvia.product_variant_images_id
-                    WHERE pvia.product_variant_id = pv.id AND pvi.is_primary = TRUE
+                    WHERE pvia.product_variant_id = pv.id
                     LIMIT 1
                 ) AS primary_image
             FROM order_items oi

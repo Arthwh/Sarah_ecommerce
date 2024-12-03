@@ -326,8 +326,6 @@ async function saveVariant() {
             addVariantToVariantsWithImagesVariable(variantObject);
         }
 
-        console.log('Dados da variante:', variantObject);
-        console.log('imagens da variante:', images);
         setVariantDataIntoFormData(variantObject, images)
         const tableUpdated = await setVariantDataIntoTable(variantObject);
         if (tableUpdated) {
@@ -534,7 +532,8 @@ async function createProduct(event) {
         });
         if (response.ok) {
             showToast("Produto criado com sucesso!", "success");
-            renderProductRegister();
+            window.location.href = "/admin";
+            // renderProductRegister();
         } else {
             const errorText = await response.message;
             showToast(`Erro no processamento: ${errorText || "Desconhecido"} (Status: ${response.status})`, "error")

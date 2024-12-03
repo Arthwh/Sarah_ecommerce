@@ -22,7 +22,7 @@ class CartRepository {
                         FROM product_variant_images pvi
                         JOIN product_variant_images_assignments pvia 
                         ON pvi.id = pvia.product_variant_images_id
-                        WHERE pvia.product_variant_id = pv.id AND pvi.is_primary = TRUE
+                        WHERE pvia.product_variant_id = pv.id
                         LIMIT 1
                     ) AS primary_image,
 					variant_offers.offer_type AS variant_offer_type,

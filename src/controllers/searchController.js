@@ -6,12 +6,9 @@ class SearchController {
         try {
             const user = req.session.user;
             const { query, page, limit } = req.query;
-
             const searchResults = await SearchService.searchProducts(user, query, limit, page);
             const categories = await ProductService.getAllProductCategoriesAndSubcategories();
-
             searchResults.page.categories = categories;
-
             res.render('client/productsList', { data: searchResults });
         } catch (error) {
             console.error("Error searching products:", error.message);

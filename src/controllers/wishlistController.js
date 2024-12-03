@@ -9,7 +9,6 @@ class WishlistController {
             const categories = await ProductService.getAllProductCategoriesAndSubcategories();
             const data = await WishlistService.getWishlistItemsByUser(user, limit, page);
             data.page.categories = categories;
-
             res.render('client/wishlist', { data });
         } catch (error) {
             res.status(500).json({ error: 'Erro ao obter página de favoritos: ', error });
@@ -32,7 +31,6 @@ class WishlistController {
     static async checkProductInWishlist(req, res) {
         try {
             const { id, productId } = req.params;
-
             if (!id) {
                 return res.status(401).json({ message: 'You must be logged in to view your wishlist' });
             }
@@ -49,14 +47,12 @@ class WishlistController {
     static async addProductToWishlist(req, res) {
         try {
             const { id, productId } = req.params;
-
             if (!id) {
                 return res.status(401).json({ message: 'You must be logged in to add products to your wishlist' });
             }
             if (!productId) {
                 return res.status(400).json({ message: 'Product ID is required' });
             }
-
             await WishlistService.addProductToWishlist(id, productId);
             return res.status(200).json({ message: 'Product added to wishlist' });
         } catch (error) {
@@ -67,14 +63,12 @@ class WishlistController {
     static async removeProductFromWishlist(req, res) {
         try {
             const { id, productId } = req.params;
-
             if (!id) {
                 return res.status(401).json({ message: 'You must be logged in to add products to your wishlist' });
             }
             if (!productId) {
                 return res.status(400).json({ message: 'Product ID is required' });
             }
-
             await WishlistService.removeProductFromWishlist(id, productId);
             res.status(200).json({ message: 'Product removed from wishlist' });
         } catch (error) {

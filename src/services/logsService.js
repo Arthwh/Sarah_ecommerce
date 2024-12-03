@@ -21,11 +21,3 @@ export async function logAction(userIP, userAgent, action, details = null, userI
         throw Error('Error creating log: ', error)
     }
 };
-
-// Exemplo de uso
-// logAction(
-//     'update_product',
-//     { before: { name: 'Camiseta' }, after: { name: 'Camiseta Azul' } },
-//     1,
-//     1
-// );

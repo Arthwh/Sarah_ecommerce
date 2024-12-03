@@ -1,4 +1,4 @@
-function showOrderModal(status, message) {
+function showOrderModal(status, message, orderId = null) {
     const existentModal = document.getElementById('orderModal');
     if (existentModal) {
         existentModal.remove();
@@ -17,7 +17,7 @@ function showOrderModal(status, message) {
             <p class="modal-message">${message}</p>
             <div class="modal-buttons">
                 ${status === 'success' ?
-            `<a href="/account/orders" class="modal-button action-btn-contrast" onclick="closeModal()">Acompanhar pedido</a>` : ''
+            `<a href="/account/orders${orderId ? '/' + orderId : ''}" class="modal-button action-btn-contrast" onclick="closeModal()">Acompanhar pedido</a>` : ''
         }
                 <button class="modal-close action-btn-contrast">Fechar</button>
             </div>

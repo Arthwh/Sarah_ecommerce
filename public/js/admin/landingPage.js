@@ -4,13 +4,11 @@ const scheduledChangesLandingPageButton = document.getElementById('scheduledChan
 const landingPageHistoryButton = document.getElementById('landingPageHistoryButton');
 
 document.addEventListener('DOMContentLoaded', function () {
-    // Add event listeners aos botões dos submenus
     alterLandingPageButton.addEventListener('click', renderAlterLandingPage);
     scheduledChangesLandingPageButton.addEventListener('click', renderScheduledChangesLandingPage);
     landingPageHistoryButton.addEventListener('click', renderLandingPageHistory);
 });
 
-// Funções de renderização para Página Inicial
 async function renderAlterLandingPage() {
     optionVisualizationContainer.innerHTML = `
         <div class="utility-bar">

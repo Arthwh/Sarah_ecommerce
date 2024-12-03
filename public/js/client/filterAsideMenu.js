@@ -29,11 +29,6 @@ async function renderColorOptions() {
     });
 }
 
-// Função para alternar o filtro de cor e adicionar a classe 'selected'
 function toggleColorFilter(color) {
-    // Lógica de filtragem, onde você pode ativar/desativar o filtro para essa cor
     console.log(`Filtro de cor selecionado: ${color}`);
-
-    // Opcional: Alterne a classe 'selected' no elemento de cor para indicar a seleção
-    // e aplique a lógica de atualização de produtos conforme a cor
 }

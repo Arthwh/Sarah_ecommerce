@@ -12,10 +12,8 @@ class ProductService {
             }
             const totalProducts = (await ProductRepository.countTotalProducts(category, subcategory)).total_count;
             const { limit, offset, page, totalPages } = await calculatePageParams(limitParam, pageParam, totalProducts);
-
             let products = await ProductRepository.listProductsBySubcategoryRepository('name', category, subcategory, limit, offset);
             user ? products = await WishlistService.checkProductsInWishlist(user, products) : '';
-
             const results = products.length;
             const breadcrumbs = await createBreadcrumbs(null, category, subcategory);
             const title = subcategory ? `${capitalizeWords(subcategory)} ${category}` : `${capitalizeWords(category)}`;
@@ -27,16 +25,13 @@ class ProductService {
         }
     }
 
-    //FUNCIONANDO CERTO
     static async getSpecificProduct(user = null, id, sku) {
         try {
             let productData = {};
-
             if (!id) {
                 throw Error("Product ID missing.");
             }
             if (!sku || sku === 'undefined') {
-                //Pega a primeira variante com estoque
                 productData = await ProductRepository.getProductAndFirstVariantByProductIdRepository(id);
             }
             else {
@@ -45,7 +40,6 @@ class ProductService {
             if (user) {
                 productData.product_in_wishlist = await WishlistService.checkProductIsAddedWishlist(user.id, productData.product_public_id);
             }
-
             const variantsData = await ProductVariantRepository.getAllProductVariantsByProductIdRepository(id);
             if (variantsData) {
                 productData['variants'] = variantsData;
@@ -70,7 +64,6 @@ class ProductService {
         }
     }
 
-    //FUNCIONANDO CERTO
     static async getProductVariantData(sku) {
         try {
             if (!sku) {
@@ -87,7 +80,6 @@ class ProductService {
 
     static async getProductVariantStockQuantity(sku) {
         try {
-            console.log(sku)
             const skuQuantity = await ProductRepository.getProductVariantStockQuantity(sku) || 0;
             return skuQuantity;
         } catch (error) {
@@ -96,11 +88,9 @@ class ProductService {
         }
     }
 
-    //FUNCIONANDO CERTO
     static async createProductService(productData, files) {
         const client = await pool.connect();
         try {
-            //Inicia a transaction
             await client.query('BEGIN');
             const variantsData = JSON.parse(productData.variants);
             let totalStock = 0;
@@ -115,11 +105,9 @@ class ProductService {
                 const images = await ProductVariantRepository.insertVariantImages(client, files);
                 await ProductVariantRepository.assignVariantImageRepository(client, variants, images);
             }
-            //Commita as alterações se todas deram certo
             await client.query('COMMIT')
             return { message: "Product created successfully" };
         } catch (error) {
-            // Se ocorrer algum erro, faz o rollback
             await client.query('ROLLBACK');
             console.error('Error creating product: ' + error.message);
             throw Error('Error creating product: ' + error.message);
@@ -128,7 +116,6 @@ class ProductService {
         }
     }
 
-    //FUNCIONANDO CERTO
     static async getAllProductCategoriesAndSubcategories() {
         try {
             const rows = await ProductRepository.getCategoriesAndSubcategories();
@@ -136,7 +123,6 @@ class ProductService {
             const categoriesMap = {};
 
             rows.forEach(row => {
-                // Adiciona uma nova categoria se ela ainda não existe no mapa
                 if (!categoriesMap[row.category_id]) {
                     const category = {
                         id: row.category_id,
@@ -146,7 +132,6 @@ class ProductService {
                     categories.push(category);
                     categoriesMap[row.category_id] = category;
                 }
-                // Adiciona subcategoria à categoria correspondente
                 if (row.subcategory_id) {
                     categoriesMap[row.category_id].subcategories.push({
                         id: row.subcategory_id,
@@ -161,7 +146,6 @@ class ProductService {
         }
     }
 
-    //FUNCIONANDO CERTO
     static async getAllBrands() {
         try {
             const brands = await ProductRepository.getAllBrands();
@@ -213,7 +197,6 @@ class ProductService {
             if (!productVariantId || !quantity) {
                 throw new Error('Produto ou quantidade não informados');
             }
-
             await ProductVariantRepository.reserveStock(client, productVariantId, quantity);
         } catch (error) {
             console.error('Erro ao reservar estoque: ', error);

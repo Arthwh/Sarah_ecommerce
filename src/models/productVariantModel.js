@@ -12,7 +12,6 @@ export class ProductVariant extends Product {
         this.size = size;
         this.stock_quantity = stock_quantity || 0;
     }
-
 }
 
 // Método para validar dados do produto

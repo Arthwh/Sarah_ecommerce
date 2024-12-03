@@ -19,7 +19,6 @@ class OrderService {
                     categories: []
                 }
             };
-
             return data;
         } catch (error) {
             console.error('Erro ao obter tela de checkout:', error);
@@ -66,7 +65,6 @@ class OrderService {
             }
             const orderItems = await OrderRepository.addOrderItems(client, order.id, cart.items);
             order.items = orderItems;
-
             return order;
         } catch (error) {
             console.error('Erro ao criar pedido:', error);
@@ -77,7 +75,6 @@ class OrderService {
     static async getOrdersByUser(user) {
         try {
             const orders = await OrderRepository.getOrdersByUser(user.id);
-            console.log(orders)
             return orders;
         } catch (error) {
             console.error('Erro ao obter pedidos:', error);
@@ -95,8 +92,6 @@ class OrderService {
             const orderItems = await OrderRepository.getOrderItems(orderId);
             order.items = orderItems;
             order.address = address;
-
-            console.log(order);
             return order;
         } catch (error) {
             console.error('Erro ao obter detalhes do pedido:', error);

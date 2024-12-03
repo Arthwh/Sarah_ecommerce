@@ -8,7 +8,6 @@ class WishlistService {
             if (!user) {
                 throw Error('User is required!');
             }
-
             const totalProducts = (await WishlistRepository.getCountWishlistProductsByUserId(user.id));
             const { limit, offset, page, totalPages } = await calculatePageParams(limitParam, pageParam, totalProducts);
             const wishlistItems = await WishlistRepository.fetchWishlistItemsByUserId_completeForm(userId, limit, offset);
@@ -24,7 +23,6 @@ class WishlistService {
         try {
             const wishlistItems = await WishlistRepository.fetchWishlistItemsByUserId_resumedForm(user.id);
             const wishlistItemsMap = wishlistItems.map(item => item.product_public_id);
-
             for (const product of products) {
                 if (wishlistItemsMap.includes(product.product_public_id)) {
                     product.product_in_wishlist = true;
@@ -33,7 +31,6 @@ class WishlistService {
                     product.product_in_wishlist = false;
                 }
             }
-
             return products
         } catch (error) {
             console.error('Failed to check products in wishlist: ', error)

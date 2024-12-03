@@ -28,7 +28,6 @@
         const product = data.product;
         const variants = product?.variants;
         const page = data.page
-        console.log(data)
     </script>
 </head>
 
@@ -46,7 +45,7 @@
                                     <div class="cart-item" data-variant-public-id="<%= item.variant_public_id %>"
                                         data-product-public-id="<%= item.product_public_id %>"
                                         data-selected-quantity="<%= item.quantity %>">
-                                        <img src="<%= item.primary_image %>" alt="<%= item.name %>"
+                                        <img src="/<%= item.primary_image %>" alt="<%= item.name %>"
                                             class="cart-item-image">
                                         <div class="cart-item-info">
                                             <a

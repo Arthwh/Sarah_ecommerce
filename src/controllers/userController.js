@@ -115,7 +115,6 @@ class UserController {
         }
     }
 
-    //AINDA NAO É USADO
     static async getAllUsers(req, res) {
         try {
             res.status(200).send(await UserService.getAllUsersService());
@@ -124,7 +123,6 @@ class UserController {
         }
     }
 
-    //AINDA NAO É USADO
     static async getUserById(req, res) {
         try {
             res.status(200).send(await UserService.getUserbyIdService(req.params.id));
@@ -133,7 +131,6 @@ class UserController {
         }
     }
 
-    //AINDA NAO É USADO
     static async getUserByEmail(req, res) {
         try {
             res.status(200).send(await UserService.getUserbyEmailService(req.params.email));
@@ -142,7 +139,6 @@ class UserController {
         }
     }
 
-    //AINDA NAO É USADO
     static async updateUser(req, res) {
         try {
             const user = req.session.user
@@ -154,7 +150,6 @@ class UserController {
         }
     }
 
-    //AINDA NAO É USADO
     static async deleteUser(req, res) {
         try {
             await UserService.deleteUserService(req.params.id);

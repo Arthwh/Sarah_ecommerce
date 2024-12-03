@@ -14,20 +14,17 @@
     <link href="/public/css/client/loginRegisterModal.css" rel="stylesheet">
 
     <script>
-        // Obtem os dados enviados do backend e converte para JSON
         const data = JSON.parse('<%- JSON.stringify(data) %>') || {};
         if (!data) {
             console.error('Erro ao carregar a página: Dados incompletos.');
             window.location.href = "/";
         }
-        // Separa os dados em variáveis
         const user = data.user;
         const page = data.page;
     </script>
 </head>
 
 <body class="min-h-lvh">
-    <!-- Header da Página de Admin -->
     <%- include('partials/_adminHeader') %>
         <%- include('../client/partials/_loginRegisterModal') %>
 

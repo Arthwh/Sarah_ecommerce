@@ -1,7 +1,4 @@
 import CartRepository from '../repositories/cartRepository.js';
-import { calculatePageParams, createDataStructureForListProducts } from '../helpers/pageHelpers.js';
-
-import pool from '../db.js';
 import ProductVariantRepository from '../repositories/productVariantRepository.js';
 
 class CartService {
@@ -28,7 +25,6 @@ class CartService {
             }
             return data;
         } catch (error) {
-            console.log('Error getting cart page data: ', error);
             throw error;
         }
     }
@@ -51,7 +47,6 @@ class CartService {
 
             return cart;
         } catch (error) {
-            console.log('Error getting cart data: ', error);
             throw error;
         }
     }
@@ -61,7 +56,6 @@ class CartService {
         if (!cartFromDb) {
             return false;
         }
-        // Verificação dos campos simples
         const keysToCompare = ['total_amount', 'installments', 'total_products'];
         for (const key of keysToCompare) {
             if (cartFromFront[key] !== cartFromDb[key]) {
@@ -69,11 +63,8 @@ class CartService {
                 return false;
             }
         }
-
-        // Verificação dos itens
         const itemsFromFront = cartFromFront.items;
         const itemsFromDb = cartFromDb.items;
-
         if (itemsFromFront.length !== itemsFromDb.length) {
             console.error(`Mismatch in number of items: Front: ${itemsFromFront.length}, DB: ${itemsFromDb.length}`);
             return false;
@@ -87,7 +78,6 @@ class CartService {
             const cartCount = await CartRepository.getUserCartCount(user.id) || 0;
             return cartCount;
         } catch (error) {
-            console.log('Error getting userCartCount: ', error);
             throw error;
         }
     }
@@ -171,16 +161,13 @@ async function calculateCartParams(cartItems) {
 
     cartItems.forEach(item => {
         total_products++;
-
         if (item.is_on_sale) {
             const offerType = item.variant_offer_type;
             const offerValue = item.variant_offer_value;
             const offerInstallments = item.variant_offer_installments;
-
             if (offerInstallments && !isNaN(offerInstallments)) {
                 total_installments += offerInstallments;
             }
-
             let discountValue = 0;
             if (offerType === 'percentage') {
                 discountValue = (parseFloat(item.unit_price) * parseFloat(offerValue)) / 100;
@@ -197,9 +184,7 @@ async function calculateCartParams(cartItems) {
             }
         }
     });
-
     total_installments = await calculateInstallments(total_installments, total_products, total_amount);
-
     return {
         total_amount: total_amount.toFixed(2),
         total_installments,
@@ -210,14 +195,11 @@ async function calculateCartParams(cartItems) {
 async function calculateInstallments(total_installments, total_products, total_amount) {
     const maxInstallments = 10;
     const minInstallmentValue = 40;
-
     let averageInstallments = Math.ceil(parseInt(total_installments) / parseInt(total_products));
-
     if (averageInstallments > maxInstallments) {
         averageInstallments = maxInstallments;
     }
     const calculatedInstallmentValue = parseInt(total_amount) / averageInstallments;
-
     if (averageInstallments < maxInstallments && calculatedInstallmentValue > minInstallmentValue) {
         let ok = true;
         while (ok) {

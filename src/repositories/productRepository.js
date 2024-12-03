@@ -1,5 +1,4 @@
 import pool from '../db.js';
-import { Product } from '../models/productModel.js'
 
 class ProductRepository {
     static async getProductsByFilter_newArrivals(limit = 10) {
@@ -42,7 +41,7 @@ class ProductRepository {
                             ORDER BY p.id, pv.color, pv.stock_quantity DESC
                         ) unique_colors ON unique_colors.product_id = p.id AND unique_colors.color = pv.color
                         LEFT JOIN product_reviews pr ON p.id = pr.product_id
-                    WHERE unique_colors.variant_id = pv.id
+                    WHERE unique_colors.variant_id = pv.id AND p.is_active = true
                     GROUP BY
                         p.id,
                         pv.id,
@@ -110,7 +109,7 @@ class ProductRepository {
                             WHERE pv.stock_quantity > 0
                             ORDER BY p.id, pv.color, pv.stock_quantity DESC
                         ) unique_colors ON unique_colors.product_id = p.id AND unique_colors.color = pv.color
-                    WHERE pv.stock_quantity > 0 AND unique_colors.variant_id = pv.id
+                    WHERE pv.stock_quantity > 0 AND unique_colors.variant_id = pv.id AND p.is_active = true
                     GROUP BY
                         p.id,
                         pv.id,
@@ -124,8 +123,8 @@ class ProductRepository {
             `, [limit]);
             return rows;
         } catch (error) {
-            console.error(`Error while getting products by filter "newArrivals": ${error}`);
-            throw Error(`Error while getting products by filter "newArrivals": ${error.message}`)
+            console.error(`Error while getting products by filter "highestRated": ${error}`);
+            throw Error(`Error while getting products by filter "highestRated": ${error.message}`)
         }
     }
 
@@ -177,7 +176,7 @@ class ProductRepository {
                     ) unique_colors ON unique_colors.product_id = p.id AND unique_colors.color = pv.color
                     LEFT JOIN product_reviews pr ON p.id = pr.product_id
                     INNER JOIN product_highest_selled AS phs ON phs.product_id = p.id
-                WHERE unique_colors.variant_id = pv.id
+                WHERE unique_colors.variant_id = pv.id AND p.is_active = true
                 GROUP BY
                     p.id,
                     pv.id,
@@ -190,8 +189,8 @@ class ProductRepository {
     `, [limit]);
             return rows;
         } catch (error) {
-            console.error(`Error while getting products by filter "newArrivals": ${error}`);
-            throw Error(`Error while getting products by filter "newArrivals": ${error.message}`)
+            console.error(`Error while getting products by filter "bestSelling": ${error}`);
+            throw Error(`Error while getting products by filter "bestSelling": ${error.message}`)
         }
     }
 
@@ -235,7 +234,7 @@ class ProductRepository {
                             ORDER BY p.id, pv.color, pv.stock_quantity DESC
                         ) unique_colors ON unique_colors.product_id = p.id AND unique_colors.color = pv.color
                         LEFT JOIN product_reviews pr ON p.id = pr.product_id
-                    WHERE unique_colors.variant_id = pv.id AND pv.is_on_sale = true
+                    WHERE unique_colors.variant_id = pv.id AND pv.is_on_sale = true AND p.is_active = true
                     GROUP BY
                         p.id,
                         pv.id,
@@ -246,11 +245,11 @@ class ProductRepository {
                 `, [limit]);
             return rows;
         } catch (error) {
-
+            console.error(`Error while getting products by filter "offers": ${error}`);
+            throw Error(`Error while getting products by filter "offers": ${error.message}`)
         }
     }
 
-    //FUNCIONANDO CERTO
     static async listProductsBySubcategoryRepository(filterCategorySubcategoryBy, category, subcategory, limit, offset) {
         try {
             let parameters = [category];
@@ -307,7 +306,7 @@ class ProductRepository {
             `;
             if (subcategory) parameters.push(subcategory);
             const whereQuery = `
-                WHERE unique_colors.variant_id = pv.id ${subcategory ? (filterCategorySubcategoryBy === 'id' ? 'AND product_subcategories.subcategory_id = $2' : 'AND product_subcategories.subcategory_name ILIKE $2') : ''} 
+                WHERE unique_colors.variant_id = pv.id AND p.is_active = true ${subcategory ? (filterCategorySubcategoryBy === 'id' ? 'AND product_subcategories.subcategory_id = $2' : 'AND product_subcategories.subcategory_name ILIKE $2') : ''} 
                 ${filterCategorySubcategoryBy === 'id' ? 'AND product_subcategories.category_id = $1' : 'AND product_subcategories.category_name ILIKE $1'}
             `;
             const groupByQuery = `
@@ -333,11 +332,9 @@ class ProductRepository {
         }
     }
 
-    //FUNCIONANDO CERTO
     static async countTotalProducts(category, subcategory) {
         try {
             let parameters = [category];
-
             const selectAndJoinsQuery = `
                     SELECT
                         COUNT(DISTINCT pv.id) AS total_count
@@ -368,7 +365,7 @@ class ProductRepository {
             `;
             if (subcategory) parameters.push(subcategory);
             const whereQuery = `
-                WHERE unique_colors.variant_id = pv.id ${subcategory ? 'AND product_subcategories.subcategory_name ILIKE $2' : ''} AND product_subcategories.category_name ILIKE $1
+                WHERE unique_colors.variant_id = pv.id AND p.is_active = true ${subcategory ? 'AND product_subcategories.subcategory_name ILIKE $2' : ''} AND product_subcategories.category_name ILIKE $1
             `;
             const { rows } = await pool.query((selectAndJoinsQuery + whereQuery), parameters);
             return rows[0];
@@ -378,7 +375,6 @@ class ProductRepository {
         }
     }
 
-    //FUNCIONANDO CERTO
     static async getProductAndFirstVariantByProductIdRepository(id) {
         try {
             const { rows } = await pool.query(`
@@ -437,7 +433,7 @@ class ProductRepository {
                             INNER JOIN categories ca ON sbc.categories_id = ca.id
                         ) product_subcategories ON product_subcategories.product_id = p.id
                         LEFT JOIN product_reviews pr ON p.id = pr.product_id
-					WHERE p.public_id = $1 AND pv.stock_quantity > 0
+					WHERE p.public_id = $1 AND p.is_active = true AND pv.stock_quantity > 0
 					GROUP BY
 						p.id,
                         pv.id,
@@ -452,7 +448,6 @@ class ProductRepository {
         }
     };
 
-    //FUNCIONANDO CERTO
     static async getProductByProductAndVariantIdRepository(id, sku) {
         try {
             const { rows } = await pool.query(`
@@ -540,7 +535,6 @@ class ProductRepository {
         }
     }
 
-    //FUNCIONANDO CERTO
     static async createProductRepository(client, { productName, productDescription, brand, productTotalStock }) {
         try {
             const { rows } = await client.query(`
@@ -555,7 +549,6 @@ class ProductRepository {
         }
     }
 
-    //FUNCIONANDO CERTO
     static async assignSubcategoryRepository(client, product_id, subcategories) {
         try {
             for (const subcategory of subcategories) {
@@ -570,7 +563,6 @@ class ProductRepository {
         }
     }
 
-    //FUNCIONANDO CERTO
     static async getCategoriesAndSubcategories() {
         try {
             const { rows } = await pool.query('SELECT c.id AS category_id, c.name AS category_name, s.id AS subcategory_id, s.name AS subcategory_name FROM categories c LEFT JOIN sub_categories s ON c.id = s.categories_id ORDER BY c.id, s.id;');
@@ -581,7 +573,6 @@ class ProductRepository {
         }
     }
 
-    //FUNCIONANDO CERTO
     static async getAllBrands() {
         try {
             const { rows } = await pool.query('SELECT id, name FROM brands ORDER BY id;');
@@ -592,7 +583,6 @@ class ProductRepository {
         }
     }
 
-    //FUNCIONANDO CERTO
     static async getAllActiveProductColors() {
         try {
             const { rows } = pool.query(`SELECT DISTINCT ON (pv.color) pv.color FROM product_variant pv GROUP BY pv.color`);
@@ -604,13 +594,18 @@ class ProductRepository {
     }
 
     static async countTotalSearchResults(query) {
-        const searchQuery = `%${query}%`;
-        const sql = `
+        try {
+            const searchQuery = `%${query}%`;
+            const sql = `
             SELECT COUNT(*) FROM products
             WHERE name ILIKE $1;
         `;
-        const { rows } = await pool.query(sql, [searchQuery]);
-        return { total_count: parseInt(rows[0].count, 10) };
+            const { rows } = await pool.query(sql, [searchQuery]);
+            return { total_count: parseInt(rows[0].count, 10) };
+        } catch (error) {
+            console.error('Error counting search results: ', error);
+            throw error;
+        }
     }
 
     static async searchProductsByQuery(query, limit, offset) {

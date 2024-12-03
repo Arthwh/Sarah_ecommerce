@@ -19,7 +19,6 @@ class WishlistRepository {
                     FROM favorites_list fl INNER JOIN favorites_items fi ON fl.id = fi.favorites_list_id
                     WHERE fl.user_id = $1
                 `, [userId]);
-
             return rows[0].count || 0;
         } catch (error) {
             console.error('Error while getting count wishlist products by user id: ', error);
@@ -40,7 +39,6 @@ class WishlistRepository {
                     WHERE fl.user_id = $1
                     ORDER BY fi.created_at
                 `, [userId]);
-
             return rows;
         } catch (error) {
             console.error('Error while fetching wishlist items: ', error);
@@ -124,7 +122,6 @@ class WishlistRepository {
                     INNER JOIN products p ON p.id = fi.product_id
                     WHERE fl.user_id = $1 AND p.public_id = $2
                 `, [userId, productPublicId]);
-
             return rows.length > 0;
         } catch (error) {
             console.error('Error while checking product is added wishlist: ', error);
@@ -159,7 +156,6 @@ class WishlistRepository {
                 throw new Error(`Favorites list not found for user ID ${userId}`);
             }
             const favoritesListId = favoritesRows[0].favorites_list_id;
-
             const { rows: productRows } = await client.query(
                 `SELECT id AS product_id FROM products WHERE public_id = $1 LIMIT 1`,
                 [productPublicId]
@@ -168,12 +164,10 @@ class WishlistRepository {
                 throw new Error(`Product not found for public ID ${productPublicId}`);
             }
             const productId = productRows[0].product_id;
-
             await client.query(
                 `INSERT INTO favorites_items (favorites_list_id, product_id) VALUES ($1, $2)`,
                 [favoritesListId, productId]
             );
-
             await client.query('COMMIT');
         } catch (error) {
             await client.query('ROLLBACK');

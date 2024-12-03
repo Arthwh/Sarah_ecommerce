@@ -74,7 +74,6 @@ class UserRepository {
                 SELECT COUNT(1) AS email_count
                 FROM users
                 WHERE email = $1`, [email]);
-
             return parseInt(rows[0].email_count) > 0
         } catch (error) {
             console.error('Error checking if email exists:', error);

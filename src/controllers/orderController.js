@@ -31,7 +31,6 @@ class OrderController {
             if (!orderId) {
                 res.status(400).json({ message: 'Id do pedido não informado.' });
             }
-
             const orderData = await OrderService.getOrderDetails(user, orderId);
             res.render('client/partials/userPageComponents/orderDetails', { sectionData: orderData });
         } catch (error) {
@@ -52,10 +51,9 @@ class OrderController {
     }
 
     static async getOrdersByUser(req, res) {
-        const user = req.session.user;
-        const userId = user.id;
-
         try {
+            const user = req.session.user;
+            const userId = user.id;
             const orders = await OrderService.getOrdersByUser(userId);
             res.status(200).json(orders);
         } catch (error) {
@@ -65,9 +63,8 @@ class OrderController {
     }
 
     static async getOrderDetails(req, res) {
-        const { orderId } = req.params;
-
         try {
+            const { orderId } = req.params;
             const order = await OrderService.getOrderDetails(orderId);
             if (order) {
                 res.status(200).json(order);
@@ -81,10 +78,9 @@ class OrderController {
     }
 
     static async getUserOpenOrders(req, res) {
-        const user = req.session.user;
-        const userId = user.id;
-
         try {
+            const user = req.session.user;
+            const userId = user.id;    
             const orders = await OrderService.getUserOpenOrders(userId);
             res.status(200).json(orders);
         } catch (error) {
@@ -94,10 +90,9 @@ class OrderController {
     }
 
     static async getUserFinishedOrders(req, res) {
-        const user = req.session.user;
-        const userId = user.id;
-
         try {
+            const user = req.session.user;
+            const userId = user.id;    
             const orders = await OrderService.getUserFinishedOrders(userId);
             res.status(200).json(orders);
         } catch (error) {

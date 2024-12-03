@@ -21,10 +21,8 @@ class LandingPageController {
             const user = req.session.user;
             const userIP = await getUserIP(req);
             const userAgent = await getUserAgent(req);
-
             const landingPageData = JSON.parse(req.body.sectionsData);
             const bannerImages = req.files;
-
             const { message } = await LandingPageService.saveLandingPageEdits(user, userIP, userAgent, landingPageData, bannerImages);
             res.status(200).json({ message: message })
         } catch (error) {

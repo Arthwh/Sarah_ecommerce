@@ -7,7 +7,6 @@ const toggleLandingPageDropdownMenuButton = document.getElementById('toggleLandi
 const toggleOptionsMenuSmallScreenButton = document.getElementById('toggleOptionsMenuSmallScreenButton');
 
 document.addEventListener('DOMContentLoaded', function () {
-    // Add event listeners to the menu buttons
     toggleProductsDropdownMenuButton.addEventListener('click', toggleProductsDropdownMenu);
     toggleOrdersDropdownMenuButton.addEventListener('click', toggleOrdersDropdownMenu);
     toggleLandingPageDropdownMenuButton.addEventListener('click', toggleLandingPageDropdownMenu);

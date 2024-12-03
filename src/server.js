@@ -14,6 +14,7 @@ import searchRoutes from './routes/searchRoutes.js';
 import cartRoutes from './routes/cartRoutes.js';
 import landingPageRoutes from './routes/landingPageRoutes.js';
 import wishlistRoutes from './routes/wishlistRoutes.js';
+import offerRoutes from './routes/offerRoutes.js';
 
 dotenv.config();
 
@@ -49,6 +50,7 @@ app.use(addressRoutes);
 app.use(orderRoutes);
 app.use(searchRoutes);
 app.use(cartRoutes);
+app.use(offerRoutes);
 
 app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`);

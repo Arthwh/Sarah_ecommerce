@@ -43,4 +43,4 @@ O projeto segue uma arquitetura organizada em camadas para garantir separação 
 
 ## Contato
 
-Projeto desenvolvido por **Arthur e equipe**. Para dúvidas ou sugestões, entre em contato pelo GitHub: [Seu Perfil](https://github.com/seuusuario)
+Projeto desenvolvido por **Arthur e equipe**. Para dúvidas ou sugestões, entre em contato pelo GitHub: Arthwh(https://github.com/Arthwh)

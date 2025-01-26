@@ -1,0 +1,94 @@
+<section>
+  <div id="headerContent">
+    <%- include('../partials/headerComponents/_promotionHeader') %>
+      <header class="bg-black text-white shadow-lg flex block items-center">
+        <div class="container mx-auto py-4 px-6 flex flex-col cols-1 lg:flex-row lg:cols-2 items-center">
+
+          <!-- Logo/Nome da Empresa -->
+          <div class="flex-shrink-0 mb-4 lg:mb-0">
+            <a class="flex items-center space-x-3" href="/">
+              <img class="w-12 h-12" src="/public/images/logo/logo_dourado_preto_semTexto.jpeg"
+                alt="Sarah Ecommerce Logo">
+              <div class="text-4xl font-bold tracking-wide textColorYellow">S A R A H</div>
+            </a>
+          </div>
+
+          <!-- Barra de Pesquisa e Botões de Login/Carrinho -->
+          <div class="w-full flex mx-auto lg:ml-6">
+            <!-- Barra de Pesquisa -->
+            <div id="searchBar" class="relative w-full md:flex-grow md:mx-auto">
+              <form action="/search">
+                <input type="text" name="query" placeholder="Buscar produtos..."
+                  class="w-full h-10 px-4 py-1 text-black pr-10">
+                <button type="submit" class="absolute inset-y-0 right-0 flex items-center px-4 text-black">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M21 21l-4.35-4.35M17 11a6 6 0 11-12 0 6 6 0 0112 0z" />
+                  </svg>
+                </button>
+              </form>
+            </div>
+
+            <!-- Botões de Login/Carrinho -->
+            <div id="userControlsContainer" class="flex flex-shrink-0 justify-center items-center mx-auto ml-5">
+              <% if(data.user && Object.keys(data.user).length> 0){ %>
+                <div class="md:hidden relative">
+                  <button id="menuUserOptionsSmallScreen">
+                    <img src="/public/images/icons/menu_icon_white.svg" alt="menuIcon" class="w-8 h-8 mx-auto">
+                  </button>
+                  <div id="userOptionsDropdown"
+                    class="hidden md:hidden absolute right-0 mt-2 p-4 w-36 bg-black shadow-lg min-h-fit">
+                    <a href="/cart" class="block pb-2 text-white menuItem w-fit">Carrinho</a>
+                    <a href="/wishlist" class="block py-2 text-white menuItem w-fit">Favoritos</a>
+                    <% if(data.user?.role=='3' ){ %>
+                      <a href="/admin" class="block py-2 text-white menuItem w-fit">Administrador</a>
+                      <% } %>
+                        <a href="/account" class="block pt-2 text-white menuItem w-fit">Perfil</a>
+                        <button onclick="logout()" class="block pt-2 text-white menuItem w-fit">Sair</button>
+                  </div>
+                </div>
+                <div class="hidden md:flex relative space-x-6 ">
+                  <a href="/cart" class="relative inline-block group">
+                    <img id="cartIcon" src="/public/images/icons/shopping_cart_icon.svg" title="Carrinho" alt="Carrinho"
+                      class="w-8 h-8 group-hover:hidden">
+                    <img id="cartIcon" src="/public/images/icons/shopping_cart_icon_hover.svg" title="Carrinho"
+                      alt="Carrinho" class="w-8 h-8 hidden group-hover:block">
+                    <span id="cartNumber"
+                      class="hidden absolute top-0 right-0 transform -translate-x-1/2 -translate-y-1/2 bg-white text-black group-hover:bg-black group-hover:text-white font-bold rounded-full w-4 h-4 flex items-center justify-center text-xs scale-0 opacity-0 transition-all duration-200">
+                    </span>
+                  </a>
+                  <a href="/wishlist" class="relative inline-block group">
+                    <img id="favoriteIcon" src="/public/images/icons/favorite_icon.svg" title="Favoritos"
+                      alt="Favoritos" class="w-8 h-8 group-hover:hidden">
+                    <img id="favoriteIcon" src="/public/images/icons/favorite_icon_hover.svg" title="Favoritos"
+                      alt="Favoritos" class="w-8 h-8 hidden group-hover:block">
+                  </a>
+                  <% if(data.user?.role=='3' ){ %>
+                    <a href="/admin" class="relative inline-block group">
+                      <img id="userIcon" src="/public/images/icons/admin_panel_settings_icon_border_white.svg"
+                        title="Painel administrativo" alt="Perfil" class="w-8 h-8 group-hover:hidden">
+                      <img id="userIcon" src="/public/images/icons/admin_panel_settings_icon_fill_white.svg"
+                        title="Painel administrativo" alt="Perfil" class="w-8 h-8 hidden group-hover:block">
+                    </a>
+                    <% } %>
+                      <a href="/account" class="relative inline-block group">
+                        <img id="userIcon" src="/public/images/icons/user_icon.svg" title="Configurações do usuário"
+                          alt="Perfil" class="w-8 h-8 group-hover:hidden">
+                        <img id="userIcon" src="/public/images/icons/user_icon_hover.svg"
+                          title="Configurações do usuário" alt="Perfil" class="w-8 h-8 hidden group-hover:block">
+                      </a>
+                      <button <%=data.page?.mode !=='edit' ? 'onclick=logout()' : '' %> class="relative inline-block">
+                        <img id="userLogout" src="/public/images/icons/logout_icon.svg" alt="logout"
+                          title="Sair da conta" class="w-8 h-8">
+                      </button>
+                </div>
+                <% } else { %>
+                  <button onclick="toggleLoginModal()" class="menuItem">Entre ou cadastre-se</button>
+                  <% } %>
+            </div>
+          </div>
+      </header>
+      <%- include('../partials/headerComponents/_subHeader') %>
+  </div>
+</section>

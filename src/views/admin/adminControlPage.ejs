@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerenciar produtos - SARAH</title>
+    <link rel="shortcut icon" href="/public/images/logo/logo_dourado_preto_icon.ico" type="image/x-icon">
+    <link href="/public/css/pagePattern.css" rel="stylesheet">
+    <link href="/public/css/tailwind/style.css" rel="stylesheet">
+    <link href="/public/css/admin/product.css" rel="stylesheet">
+    <link href="/public/css/messageModal/modal.css" rel="stylesheet">
+    <link href="/public/css/admin/landingPageEdit/editLandingPage.css" rel="stylesheet">
+    <link href="/public/css/client/loginRegisterModal.css" rel="stylesheet">
+
+    <script>
+        const data = JSON.parse('<%- JSON.stringify(data) %>') || {};
+        if (!data) {
+            console.error('Erro ao carregar a página: Dados incompletos.');
+            window.location.href = "/";
+        }
+        const user = data.user;
+        const page = data.page;
+    </script>
+</head>
+
+<body class="min-h-lvh">
+    <%- include('partials/_adminHeader') %>
+        <%- include('../client/partials/_loginRegisterModal') %>
+
+            <div id="mainContentContainer"
+                class="flex flex-grow flex-col md:grid md:grid-cols-6 h-full box-border space-y-4 md:space-y-0 md:space-x-4">
+                <aside id="optionsMenuContainer"
+                    class="hidden md:block border-t border-white md:border-none flex flex-col span-cols-1 bg-black text-white p-4">
+                    <div class="flex mb-10 w-full md:items-center">
+                        <h2 class="flex justify-center w-full textColorYellow text-md">Configurações</h2>
+                        <button onclick="toggleOptionsMenuSmallScreen()"
+                            class="flex text-right justify-end w-fit md:hidden">
+                            <img src="/public/images/icons/close_icon_white.svg" alt="closeButton" class="w-8 h-8">
+                        </button>
+                    </div>
+                    <div class="flex flex-col items-start space-y-4 text-md w-full">
+                        <div class="flex flex-col w-full">
+                            <div class="flex pl-2 group">
+                                <button class="menuItem category"
+                                    id="toggleProductsDropdownMenuButton">Produtos</button>
+                                <img class="h-6 w-6 ml-auto arrow group-hover:hidden"
+                                    src="/public/images/icons/arrow_right_icon_white.svg" alt="Arrow right white">
+                                <img class="h-6 w-6 ml-auto arrow hidden group-hover:block"
+                                    src="/public/images/icons/arrow_right_icon_E9C495.svg" alt="Arrow right white">
+                            </div>
+                            <div id="productsMenu" class="hidden">
+                                <ul class="flex flex-col ml-6 mt-2 space-y-2">
+                                    <li class="menuItem w-fit"><button id="productRegisterButton">Cadastrar</button>
+                                    </li>
+                                    <li class="menuItem w-fit"><button id="productEditButton">Editar</button></li>
+                                    <li class="menuItem w-fit"><button id="productStockButton">Alterar estoque</button>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="flex flex-col w-full">
+                            <div class="flex pl-2 group">
+                                <button class="menuItem category" id="toggleOrdersDropdownMenuButton">Pedidos</button>
+                                <img class="h-6 w-6 ml-auto arrow group-hover:hidden"
+                                    src="/public/images/icons/arrow_right_icon_white.svg" alt="Arrow right white">
+                                <img class="h-6 w-6 ml-auto arrow hidden group-hover:block"
+                                    src="/public/images/icons/arrow_right_icon_E9C495.svg" alt="Arrow right white">
+                            </div>
+                            <div id="ordersMenu" class="hidden">
+                                <ul class="flex flex-col ml-6 mt-2 space-y-2">
+                                    <li class="menuItem w-fit"><button id="ordersOpenButton">Em aberto</button></li>
+                                    <li class="menuItem w-fit"><button id="ordersFinishedButton">Finalizados</button>
+                                    </li>
+                                    <li class="menuItem w-fit"><button id="ordersAllButton">Todos</button></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="flex flex-col w-full">
+                            <div class="flex pl-2 group justify-start items-center text-right">
+                                <button class="menuItem category" id="toggleLandingPageDropdownMenuButton">Página
+                                    inicial</button>
+                                <img class="h-6 w-6 ml-auto arrow group-hover:hidden"
+                                    src="/public/images/icons/arrow_right_icon_white.svg" alt="Arrow right white">
+                                <img class="h-6 w-6 ml-auto arrow hidden group-hover:block"
+                                    src="/public/images/icons/arrow_right_icon_E9C495.svg" alt="Arrow right white">
+                            </div>
+                            <div id="landingPageMenu" class="hidden">
+                                <ul class="flex flex-col ml-6 mt-2 space-y-2">
+                                    <li class="menuItem w-fit"><button id="alterLandingPageButton">Alterar</button></li>
+                                    <li class="menuItem w-fit"><button id="scheduledChangesLandingPageButton">Alterações
+                                            programadas</button></li>
+                                    <li class="menuItem w-fit"><button id="landingPageHistoryButton">Histórico</button>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="flex pl-2">
+                            <button class="menuItem category" id="logsMenuButton">Logs do sistema</button>
+                        </div>
+                    </div>
+                </aside>
+                <div id="optionVisualizationContainer"
+                    class="overflow-y-hidden flex flex-col flex-grow col-span-5 min-w-screen border border-gray-300 md:mr-4">
+                </div>
+            </div>
+
+            <script src="/public/js/messageModal/toastMessageModal.js"></script>
+            <script src="/public/js/messageModal/centralMessageModal.js"></script>
+            <script src="/public/js/messageModal/sessionExpiredModal.js"></script>
+            <script src="/public/js/messageModal/loginNeddedMessageModal.js"></script>
+            <script src="/public/js/statusHandler/statusHandler.js"></script>
+            <script src="/public/js/client/loginAndRegister.js"></script>
+            <script src="/public/js/admin/adminControlPage.js"></script>
+            <script src="/public/js/admin/product/product.js"></script>
+            <script src="/public/js/admin/product/product_register.js"></script>
+            <script src="/public/js/admin/order.js"></script>
+            <script src="/public/js/admin/landingPage.js"></script>
+            <script src="/public/js/admin/landingPage/editLandingPage.js"></script>
+            <script src="/public/js/admin/logs.js"></script>
+</body>
+
+</html>

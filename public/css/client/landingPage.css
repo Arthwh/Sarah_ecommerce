@@ -1,0 +1,220 @@
+/* Banner Section */
+.banner-section {
+    position: relative;
+    width: 100%;
+    min-height: 400px;
+    max-height: 650px;
+    background-color: #e9ecef;
+    margin-bottom: 40px;
+    display: flex;
+    overflow: hidden;
+    flex-wrap: nowrap;
+    margin-inline: auto;
+}
+
+.banner-carousel{
+    width: 100%;
+    height: 100%;
+}
+
+.banner-carousel img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.banner-carousel:hover .editable:hover, .banner-section:hover{
+    .banner-carousel{
+        margin-top: 50px;
+        box-sizing: border-box;
+    }
+}
+
+.bannerDiv {
+    display: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+}
+
+.bannerDiv[data-active="true"] {
+    display: block;
+    position: relative;
+}
+
+.banner_image_large {
+    width: 100%;
+    height: 100%;
+    display: none;
+    object-fit: cover;
+    flex-grow: 1;
+}
+
+.banner_image_small {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: cover;
+    flex-grow: 1;
+}
+
+.banner_button{
+    display: none;
+    position: absolute;
+    font-family: roboto, sans-serif;
+    min-width: fit-content;
+    width: 15%;
+    text-align: center;
+    font-weight: bold;
+    top: 85%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 10px;
+    font-size: small;
+    color: black;
+    background-color: #FFF;
+    box-sizing: border-box;
+}
+
+.banner_button:hover{
+    color: white;
+    background-color: black;
+}
+
+@media (min-width: 900px) {
+    .banner_image_large {
+        display: block;
+    }
+    .banner_image_small {
+        display: none;
+    }
+    .banner_button{
+        display: block;
+    }
+}
+
+/* carousel Section */
+.carousel-section {
+    width: 90%;
+    min-height: 500px;
+    height: fit-content;
+    margin-inline: auto;
+    object-fit: cover;
+    background-color: #f1f3f5;
+    padding-bottom: 20px;
+    margin-bottom: 40px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.carousel-content-container{
+    padding: 0 15px;
+}
+
+.carousel-content{
+    align-items: stretch;
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 15px;
+    overflow: hidden;
+    scroll-behavior: smooth;
+    margin: auto;
+}
+
+.carousel-content .product-card{
+    min-width: 250px;
+    max-width: 250px;
+    justify-content: space-between;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 0;
+}
+
+/* Grid Section */
+.grid-section {
+    background-color: #f1f3f5;
+    min-height: 500px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    width: 90%;
+    margin-inline: auto;
+    max-height: fit-content;
+    object-fit: cover;
+    margin-bottom: 40px;
+    /* margin-top: 20px; */
+    text-align: center;
+}
+
+.grid-section[data-component-section-position="1"], .carousel-section[data-component-section-position="1"]{
+    margin-top: 40px;
+}
+
+.grid-section-content{
+    padding: 15px;
+}
+
+.carousel-section h2, .grid-section h2 {
+    font-family: Lato, sans-serif;
+    font-size: 1.2rem;
+    margin-bottom: 15px;
+    width: fit-content;
+    margin: auto;
+}
+
+.links-cards-section{
+    background-color: #f1f3f5;
+    max-width: 90%;
+    margin-inline: auto;
+    max-height: fit-content;
+    object-fit: cover;
+    padding: 20px;
+    margin-bottom: 40px;
+    text-align: center;
+}
+
+.links-cards-row{
+    display: flex;
+    width: 100%;
+    height: 400px;
+}
+
+@media (min-width: 1920px){
+    .links-cards-section{
+        max-width: 70%;
+    }
+    .carousel-section{
+        max-width: 70%;
+    }
+    .grid-section{
+        max-width: 70%;
+    }
+}
+
+.titleSection {
+    background-color: #2d2d2d;
+    color: #E9C495;
+    font-size: 2rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    text-align: center;
+    padding: 15px 20px;
+    position: relative;
+    margin-bottom: 30px;
+    letter-spacing: 2px;
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3);
+}
+
+.titleSection::after {
+    content: '';
+    position: absolute;
+    bottom: -6px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 4px;
+    background-color: #E9C495;
+    border-radius: 2px;
+}

@@ -1,0 +1,43 @@
+/* Botão de favoritos */
+.wishlist-button-wrapper {
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 10;
+    padding: 0.5rem;
+}
+
+.favorite-icon {
+    width: 32px;
+    height: 32px;
+}
+
+.favorite-icon-hover {
+    width: 32px;
+    height: 32px;
+    display: none;
+}
+
+.favorite-btn:hover .favorite-icon {
+    display: none;
+}
+
+.favorite-btn:hover .favorite-icon-hover {
+    display: block;
+}
+
+.product-image-wrapper:hover .cart-button-wrapper,
+.product-image-wrapper:hover .wishlist-button-wrapper {
+    display: block;
+}
+
+[data-in-wishlist="true"]{
+    .wishlist-button-wrapper .favorite-icon-hover{
+        display: block;
+    }
+    .wishlist-button-wrapper .favorite-icon{
+        display: none;
+    }
+}
+

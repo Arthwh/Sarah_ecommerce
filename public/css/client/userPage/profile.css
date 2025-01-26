@@ -1,0 +1,129 @@
+.profile-container {
+    padding: 20px;
+    background-color: #f9f9f9;
+    width: 100%;
+    height: 100%;
+}
+
+.profile-content {
+    background: #fff;
+    border: 1px solid #ddd;
+    padding: 15px;
+    max-width: 70%;
+    margin: 0 auto;
+}
+
+.profile-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+@media (max-width: 900px) {
+    .profile-grid {
+        grid-template-columns: 1fr;
+    }
+    .profile-content{
+        max-width: 100%;
+    }
+}
+
+.profile-item {
+    display: flex;
+    flex-direction: column;
+}
+
+.profile-item-editable{
+    display: flex;
+    width: 100%;
+}
+
+.profile-item-editable div{
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+
+.profile-label {
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: #555;
+}
+
+.profile-value {
+    border-bottom: 2px solid transparent;
+    color: #333;
+    width: 100%;
+}
+
+input.profile-input{
+    border-bottom: 2px solid black;
+    width: 100%;
+}
+
+.profile-item-editable .profile-input {
+    display: block;
+}
+
+.profile-item-editable .profile-value {
+    display: block;
+}
+
+.profile-item-editable .profile-value.disabled {
+    display: none;
+}
+
+.profile-item-editable .profile-input:disabled {
+    display: none;
+}
+
+.profile-btn-container {
+    display: flex;
+    gap: 0.5rem;
+    min-width: fit-content;
+}
+
+.profile-btn-container button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0.5rem;
+    border-radius: 4px;
+    transition: background-color 0.2s ease;
+    min-width: fit-content;
+    margin-left: auto;
+}
+
+.profile-btn-container button:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+.btn-edit img, .btn-delete img {
+    width: 24px;
+    height: 24px;
+}
+
+.btn-edit-default, .btn-delete-default{
+    display: block;
+}
+
+.btn-edit-hover, .btn-delete-hover{
+    display: none;
+}
+
+.profile-btn-container button:hover{
+    .btn-edit-default, .btn-delete-default{
+        display: none;
+    }
+    .btn-edit-hover, .btn-delete-hover{
+        display: block;
+    }
+}
+
+.profile-actions {
+    margin-top: 20px;
+    text-align: center;
+}

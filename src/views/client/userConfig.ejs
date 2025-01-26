@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Configurações do Usuário - SARAH</title>
+    <link rel="shortcut icon" href="/public/images/logo/logo_dourado_preto_icon.ico" type="image/x-icon">
+    <link href="/public/css/pagePattern.css" rel="stylesheet">
+    <link href="/public/css/tailwind/style.css" rel="stylesheet">
+    <link href="/public/css/messageModal/modal.css" rel="stylesheet">
+    <link href="/public/css/client/userConfig.css" rel="stylesheet">
+    <link href="/public/css/client/footer.css" rel="stylesheet">
+    <link href="/public/css/client/categoryAsideMenu.css" rel="stylesheet">
+    <link href="/public/css/client/loginRegisterModal.css" rel="stylesheet">
+    <link href="/public/css/client/userPage/addresses.css" rel="stylesheet">
+    <link href="/public/css/client/userPage/orders.css" rel="stylesheet">
+    <link href="/public/css/client/userPage/profile.css" rel="stylesheet">
+    <link href="/public/css/client/userPage/orderDetails.css" rel="stylesheet">
+
+    <script>
+        // Obtem os dados enviados do backend e converte para JSON
+        const data = JSON.parse('<%- JSON.stringify(data) %>');
+        if (!data) {
+            const redirect = () => {
+                window.location.href = '/';
+            }
+            showCentralModal("Configurações do Usuário", "Dados incompletos.", redirect)
+            console.error('Dados incompletos.');
+        }
+
+        // Separa os dados em variáveis
+        const user = data.user;
+        const cart = user?.cart || {};
+        const wishlist = user?.wishlist || {};
+        const products = data.products;
+        const page = data.page
+    </script>
+</head>
+
+<body>
+    <%- include('partials/_header') %>
+        <%- include('partials/_categoryAsideMenu') %>
+            <%- include('partials/_loginRegisterModal') %>
+                <main class="settings-container">
+                    <!-- Menu Lateral -->
+                    <aside class="menu-lateral">
+                        <ul>
+                            <li><button class="menuItem" id="userProfile">Informações Pessoais</button></li>
+                            <li><button class="menuItem" id="userOrders">Pedidos</button></li>
+                            <li><button class="menuItem" id="userAddresses">Endereços</button></li>
+                        </ul>
+                    </aside>
+
+                    <!-- Conteúdo Dinâmico -->
+                    <div class="main-content">
+                        <%- include('partials/_breadcrumbs', {breadcrumbs: data.page.breadcrumbs}) %>
+                            <section class="config-content" id="configContent">
+                                <% if (data.section){ %>
+                                    <% if (data.sectionData){ %>
+                                        <%- include(`partials/userPageComponents/${data.section}`, { sectionData:
+                                            data.sectionData }) %>
+                                            <% } else { %>
+                                                <div class="user-account__error-message">
+                                                    <h2 class="user-account__error-title">Erro: Seção não encontrada
+                                                    </h2>
+                                                    <p class="user-account__error-description">A seção solicitada não
+                                                        pôde
+                                                        ser
+                                                        localizada. Verifique se a URL está correta ou se você tem
+                                                        permissão
+                                                        para
+                                                        acessar este conteúdo.</p>
+                                                    <p><a href="/account" class="user-account__btn-back">Voltar para a
+                                                            página
+                                                            inicial do usuário</a></p>
+                                                </div>
+                                                <% } } else { %>
+                                                    <div class="user-welcome-banner">
+                                                        <h1 class="user-welcome-title">Bem-vindo à área de configurações
+                                                            do
+                                                            usuário!</h1>
+                                                        <p class="user-welcome-subtitle">Selecione uma opção no menu
+                                                            para
+                                                            visualizar os detalhes.</p>
+                                                    </div>
+                                                    <% } %>
+                            </section>
+                    </div>
+                </main>
+
+                <!-- Footer -->
+                <%- include('partials/_footer') %>
+
+                    <script src="/public/js/messageModal/toastMessageModal.js"></script>
+                    <script src="/public/js/messageModal/centralMessageModal.js"></script>
+                    <script src="/public/js/messageModal/sessionExpiredModal.js"></script>
+                    <script src="/public/js/messageModal/loginNeddedMessageModal.js"></script>
+                    <script src="/public/js/statusHandler/statusHandler.js"></script>
+                    <script src="/public/js/client/categoryAsideMenu.js"></script>
+                    <script src="/public/js/client/header.js"></script>
+                    <script src="/public/js/client/loginAndRegister.js"></script>
+                    <script src="/public/js/client/userPage.js"></script>
+                    <script src="/public/js/client/wishlist.js"></script>
+                    <script src="/public/js/client/userPage/addresses.js"></script>
+                    <script src="/public/js/client/userPage/profile.js"></script>
+                    <script src="/public/js/client/userPage/orders.js"></script>
+                    <script src="/public/js/client/userPage/orderDetails.js"></script>
+
+</body>
+
+</html>

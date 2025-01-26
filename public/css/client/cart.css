@@ -1,0 +1,235 @@
+/* Container geral */
+.cart-container {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    padding: 2rem;
+    background-color: #f9f9f9;
+    color: #333;
+}
+
+@media (min-width: 1024px) {
+    .cart-container {
+        grid-template-columns: 2fr 1fr;
+    }
+}
+
+.cart-products, .cart-summary{
+    background-color: #fff;
+    padding: 2rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.cart-title {
+    font-size: 1.8rem;
+    margin-bottom: 1.5rem;
+    font-weight: bold;
+    color: #000;
+}
+
+.cart-items {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.cart-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 1rem;
+}
+
+.cart-item-image {
+    height: 100%;
+    max-width: 120px;
+    width: fit-content;
+    object-fit: cover;
+}
+
+.cart-item-info {
+    flex: 1;
+    margin-left: 1rem;
+    height: 100%;
+}
+
+.cart-item-title {
+    font-size: 1rem;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+}
+
+.cart-item-quantity, .cart-item-price, .cart-item-size, .cart-item-color {
+    align-items: center;
+    font-size: 0.875rem;
+    color: #666;
+    margin: 0.5rem 0;
+}
+
+.cart-item-quantity{
+    display: flex;
+}
+
+.cart-item-quantity-btn-container{
+    border: 1px solid black;
+    display: flex;
+    margin-left: 1rem;
+}
+
+.cart-item-quantity-btn-container span{
+    font-size: 1rem;
+    align-items: center;
+    padding-inline: 0.5rem;
+}
+
+.cart-item-quantity-btn{
+    padding: 2px;
+}
+
+.cart-item-quantity-btn img{
+    width: 20px;
+    height: 20px;
+}
+
+.cart-item-quantity-btn:hover{
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+.cart-item-total {
+    font-size: 0.875rem;
+    color: #000;
+}
+
+.cart-item-remove-btn-container {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.cart-item-remove-btn-container button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0.5rem;
+    border-radius: 4px;
+    transition: background-color 0.2s ease;
+    margin-left: 1rem;
+}
+
+.cart-item-remove-btn-container button:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+.cart-item-remove-btn-container button img, .cart-item-remove-btn-container button img {
+    width: 24px;
+    height: 24px;
+}
+
+/* Carrinho vazio */
+.cart-empty {
+    text-align: center;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.cart-empty-title {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+    font-weight: bold;
+}
+
+.cart-empty-text {
+    font-size: 0.875rem;
+    color: #666;
+}
+
+.cart-empty .action-btn-contrast{
+    width: fit-content;
+    margin-top: 1rem;
+}
+
+/* Resumo do carrinho */
+.cart-summary-title {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    font-weight: bold;
+    color: #000;
+}
+
+.cart-summary-details {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.cart-summary-item {
+    display: flex;
+    justify-content: space-between;
+    font-size: 1rem;
+    color: #333;
+}
+
+.cart-summary-total {
+    margin-top: 1rem;
+    font-size: 1.25rem;
+    font-weight: bold;
+    color: #000;
+}
+
+.cart-summary-actions .action-btn-contrast {
+    margin-top: 2rem;
+}
+
+.cart-summary-actions .action-btn {
+    text-decoration: none;
+    color: #000;
+    font-weight: bold;
+    transition: color 0.2s ease;
+    text-align: center;
+    margin-top: 1rem;
+}
+
+.cart-summary-actions{
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+}
+
+.cart-summary-actions span{
+    margin-top: 2rem;
+}
+
+/* Animacao para contagem do carrinho */
+#cartNumber {
+    transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+#cartNumber.animate {
+    transform: scale(1.5); 
+    opacity: 1;
+}
+
+#cartNumber.scale-normal {
+    transform: scale(1);
+    opacity: 1;
+}
+
+.discount-coupon-container div{
+    display: flex;
+    border: 1px solid black;
+}
+
+.discount-coupon-container .action-btn-contrast{
+    width: fit-content;
+    padding-inline: 1rem;
+}
+
+.discount-coupon-container input{
+    flex-grow: 1;
+    padding-inline: 1rem;
+}

@@ -1,0 +1,240 @@
+/* Estilo para o cabeçalho das sessões */
+.section-header {
+    text-align: center;
+    padding: 0 1rem;
+}
+
+.section-title {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #333;
+    margin: 0;
+    text-transform: capitalize;
+}
+
+.section-subtitle {
+    font-size: 1rem;
+    font-weight: 400;
+    color: #666;
+    margin: 1rem 0;
+    line-height: 1.4;
+}
+
+.addresses-container {
+    margin-inline: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    padding: 1rem 0 1rem 1rem;
+    width: 100%;
+}
+
+.addresses-content{
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1rem;
+    padding: 1rem 0 1rem 1rem;
+    width: 100%;
+}
+
+.address-card {
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+    border: 1px solid #e0e0e0;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+    overflow: hidden;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.address-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.address-card-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #f5f5f5;
+    padding: 1rem;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.address-card-title .address-name {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #333;
+    text-transform: capitalize;
+}
+
+.address-btn-container {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.address-btn-container button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0.5rem;
+    border-radius: 4px;
+    transition: background-color 0.2s ease;
+}
+
+.address-btn-container button:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+.btn-edit img, .btn-delete img {
+    width: 24px;
+    height: 24px;
+}
+
+.btn-edit-default, .btn-delete-default{
+    display: block;
+}
+
+.btn-edit-hover, .btn-delete-hover{
+    display: none;
+}
+
+.address-btn-container button:hover{
+    .btn-edit-default, .btn-delete-default{
+        display: none;
+    }
+    .btn-edit-hover, .btn-delete-hover{
+        display: block;
+    }
+}
+
+.address-details{
+    padding: 1rem;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.address-details {
+    padding: 1rem;
+}
+
+.address-details p {
+    font-size: 0.95rem;
+    color: #555;
+    margin: 0.5rem 0;
+}
+
+.address-details p strong {
+    font-weight: 600;
+    color: #222;
+}
+
+.addresses-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.addresses-modal.hidden {
+    display: none;
+}
+
+.addresses-modal-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+}
+
+.addresses-modal-content {
+    position: relative;
+    background: #fff;
+    width: 90%;
+    max-width: 500px;
+    z-index: 1001;
+    display: flex;
+    flex-direction: column;
+}
+
+.addresses-modal-content h2{
+    text-align: center;
+    width: 100%;
+    padding: 0.5rem;
+    font-size: 1.5rem;
+    font-weight: bold;
+    background-color: black;
+}
+
+#edit-address-form{
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+}
+
+#edit-address-form div{
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 0.5rem;
+}
+
+
+#edit-address-form label{
+    font-weight: bold;
+}
+
+#edit-address-form input, #edit-address-form select{
+    border: 1px solid #e2e8f0;
+    padding: 0.5rem;
+}
+
+#edit-address-form input:focus, #edit-address-form select:focus{
+    border-color: black;
+}
+
+.address-form-btn-container{
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.empty-addresses-banner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 2.5rem;
+    margin-top: 2rem;
+}
+
+.empty-addresses-banner h2 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #4a4a4a;
+    margin-bottom: 1rem;
+}
+
+.empty-addresses-banner p {
+    font-size: 1rem;
+    color: #6c6c6c;
+    margin-bottom: 1.5rem;
+    line-height: 1.6;
+}
+
+.addresses-container .action-btn-contrast{
+    width: fit-content;
+}

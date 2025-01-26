@@ -1,0 +1,54 @@
+.no-products-message {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    padding: 30px;
+    margin-top: 30px;
+    background-color: #f7f9fc;
+    border: 1px solid #e0e0e0;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.message-content {
+    text-align: center;
+    max-width: 600px;
+    padding: 20px;
+}
+
+.no-products-message h2 {
+    color: #333;
+    font-size: 24px;
+    font-weight: 600;
+    margin-bottom: 15px;
+}
+
+.no-products-message p {
+    color: #666;
+    font-size: 16px;
+    margin-bottom: 15px;
+}
+
+.suggestions {
+    margin-top: 20px;
+}
+
+.out-of-stock-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.out-of-stock-message {
+    color: #fff;
+    font-size: 1.2rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    padding-inline: 5px;
+}

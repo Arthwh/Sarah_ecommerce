@@ -1,0 +1,138 @@
+<% const userProfile=sectionData; %>
+    <div class="profile-container">
+        <div class="section-header">
+            <h2 class="section-title">Meu Perfil</h2>
+            <p class="section-subtitle">Gerencie as informações do seu perfil</p>
+        </div>
+        <div class="profile-content">
+            <div class="profile-grid">
+                <div class="profile-item" data-profile-item="user_id">
+                    <span class="profile-label">ID de Usuário:</span>
+                    <span class="profile-value">
+                        <%= userProfile.user_public_id %>
+                    </span>
+                </div>
+
+                <div class="profile-item" data-profile-item="user_name">
+                    <div class="profile-item-editable">
+                        <div class="profile-data">
+                            <span class="profile-label">Nome:</span>
+                            <span class="profile-value">
+                                <%= userProfile.user_name %>
+                            </span>
+                            <input disabled type="text" name="user_name" value="<%= userProfile.user_name %>"
+                                class="profile-input">
+                        </div>
+                        <div class="profile-btn-container">
+                            <button class="btn-edit" onclick="toggleEditField('user_name')">
+                                <img class="btn-edit-default" src="/public/images/icons/edit_pen_icon_black_border.svg"
+                                    alt="edit">
+                                <img class="btn-edit-hover" src="/public/images/icons/edit_pen_icon_black_fill.svg"
+                                    alt="edit">
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="profile-item" data-profile-item="user_email">
+                    <div class="profile-item-editable">
+                        <div>
+                            <span class="profile-label">E-mail:</span>
+                            <span class="profile-value">
+                                <%= userProfile.user_email %>
+                            </span>
+                            <input disabled type="text" name="user_email" value="<%= userProfile.user_email %>"
+                                class="profile-input">
+                        </div>
+                        <div class="profile-btn-container">
+                            <button class="btn-edit" onclick="toggleEditField('user_email')">
+                                <img class="btn-edit-default" src="/public/images/icons/edit_pen_icon_black_border.svg"
+                                    alt="edit">
+                                <img class="btn-edit-hover" src="/public/images/icons/edit_pen_icon_black_fill.svg"
+                                    alt="edit">
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="profile-item" data-profile-item="user_phone_number">
+                    <div class="profile-item-editable">
+                        <div>
+                            <span class="profile-label">Telefone:</span>
+                            <span class="profile-value">
+                                <%= userProfile.user_phone_number %>
+                            </span>
+                            <input disabled type="text" name="user_phone_number"
+                                value="<%= userProfile.user_phone_number %>" class="profile-input">
+                        </div>
+                        <div class="profile-btn-container">
+                            <button class="btn-edit" onclick="toggleEditField('user_phone_number')">
+                                <img class="btn-edit-default" src="/public/images/icons/edit_pen_icon_black_border.svg"
+                                    alt="edit">
+                                <img class="btn-edit-hover" src="/public/images/icons/edit_pen_icon_black_fill.svg"
+                                    alt="edit">
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="profile-item" data-profile-item="user_birthdate">
+                    <span class="profile-label">Data de Nascimento:</span>
+                    <span class="profile-value">
+                        <%= new Date(userProfile.user_birthdate).toLocaleDateString() %>
+                    </span>
+                </div>
+                <div class="profile-item" data-profile-item="user_gender">
+                    <div class="profile-item-editable">
+                        <div>
+                            <span class="profile-label">Gênero:</span>
+                            <span class="profile-value">
+                                <% if(userProfile.user_gender==='male' ){ %>
+                                    Masculino
+                                    <% } else if (userProfile.user_gender==='female' ) { %>
+                                        Feminino
+                                        <% } else { %>
+                                            Outro
+                                            <% } %>
+                            </span>
+                            <select disabled name="user_gender" id="user_gender" class="profile-input">
+                                <option value="male" <%=userProfile.user_gender=='male' ? 'selected' : '' %>>Masculino
+                                </option>
+                                <option value="female" <%=userProfile.user_gender=='female' ? 'selected' : '' %>
+                                    >Feminino
+                                </option>
+                                <option value="other" <%=userProfile.user_gender=='other' ? 'selected' : '' %>>Outro
+                                </option>
+                            </select>
+                        </div>
+                        <div class="profile-btn-container">
+                            <button class="btn-edit" onclick="toggleEditField('user_gender')">
+                                <img class="btn-edit-default" src="/public/images/icons/edit_pen_icon_black_border.svg"
+                                    alt="edit">
+                                <img class="btn-edit-hover" src="/public/images/icons/edit_pen_icon_black_fill.svg"
+                                    alt="edit">
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="profile-item" data-profile-item="user_cpf">
+                    <span class="profile-label">CPF:</span>
+                    <span class="profile-value">
+                        <%= userProfile.user_cpf %>
+                    </span>
+                </div>
+                <div class="profile-item" data-profile-item="user_account_created_at">
+                    <span class="profile-label">Conta Criada em:</span>
+                    <span class="profile-value">
+                        <%= new Date(userProfile.user_account_created_at).toLocaleDateString() %>
+                    </span>
+                </div>
+            </div>
+            <div class="profile-actions">
+                <button class="action-btn-contrast" onclick="updateUserProfileData()">
+                    Salvar Alterações
+                </button>
+            </div>
+        </div>
+    </div>

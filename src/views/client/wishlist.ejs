@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Favoritos - SARAH</title>
+    <link rel="shortcut icon" href="/public/images/logo/logo_dourado_preto_icon.ico" type="image/x-icon">
+    <link href="/public/css/pagePattern.css" rel="stylesheet">
+    <link href="/public/css/tailwind/style.css" rel="stylesheet">
+    <link href="/public/css/client/carouselControllStyles.css" rel="stylesheet">
+    <link href="/public/css/messageModal/modal.css" rel="stylesheet">
+    <link href="/public/css/client/footer.css" rel="stylesheet">
+    <link href="/public/css/client/categoryAsideMenu.css" rel="stylesheet">
+    <link href="/public/css/client/loginRegisterModal.css" rel="stylesheet">
+    <link href="/public/css/client/wishlist.css" rel="stylesheet">
+    <link href="/public/css/client/wishlistPage.css" rel="stylesheet">
+    <link href="/public/css/client/productCard.css" rel="stylesheet">
+    <link href="/public/css/client/reviewStars.css" rel="stylesheet">
+
+    <script>
+        // Obtem os dados enviados do backend e converte para JSON
+        const data = JSON.parse('<%- JSON.stringify(data) %>');
+        if (!data) {
+            console.error('Dados incompletos.');
+            window.location.href = "/error";
+        }
+        const user = data.user;
+        const cart = user?.cart;
+        const wishlist = user?.wishlist;
+        const product = data.product;
+        const variants = product?.variants;
+        const page = data.page
+        const pagination = data.pagination
+    </script>
+</head>
+
+<body>
+    <%- include('partials/_header') %>
+        <%- include('partials/_categoryAsideMenu') %>
+            <%- include('partials/_loginRegisterModal') %>
+                <main
+                    class="container mx-auto py-10 w-full px-5 xl:px-0 xl:w-full min-h-full items-center flex-grow z-0">
+                    <div class="wishlist-page-content">
+                        <div class="favorites-banner">
+                            <div class="favorites-banner-content">
+                                <h2>Seus itens favoritos</h2>
+                                <p>Adicione ao carrinho ou continue navegando para
+                                    encontrar mais inspirações.</p>
+                            </div>
+                        </div>
+                        <% if (data.page.quantResults> 0) { %>
+                            <p class="favorites-count">Você tem <strong>
+                                    <%= data.page.quantResults %>
+                                </strong>
+                                <%= data.page.quantResults !=1 ? 'produtos favoritos' : 'produto favorito' %>
+                            </p>
+                            <div class="wishlist-items">
+                                <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+                                    <% data.products.forEach(item=> { %>
+                                        <%- include('partials/productCard', { product: item, mode: 'main' }) %>
+                                            <% }); %>
+                                </div>
+                            </div>
+
+
+                            <!-- Paginação -->
+                            <div class="flex flex-col mt-10">
+                                <div class="flex justify-center items-center p-2">
+                                    <p class="text-sm">VOCÊ ESTÁ NA PÁGINA</p>
+                                </div>
+                                <div class="flex justify-center items-center space-x-2">
+                                    <button id="prevPageButton" <% if( data.pagination?.currentPage==1) { %>
+                                        class="bg-white text-black border border-black px-4 py-2" disabled
+                                        <% } else{ %>
+                                            class="bg-white text-black border border-black px-4 py-2 hover:bg-black
+                                            hover:text-white
+                                            font-bold"
+                                            <% } %>>
+                                                Anterior
+                                    </button>
+
+                                    <div class="text-xl">
+                                        <span class="font-bold">
+                                            <%= data.pagination?.currentPage %>
+                                        </span> | <span>
+                                            <%= data.pagination?.totalPages %>
+                                        </span>
+                                    </div>
+
+                                    <button id="nextPageButton" <% if(
+                                        data.pagination?.currentPage===data.pagination?.totalPages) { %>
+                                        class="bg-white text-black border border-black px-4 py-2" disabled
+                                        <% } else{ %>
+                                            class="bg-white text-black border border-black px-4 py-2 hover:bg-black
+                                            hover:text-white
+                                            font-bold"
+                                            <% } %>>
+                                                Próxima
+                                    </button>
+                                </div>
+                            </div>
+                            <% } else { %>
+                                <!-- Banner para Wishlist vazia -->
+                                <div class="empty-wishlist-banner">
+                                    <h2>Sua lista de desejos está
+                                        vazia</h2>
+                                    <p>Adicione produtos à sua lista de desejos para
+                                        encontrá-los facilmente mais tarde.</p>
+                                    <a href="/" class="action-btn-contrast">
+                                        Explorar Produtos
+                                    </a>
+                                </div>
+                                <% } %>
+
+                </main>
+                <%- include('partials/_footer') %>
+                    <script src="/public/js/messageModal/toastMessageModal.js"></script>
+                    <script src="/public/js/messageModal/centralMessageModal.js"></script>
+                    <script src="/public/js/messageModal/sessionExpiredModal.js"></script>
+                    <script src="/public/js/messageModal/loginNeddedMessageModal.js"></script>
+                    <script src="/public/js/statusHandler/statusHandler.js"></script>
+                    <script src="/public/js/client/categoryAsideMenu.js"></script>
+                    <script src="/public/js/client/header.js"></script>
+                    <script src="/public/js/client/loginAndRegister.js"></script>
+                    <script src="/public/js/client/wishlist.js"></script>
+                    <script src="/public/js/client/productsList.js"></script>
+
+</body>
+
+</html>

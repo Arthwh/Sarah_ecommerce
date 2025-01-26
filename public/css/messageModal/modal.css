@@ -1,0 +1,119 @@
+/* Toast modal styles */
+.toast {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: black;
+    color: #fff;
+    padding: 15px;
+    border-radius: 5px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.toast .toast-message {
+    margin-inline: 10px;
+}
+
+.toast .toast-close {
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.toast.success {
+    border: 4px, solid, #28a745;
+}
+
+.toast.error {
+    border: 4px, solid, #dc3545;
+}
+
+/* Central modal styles */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background-color: #fff;
+    padding: 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    max-width: 400px;
+    width: 100%;
+}
+
+.modal-title {
+    margin-bottom: 10px;
+    font-size: 1.5em;
+}
+
+.modal-buttons{
+    margin-inline: auto;
+}
+
+.modal-buttons button{
+    margin-top: 20px;
+}
+
+/* Estilos do modal de sessão expirada */
+.session-expired-modal {
+    position: fixed;
+    top: 10%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80%;
+    max-width: 400px;
+    background-color: #fff;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    z-index: 1000;
+}
+
+.session-expired-modal-content {
+    padding: 10px;
+    text-align: center;
+}
+
+.session-expired-modal-content p{
+    font-size: 14px;
+}
+
+#orderModal .modal-content{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+#orderModal .modal-content img{
+    margin-inline: auto;
+    width: 70px;
+    height: 70px;
+}
+
+#orderModal .modal-buttons{
+    gap: 1.5rem;
+    height: fit-content;
+    margin-top: 1rem;
+    margin-inline: none;
+}
+
+#orderModal .modal-buttons .action-btn-contrast{
+    width: fit-content;
+    min-width: 70%;
+    margin-inline: auto;
+}

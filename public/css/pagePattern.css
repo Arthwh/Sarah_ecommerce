@@ -1,0 +1,77 @@
+*{
+    font-family: Roboto, sans-serif;
+    scroll-behavior: smooth;
+}
+
+body{
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    background-color: white;
+}
+
+main{
+    display: flex;
+    flex-direction: column;
+    flex-grow: 3;
+    min-height: 100vh;
+}
+
+#headerContent{
+    z-index: 100;
+}
+
+.header{
+    background-color: #F7F7F7;
+}
+
+.menuItem:hover, .categoryMenuItemGetAll:hover{
+    color: #E9C495; 
+    border-bottom-color: #E9C495;
+}
+.menuItem{
+    padding-bottom: 1px;
+    margin-bottom: 2px;
+    box-sizing: border-box;
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.3s, color 0.3s;
+}
+
+.textColorYellow{
+    color: #E9C495; 
+}
+
+.error-message {
+    color: red;
+    font-size: 0.875rem;
+}
+
+input:focus{
+    outline: black;
+}
+
+.imagemProdutoTelaPequena{
+    height: 500px;
+    object-fit: cover;
+}
+
+.custom-scrollbar::-webkit-scrollbar{
+    display: none;
+}
+
+.action-btn-contrast{
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    font-weight: 600;
+    background-color: black;
+    color: #fff;
+    border: 2px solid black;
+    cursor: pointer;
+}
+
+.action-btn-contrast:hover{
+    background-color: white;
+    color: black;
+    transition: background-color 0.3s, transform 0.2s;
+}

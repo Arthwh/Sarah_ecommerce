@@ -1,0 +1,121 @@
+.orders-container {
+    margin-inline: auto;
+    gap: 1.5rem;
+    padding: 1rem 0 1rem 1rem;
+    width: 100%;
+}
+
+.orders-content {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: 1rem;
+    padding: 1rem 0 1rem 1rem;
+    width: 100%;
+    margin-bottom: auto;
+}
+
+.order-card {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid #e0e0e0;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+    overflow: hidden;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    padding: 1rem;
+}
+
+.order-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.order-card-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.order-id, .order-date {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #333;
+}
+
+.order-details {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.order-details p {
+    font-size: 0.95rem;
+    color: #555;
+    margin: 0;
+}
+
+.order-details strong {
+    font-weight: 600;
+    color: #222;
+}
+
+.order-details .action-btn-contrast{
+    margin-top: 1rem;
+}
+
+.empty-orders-banner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 2.5rem;
+    margin-top: 2rem;
+}
+
+.empty-orders-banner h2 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #4a4a4a;
+    margin-bottom: 1rem;
+}
+
+.empty-orders-banner p {
+    font-size: 1rem;
+    color: #6c6c6c;
+    margin-bottom: 1.5rem;
+    line-height: 1.6;
+}
+
+.empty-orders-banner .action-btn-contrast {
+    width: fit-content;
+}
+
+.status {
+    font-weight: bold;
+    padding: 4px 8px;
+    border-radius: 4px;
+    display: inline-block;
+    color: white;
+}
+
+.status-pending {
+    background-color: #ffc107;
+}
+
+.status-paid {
+    background-color: #28a745;
+}
+
+.status-shipped {
+    background-color: #007bff;
+}
+
+.status-delivered {
+    background-color: #6c757d;
+}
+
+.status-cancelled {
+    background-color: #dc3545;
+}

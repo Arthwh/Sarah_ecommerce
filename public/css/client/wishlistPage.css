@@ -1,0 +1,80 @@
+.wishlist-page-content{
+    display: flex;
+    flex-direction: column;
+    width: 90%;
+    flex-grow: 3;
+}
+
+.wishlist-page-content .wishlist-items{
+    display: flex;
+    flex-grow: 3;
+    height: 100%;
+    width: 100%;
+}
+
+/* Banner de Ação */
+.favorites-banner {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 20px 40px;
+    background: #f1f1f1 80%;
+    border-left: 6px solid #E9C495; 
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 30px;
+    color: #333; 
+}
+
+.favorites-banner-content {
+    margin-left: 20px;
+    max-width: 80%;
+}
+
+.favorites-banner-content h2 {
+    font-size: 26px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #333; 
+    text-transform: uppercase;
+}
+
+.favorites-banner-content p {
+    font-size: 16px;
+    line-height: 1.5;
+    color: #777;
+}
+
+.favorites-count {
+    text-align: center;
+    font-size: 1rem;
+    margin-bottom: 20px;
+    color: #34495e;
+}
+
+.empty-wishlist-banner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 2.5rem;
+    margin-top: 2rem;
+}
+
+.empty-wishlist-banner h2 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #4a4a4a;
+    margin-bottom: 1rem;
+}
+
+.empty-wishlist-banner p {
+    font-size: 1rem;
+    color: #6c6c6c;
+    margin-bottom: 1.5rem;
+    line-height: 1.6;
+}
+
+.empty-wishlist-banner a{
+    width: fit-content;
+}

@@ -1,0 +1,108 @@
+.main-content{
+    width: 100%;
+}
+
+.settings-container {
+    display: flex;
+    flex-direction: row;
+    min-height: 100vh;
+    width: 90%;
+    margin-inline: auto;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    z-index: 0;
+}
+@media(min-width: 1920px){
+    .settings-container {
+        width: 70%;
+        max-width: 1920px;
+    }
+}
+
+.menu-lateral {
+    width: 250px;
+    background-color: #f7f7f7;
+    padding: 20px;
+}
+
+.menu-lateral ul {
+    list-style: none;
+    padding: 0;
+}
+
+.menu-lateral li {
+    margin-right: auto;
+    align-items: flex-start;
+    margin-bottom: 15px;
+}
+
+.menu-lateral a {
+    text-decoration: none;
+    color: #333;
+}
+.menuItem{
+    text-align: start;
+}
+
+.config-content {
+    width: 100%;
+    height: 100%;
+    flex-grow: 1;
+    padding: 1rem 0 1rem 1rem;
+    justify-items: center;
+}
+
+.user-account__error-message {
+    background-color: #f8d7da;
+    color: #721c24;
+    padding: 20px;
+    border: 1px solid #f5c6cb;
+    font-size: 16px;
+}
+
+.user-account__error-title {
+    margin-top: 0;
+    font-size: 18px;
+}
+
+.user-account__error-description {
+    margin: 10px 0;
+}
+
+.user-account__btn-back {
+    display: inline-block;
+    padding: 8px 0px;
+    margin-top: 10px;
+}
+
+.user-account__btn-back:hover{
+    text-decoration: underline;
+}
+
+.user-welcome-banner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 2rem 1rem;
+    background-color: #f9f9f9;
+    border: 1px solid #e0e0e0;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin-top: 2rem;
+    width: 100%;
+}
+
+.user-welcome-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #333;
+    margin-bottom: 0.5rem;
+}
+
+.user-welcome-subtitle {
+    font-size: 1rem;
+    font-weight: 400;
+    color: #666;
+    line-height: 1.6;
+}

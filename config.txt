@@ -1,0 +1,9 @@
+-- Instalar as dependências
+    npm install express
+    npm install ejs
+    npm install dotenv
+    npm install -D tailwindcss
+    npx tailwindcss init
+    npm install express-session
+    npm install multer (controla o envio de arquivos do front para o backend)
+    

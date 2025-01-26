@@ -1,0 +1,41 @@
+<section>
+    <aside id="filter-menu" class="filter-menu">
+        <div class="title-close-menu">
+            <h2>Filtros e Ordenação</h2>
+            <button onclick="toggleFilterMenu()">
+                <img src="/public/images/icons/close_icon_black.svg" alt="Close Filter">
+            </button>
+        </div>
+        <div class="content-section">
+            <div class="filter-section">
+                <h3>Ordenar por</h3>
+                <label>
+                    <input type="radio" name="sort" value="price-asc"> Preço: Menor para Maior
+                </label>
+                <label>
+                    <input type="radio" name="sort" value="price-desc"> Preço: Maior para Menor
+                </label>
+                <label>
+                    <input type="radio" name="sort" value="newest"> Mais Recentes
+                </label>
+            </div>
+            <div class="filter-section">
+                <h3>Filtrar por Preço</h3>
+                <div class="price-filter">
+                    <label for="minPrice">Preço Mínimo: <input type="number" id="minPrice" name="minPrice" min="0"
+                            max="10000" step="10" value="0" oninput="updatePriceFilter()"></label>
+                    <label for="maxPrice">Preço Máximo: <input type="number" id="maxPrice" name="maxPrice" min="0"
+                            max="10000" step="10" value="1000" oninput="updatePriceFilter()"></label>
+                </div>
+            </div>
+            <div class="filter-section">
+                <h3>Filtrar por cor:</h4>
+                    <div class="color-filter">
+                        <div id="colorOptionsContainer" class="color-options"></div>
+                    </div>
+            </div>
+        </div>
+
+        <button class="action-btn-contrast">Aplicar Filtros</button>
+    </aside>
+</section>

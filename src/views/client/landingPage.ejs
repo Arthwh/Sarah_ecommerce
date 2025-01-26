@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home - SARAH</title>
+    <link rel="shortcut icon" href="/public/images/logo/logo_dourado_preto_icon.ico" type="image/x-icon">
+    <link href="/public/css/pagePattern.css" rel="stylesheet">
+    <link href="/public/css/tailwind/style.css" rel="stylesheet">
+    <link href="/public/css/client/landingPage.css" rel="stylesheet">
+    <link href="/public/css/client/productCard.css" rel="stylesheet">
+    <link href="/public/css/client/carouselControllStyles.css" rel="stylesheet">
+    <link href="/public/css/client/footer.css" rel="stylesheet">
+    <link href="/public/css/messageModal/modal.css" rel="stylesheet">
+    <link href="/public/css/admin/landingPageEdit/editLandingPage.css" rel="stylesheet">
+    <link href="/public/css/admin/landingPageEdit/sectionConfig.css" rel="stylesheet">
+    <link href="/public/css/client/categoryAsideMenu.css" rel="stylesheet">
+    <link href="/public/css/client/loginRegisterModal.css" rel="stylesheet">
+    <link href="/public/css/client/reviewStars.css" rel="stylesheet">
+    <link href="/public/css/client/wishlist.css" rel="stylesheet">
+
+    <script>
+        // Obtem os dados enviados do backend e converte para JSON
+        const data = JSON.parse('<%- JSON.stringify(data) %>') || {};
+        if (!data) {
+            console.error('Erro ao carregar a página: Dados incompletos.');
+            window.location.href = "/";
+        }
+        // Separa os dados em variáveis
+        const user = data.user;
+        const cart = user?.cart || {};
+        const wishlist = user?.wishlist || {};
+        const page = data.page
+    </script>
+</head>
+
+<body <%=data.page.mode=='edit' ? 'class="edit-mode"' : '' %>>
+    <%- include('partials/_header') %>
+        <%- include('partials/_categoryAsideMenu') %>
+            <%- include('partials/_loginRegisterModal') %>
+                <main class="w-full h-full flex-grow flex flex-col z-0">
+                    <% data.components.sort((a, b)=> a.section_position - b.section_position)
+                        .forEach(component => { %>
+                        <% if (component.section_model==='banner' && component.is_active) { %>
+                            <%- include('partials/landingPageComponents/bannerCarousel', { component: component, mode: data.page.mode }) %>
+                                <% } %>
+                                    <% if (component.section_model==='carousel' && component.is_active) { %>
+                                        <%- include('partials/landingPageComponents/carousel', { component: component, mode: data.page.mode})
+                                            %>
+                                            <% } %>
+                                                <% if (component.section_model==='grid' && component.is_active) { %>
+                                                    <%- include('partials/landingPageComponents/itemGrid', { component:
+                                                        component, mode: data.page.mode }) %>
+                                                        <% } %>
+                                                            <% }); %>
+                </main>
+                <%- include('partials/_footer') %>
+
+                    <script src="/public/js/messageModal/toastMessageModal.js"></script>
+                    <script src="/public/js/messageModal/centralMessageModal.js"></script>
+                    <script src="/public/js/messageModal/sessionExpiredModal.js"></script>
+                    <script src="/public/js/messageModal/loginNeddedMessageModal.js"></script>
+                    <script src="/public/js/statusHandler/statusHandler.js"></script>
+                    <script src="/public/js/client/categoryAsideMenu.js"></script>
+                    <script src="/public/js/client/header.js"></script>
+                    <script src="/public/js/client/loginAndRegister.js"></script>
+                    <script src="/public/js/client/landingPage.js"></script>
+                    <script src="/public/js/admin/landingPage/editLandingPage.js"></script>
+                    <script src="/public/js/admin/landingPage/bannerConfig.js"></script>
+                    <script src="/public/js/admin/landingPage/editComponentModal.js"></script>
+                    <script src="/public/js/client/wishlist.js"></script>
+
+</body>
+
+</html>
